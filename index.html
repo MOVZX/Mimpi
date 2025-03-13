@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Buat Gambar dengan AI</title>
+        <style>
+            body {
+                margin: 0;
+                padding: 20px;
+                font-family: "Arial", sans-serif;
+                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                min-height: 100vh;
+                color: #fff;
+            }
+
+            .container {
+                max-width: 500px;
+                margin: 0 auto;
+                background: rgba(255, 255, 255, 0.05);
+                padding: 30px;
+                border-radius: 15px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+                backdrop-filter: blur(10px);
+            }
+
+            h1 {
+                text-align: center;
+                color: #00d4ff;
+                text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+                margin-bottom: 30px;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 0;
+                color: #e0e0e0;
+                font-weight: bold;
+            }
+
+            .checkbox-group {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 20px;
+                padding: 5px 0;
+                min-height: 24px;
+            }
+
+            .checkbox-group .checkbox-wrapper {
+                display: flex;
+                align-items: center;
+            }
+
+            .checkbox-group input[type="checkbox"] {
+                margin: 0;
+                width: 16px;
+                height: 16px;
+                flex-shrink: 0;
+                vertical-align: middle;
+            }
+
+            .checkbox-group label {
+                margin: 0;
+                color: #e0e0e0;
+                font-weight: bold;
+                white-space: nowrap;
+                line-height: 1;
+                vertical-align: middle;
+                display: flex;
+                align-items: center;
+            }
+
+            input,
+            textarea,
+            select {
+                width: 100%;
+                padding: 10px;
+                border: none;
+                border-radius: 8px;
+                background: rgba(255, 255, 255, 0.1);
+                color: #fff;
+                font-size: 16px;
+                transition: all 0.3s ease;
+                box-sizing: border-box;
+            }
+
+            input:focus,
+            textarea:focus,
+            select:focus {
+                outline: none;
+                background: rgba(255, 255, 255, 0.15);
+                box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+            }
+
+            textarea {
+                min-height: 100px;
+                resize: vertical;
+            }
+
+            button {
+                width: 100%;
+                padding: 12px;
+                background: linear-gradient(45deg, #00d4ff, #ff00ff);
+                border: none;
+                border-radius: 8px;
+                color: #fff;
+                font-size: 18px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-top: 10px;
+            }
+
+            button:disabled {
+                background: rgba(255, 255, 255, 0.1);
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+            }
+
+            button:hover:not(:disabled) {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+            }
+
+            img {
+                max-width: 100%;
+                height: auto;
+                margin-top: 20px;
+                border-radius: 8px;
+                box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+            }
+
+            #status {
+                margin-top: 20px;
+                text-align: center;
+                padding: 10px;
+                border-radius: 8px;
+                display: none;
+            }
+
+            #error {
+                margin-top: 20px;
+                text-align: center;
+                padding: 10px;
+                border-radius: 8px;
+                display: none;
+                background: rgba(255, 0, 0, 0.1);
+                color: #ff4444;
+            }
+
+            .success {
+                background: rgba(0, 255, 0, 0.1);
+                color: #00ff00;
+            }
+
+            .image-actions {
+                display: none;
+                margin-top: 10px;
+                display: flex;
+                gap: 10px;
+                justify-content: center;
+            }
+
+            .image-actions button {
+                width: 50%;
+                padding: 8px;
+                font-size: 16px;
+                background: linear-gradient(45deg, #00d4ff, #00ff00);
+                margin-top: 0;
+            }
+
+            .image-actions button.preview {
+                background: linear-gradient(45deg, #ff00ff, #00d4ff);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>AI Daaandy!</h1>
+            <div class="form-group">
+                <label for="prompt">
+                    Deskripsi Gambar (dalam bahasa Inggris)
+                    <span style="color: #aaa; font-weight: normal"></span>
+                </label>
+                <textarea id="prompt" required rows="5">
+A highly detailed, photorealistic portrait of a real-life animal species found in nature, such as a cat, captured in its authentic natural habitat. The image features accurate anatomy, realistic textures of fur, feathers, or skin, lifelike eyes, and natural lighting. No mythical or fantasy creatures, only existing animals, depicted in a sharp, vibrant, 4k resolution with cinematic quality.</textarea
+                >
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="useDynamicPrompt" />
+                <label for="useDynamicPrompt">Gunakan Prompt Generator</label>
+            </div>
+            <div class="form-group">
+                <label for="imageMode">Mode Gambar</label>
+                <select id="imageMode">
+                    <option value="portrait">Portrait (896x1152)</option>
+                    <option value="landscape">Landscape (1152x896)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="steps">Steps <span style="color: #aaa; font-weight: normal">(1-100)</span></label>
+                <input type="number" id="steps" min="1" max="100" value="35" required />
+            </div>
+            <div class="form-group">
+                <label for="cfg">
+                    CFG <span style="color: #aaa; font-weight: normal">(Saran: 2-7.5, Default: 2.5)</span>
+                </label>
+                <input type="number" id="cfg" min="1" max="30" step="0.5" value="2.5" required />
+            </div>
+            <div class="form-group">
+                <label for="seed">Seed <span style="color: #aaa; font-weight: normal">(angka)</span></label>
+                <input type="text" id="seed" placeholder="" value="-1" />
+            </div>
+            <button onclick="generateImage()">Buat Gambar</button>
+            <p id="status"></p>
+            <p id="error"></p>
+            <img id="outputImage" src="" alt="" style="display: none" />
+            <div class="image-actions" id="imageActions">
+                <button onclick="downloadImage()">Download</button>
+                <button class="preview" onclick="previewImage()">Preview</button>
+            </div>
+        </div>
+
+        <script>
+            const COMFYUI_URL = "http://192.168.8.3:8188";
+
+            const workflow = {
+                4: {
+                    inputs: {
+                        ckpt_name: "SDXL/agxl_V2.safetensors",
+                    },
+                    class_type: "CheckpointLoaderSimple",
+                },
+                10: {
+                    inputs: {
+                        PowerLoraLoaderHeaderWidget: {
+                            type: "PowerLoraLoaderHeaderWidget",
+                        },
+                        "➕ Add Lora": "",
+                        model: ["4", 0],
+                        clip: ["16", 0],
+                    },
+                    class_type: "Power Lora Loader (rgthree)",
+                },
+                11: {
+                    inputs: {
+                        object_to_patch: "diffusion_model",
+                        residual_diff_threshold: 0.20000000000000004,
+                        start: 0,
+                        end: 1,
+                        max_consecutive_cache_hits: -1,
+                        model: ["10", 0],
+                    },
+                    class_type: "ApplyFBCacheOnModel",
+                },
+                15: {
+                    inputs: {
+                        text: "(nsfw:1.6), (porn:1.6), (nude:1.6), (nudity:1.6), (sexy:1.6), (sensual:1.6), (breast:1.6), (tits:1.6), (skimpy:1.6), (bikini:1.6), (cleavage:1.6), gore, horror, embedding:negativeXL_D",
+                        clip: ["10", 1],
+                    },
+                    class_type: "CLIPTextEncode",
+                },
+                16: {
+                    inputs: {
+                        stop_at_clip_layer: -2,
+                        clip: ["21", 0],
+                    },
+                    class_type: "CLIPSetLastLayer",
+                },
+                17: {
+                    inputs: {
+                        seed: 0,
+                        steps: 35,
+                        cfg: 2.5,
+                        sampler_name: "dpmpp_2m",
+                        scheduler: "karras",
+                        denoise: 1,
+                        model: ["38", 0],
+                        positive: ["70:2", 0],
+                        negative: ["15", 0],
+                        latent_image: ["18", 0],
+                    },
+                    class_type: "KSampler",
+                },
+                18: {
+                    inputs: {
+                        resolution: "896x1152 (0.78)",
+                        batch_size: 1,
+                        width_override: 0,
+                        height_override: 0,
+                    },
+                    class_type: "SDXLEmptyLatentSizePicker+",
+                },
+                19: {
+                    inputs: {
+                        samples: ["17", 0],
+                        vae: ["4", 2],
+                    },
+                    class_type: "VAEDecode",
+                },
+                21: {
+                    inputs: {
+                        clip_name1: "ViT-L-14-REG-TE-only-balanced-HF-format-ckpt12.safetensors",
+                        clip_name2: "clip_g.safetensors",
+                        type: "sdxl",
+                        device: "default",
+                    },
+                    class_type: "DualCLIPLoader",
+                },
+                22: {
+                    inputs: {
+                        theme: "🎲 Dynamic Random",
+                        complexity: "complex",
+                        randomize: "enable",
+                        debug_mode: "off",
+                        seed: 7772577453351473000,
+                        custom_subject: "",
+                        custom_location: "",
+                        include_environment: "yes",
+                        include_style: "yes",
+                        include_effects: "no",
+                    },
+                    class_type: "IsulionMegaPromptV3",
+                },
+                38: {
+                    inputs: {
+                        is_patcher: true,
+                        object_to_patch: "diffusion_model",
+                        compiler: "torch.compile",
+                        fullgraph: false,
+                        dynamic: false,
+                        mode: "",
+                        options: "",
+                        disable: false,
+                        backend: "inductor",
+                        model: ["11", 0],
+                    },
+                    class_type: "EnhancedCompileModel",
+                },
+                40: {
+                    inputs: {
+                        value: 7772577453351473000,
+                        mode: true,
+                        action: "increment",
+                        last_seed: "7772577453351473000",
+                    },
+                    class_type: "GlobalSeed //Inspire",
+                },
+                54: {
+                    inputs: {
+                        filename_prefix: "default/output",
+                        images: ["19", 0],
+                    },
+                    class_type: "SaveImage",
+                },
+                56: {
+                    inputs: {
+                        text: "",
+                    },
+                    class_type: "Text Multiline",
+                },
+                57: {
+                    inputs: {
+                        text: "detailerlora, best quality, highly detailed, hyper realistic, photorealistic, 8K resolution, ultra detail, raytracing",
+                    },
+                    class_type: "Text Multiline",
+                },
+                59: {
+                    inputs: {
+                        delimiter: ", ",
+                        clean_whitespace: "true",
+                        text_a: ["56", 0],
+                        text_b: ["57", 0],
+                    },
+                    class_type: "Text Concatenate",
+                },
+                "70:0": {
+                    inputs: {
+                        text: ["59", 0],
+                    },
+                    class_type: "Text Multiline",
+                },
+                "70:1": {
+                    inputs: {
+                        boolean: true,
+                        on_true: ["22", 0],
+                        on_false: ["70:0", 0],
+                    },
+                    class_type: "Switch any [Crystools]",
+                },
+                "70:2": {
+                    inputs: {
+                        text: ["70:1", 0],
+                        clip: ["10", 1],
+                    },
+                    class_type: "CLIPTextEncode",
+                },
+            };
+
+            // Load last generated image and status from localStorage on page load
+            window.onload = function () {
+                const lastImage = localStorage.getItem("lastGeneratedImage");
+                const lastStatus = localStorage.getItem("lastStatus");
+                if (lastImage) {
+                    const outputImage = document.getElementById("outputImage");
+                    outputImage.src = lastImage;
+                    outputImage.style.display = "block";
+                    document.getElementById("imageActions").style.display = "flex";
+                }
+                if (lastStatus) {
+                    const status = document.getElementById("status");
+                    status.textContent = lastStatus;
+                    status.className = "success";
+                    status.style.display = "block";
+                }
+            };
+
+            // Static list of ckpt_name options
+            function fetchCheckpointOptions() {
+                const baseCheckpoints = [
+                    "agxl_V2.safetensors",
+                    "boomerArtModelBAM_bamV2.safetensors",
+                    "clarityXL_v20.safetensors",
+                    "cyberrealisticXL_v5.safetensors",
+                    "dreamshaperXL_v21TurboDPMSDE.safetensors",
+                    "epicrealismXL_vxvAnewstoryRealism.safetensors",
+                    "fasercore_xlV1.safetensors",
+                    "juggernautXL_juggXIByRundiffusion.safetensors",
+                    "leosamsHelloworldXL_helloworldXL70.safetensors",
+                    "msSDXLRealV3_v3.safetensors",
+                    "novaRealityXL_v70.safetensors",
+                    "perfectionRealisticILXL_v10.safetensors",
+                    "polyhedronSDXL_v3.safetensors",
+                    "realisticStockPhoto_v20.safetensors",
+                    "realvisxlV50_v50Bakedvae.safetensors",
+                    "stoiqoNewrealityFLUXSD35_XLPRO.safetensors",
+                ];
+                return baseCheckpoints.map((ckpt) => `SDXL/${ckpt}`);
+            }
+
+            // Static list of sampler options
+            function fetchSamplerOptions() {
+                return [
+                    "euler",
+                    "euler_cfg_pp",
+                    "euler_ancestral",
+                    "euler_ancestral_cfg_pp",
+                    "heun",
+                    "heunpp2",
+                    "dpm_2",
+                    "dpm_2_ancestral",
+                    "lms",
+                    "dpm_fast",
+                    "dpm_adaptive",
+                    "dpmpp_2s_ancestral",
+                    "dpmpp_2s_ancestral_cfg_pp",
+                    "dpmpp_sde",
+                    "dpmpp_sde_gpu",
+                    "dpmpp_2m",
+                    "dpmpp_2m_cfg_pp",
+                    "dpmpp_2m_sde",
+                    "dpmpp_2m_sde_gpu",
+                    "dpmpp_3m_sde",
+                    "dpmpp_3m_sde_gpu",
+                    "ddpm",
+                    "lcm",
+                    "ipndm",
+                    "ipndm_v",
+                    "deis",
+                    "res_multistep",
+                    "res_multistep_cfg_pp",
+                    "res_multistep_ancestral",
+                    "res_multistep_ancestral_cfg_pp",
+                    "gradient_estimation",
+                    "er_sde",
+                    "ddim",
+                    "uni_pc",
+                    "uni_pc_bh2",
+                ];
+            }
+
+            // Static list of scheduler options
+            function fetchSchedulerOptions() {
+                return [
+                    "normal",
+                    "karras",
+                    "exponential",
+                    "sgm_uniform",
+                    "simple",
+                    "ddim_uniform",
+                    "beta",
+                    "linear_quadratic",
+                    "kl_optimal",
+                ];
+            }
+
+            // Populate checkpoint, sampler, and scheduler select elements
+            function populateDropdowns() {
+                const checkpointOptions = fetchCheckpointOptions();
+                const checkpointFormGroup = document.createElement("div");
+                checkpointFormGroup.className = "form-group";
+
+                const checkpointLabel = document.createElement("label");
+                checkpointLabel.htmlFor = "checkpoint";
+                checkpointLabel.textContent = "Checkpoint Model";
+
+                const checkpointSelect = document.createElement("select");
+                checkpointSelect.id = "checkpoint";
+                checkpointSelect.name = "checkpoint";
+
+                checkpointOptions.forEach((option) => {
+                    const optionElement = document.createElement("option");
+                    const displayName = option.replace("SDXL/", "");
+                    optionElement.value = option;
+                    optionElement.textContent = displayName;
+                    if (option === "SDXL/agxl_V2.safetensors") optionElement.selected = true;
+                    checkpointSelect.appendChild(optionElement);
+                });
+
+                checkpointFormGroup.appendChild(checkpointLabel);
+                checkpointFormGroup.appendChild(checkpointSelect);
+
+                const samplerOptions = fetchSamplerOptions();
+                const samplerFormGroup = document.createElement("div");
+                samplerFormGroup.className = "form-group";
+
+                const samplerLabel = document.createElement("label");
+                samplerLabel.htmlFor = "sampler";
+                samplerLabel.textContent = "Sampler";
+
+                const samplerSelect = document.createElement("select");
+                samplerSelect.id = "sampler";
+                samplerSelect.name = "sampler";
+
+                samplerOptions.forEach((option) => {
+                    const optionElement = document.createElement("option");
+                    optionElement.value = option;
+                    optionElement.textContent = option;
+                    if (option === "dpmpp_2m") optionElement.selected = true;
+                    samplerSelect.appendChild(optionElement);
+                });
+
+                samplerFormGroup.appendChild(samplerLabel);
+                samplerFormGroup.appendChild(samplerSelect);
+
+                const schedulerOptions = fetchSchedulerOptions();
+                const schedulerFormGroup = document.createElement("div");
+                schedulerFormGroup.className = "form-group";
+
+                const schedulerLabel = document.createElement("label");
+                schedulerLabel.htmlFor = "scheduler";
+                schedulerLabel.textContent = "Scheduler";
+
+                const schedulerSelect = document.createElement("select");
+                schedulerSelect.id = "scheduler";
+                schedulerSelect.name = "scheduler";
+
+                schedulerOptions.forEach((option) => {
+                    const optionElement = document.createElement("option");
+                    optionElement.value = option;
+                    optionElement.textContent = option;
+                    if (option === "karras") optionElement.selected = true;
+                    schedulerSelect.appendChild(optionElement);
+                });
+
+                schedulerFormGroup.appendChild(schedulerLabel);
+                schedulerFormGroup.appendChild(schedulerSelect);
+
+                const container = document.querySelector(".container");
+                const promptGroup = document.querySelector("#prompt").parentElement;
+                const imageModeGroup = document.querySelector("#imageMode").parentElement;
+                container.insertBefore(checkpointFormGroup, imageModeGroup);
+                container.insertBefore(samplerFormGroup, document.querySelector("button"));
+                container.insertBefore(schedulerFormGroup, document.querySelector("button"));
+            }
+
+            window.onload = (function (originalOnload) {
+                return function () {
+                    if (originalOnload) originalOnload();
+                    populateDropdowns();
+                };
+            })(window.onload);
+
+            document.addEventListener("DOMContentLoaded", () => {
+                const checkpointSelect = document.getElementById("checkpoint");
+                if (checkpointSelect) {
+                    checkpointSelect.addEventListener("change", () => {
+                        workflow["4"]["inputs"]["ckpt_name"] = checkpointSelect.value;
+                        console.log("Checkpoint updated to:", checkpointSelect.value);
+                    });
+                }
+
+                const samplerSelect = document.getElementById("sampler");
+                if (samplerSelect) {
+                    samplerSelect.addEventListener("change", () => {
+                        workflow["17"]["inputs"]["sampler_name"] = samplerSelect.value;
+                        console.log("Sampler updated to:", samplerSelect.value);
+                    });
+                }
+
+                const schedulerSelect = document.getElementById("scheduler");
+                if (schedulerSelect) {
+                    schedulerSelect.addEventListener("change", () => {
+                        workflow["17"]["inputs"]["scheduler"] = schedulerSelect.value;
+                        console.log("Scheduler updated to:", schedulerSelect.value);
+                    });
+                }
+            });
+
+            async function generateImage() {
+                const promptInput = document.getElementById("prompt").value;
+                const stepsInput = document.getElementById("steps").value;
+                const cfgInput = document.getElementById("cfg").value;
+                const imageMode = document.getElementById("imageMode").value;
+                const seedInput = document.getElementById("seed").value;
+                const useDynamicPrompt = document.getElementById("useDynamicPrompt").checked;
+                const status = document.getElementById("status");
+                const error = document.getElementById("error");
+                const button = document.querySelector("button");
+                const outputImage = document.getElementById("outputImage");
+                const imageActions = document.getElementById("imageActions");
+
+                if (!promptInput) {
+                    showError(error, "Deskripsi gambar tidak boleh kosong!");
+                    return;
+                }
+
+                showStatus(status, "Membuat gambar, silahkan tunggu...");
+                error.style.display = "none";
+                outputImage.style.display = "none";
+                imageActions.style.display = "none";
+                button.disabled = true;
+
+                try {
+                    const steps = parseInt(stepsInput);
+                    const cfg = parseFloat(cfgInput);
+                    if (isNaN(steps) || steps < 1 || steps > 100) {
+                        throw new Error("Steps harus berupa angka antara 1 dan 100!");
+                    }
+                    if (isNaN(cfg) || cfg < 1 || cfg > 30) {
+                        throw new Error("CFG harus berupa angka antara 1 dan 30!");
+                    }
+
+                    const checkpointSelect = document.getElementById("checkpoint");
+                    const samplerSelect = document.getElementById("sampler");
+                    const schedulerSelect = document.getElementById("scheduler");
+                    if (checkpointSelect && samplerSelect && schedulerSelect) {
+                        workflow["4"]["inputs"]["ckpt_name"] = checkpointSelect.value;
+                        workflow["56"]["inputs"]["text"] = promptInput;
+                        workflow["22"]["inputs"]["custom_subject"] = promptInput;
+                        workflow["17"]["inputs"]["steps"] = steps;
+                        workflow["17"]["inputs"]["cfg"] = cfg;
+                        workflow["17"]["inputs"]["sampler_name"] = samplerSelect.value;
+                        workflow["17"]["inputs"]["scheduler"] = schedulerSelect.value;
+                        workflow["70:1"]["inputs"]["boolean"] = useDynamicPrompt;
+                    } else {
+                        throw new Error("Checkpoint, Sampler, or Scheduler dropdown not found!");
+                    }
+
+                    const MAX_SEED = BigInt("18446744073709551615");
+                    if (!seedInput || isNaN(seedInput) || seedInput === "-1") {
+                        const randomValue =
+                            BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
+                            BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
+                        const seed = randomValue % (MAX_SEED + BigInt(1));
+                        workflow["17"]["inputs"]["seed"] = Number(seed);
+                        workflow["22"]["inputs"]["seed"] = Number(seed);
+                        workflow["40"]["inputs"]["value"] = Number(seed);
+                        workflow["40"]["inputs"]["last_seed"] = Number(seed) - 1;
+                    } else {
+                        const seedNum = BigInt(seedInput);
+                        if (seedNum < BigInt(0) || seedNum > MAX_SEED) {
+                            throw new Error(`Seed harus antara 0 dan ${MAX_SEED}!`);
+                        }
+                        workflow["17"]["inputs"]["seed"] = Number(seedNum);
+                        workflow["22"]["inputs"]["seed"] = Number(seedNum);
+                        workflow["40"]["inputs"]["value"] = Number(seedNum);
+                        workflow["40"]["inputs"]["last_seed"] = Number(seedNum) - 1;
+                    }
+
+                    if (imageMode === "portrait") {
+                        workflow["18"]["inputs"]["resolution"] = "896x1152 (0.78)";
+                    } else if (imageMode === "landscape") {
+                        workflow["18"]["inputs"]["resolution"] = "1152x896 (1.29)";
+                    }
+
+                    workflow["54"]["inputs"]["filename_prefix"] = `default/${Date.now()}`;
+
+                    console.log("Generating with:", {
+                        checkpoint: workflow["4"]["inputs"]["ckpt_name"],
+                        sampler: workflow["17"]["inputs"]["sampler_name"],
+                        scheduler: workflow["17"]["inputs"]["scheduler"],
+                        seed: workflow["17"]["inputs"]["seed"],
+                        useDynamicPrompt: useDynamicPrompt,
+                    });
+
+                    const response = await fetch(`${COMFYUI_URL}/prompt`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ prompt: workflow, client_id: "webapp" }),
+                    });
+
+                    if (!response.ok) throw new Error("Gagal terhubung ke server ComfyUI. Pastikan server berjalan!");
+
+                    const { prompt_id } = await response.json();
+
+                    let imageUrl = null;
+                    while (!imageUrl) {
+                        await new Promise((resolve) => setTimeout(resolve, 1000));
+                        const historyResponse = await fetch(`${COMFYUI_URL}/history/${prompt_id}`);
+                        const history = await historyResponse.json();
+
+                        if (history[prompt_id] && history[prompt_id].outputs["54"]?.images) {
+                            const imageData = history[prompt_id].outputs["54"].images[0];
+                            imageUrl = `${COMFYUI_URL}/view?filename=${imageData.filename}&subfolder=${imageData.subfolder}&type=${imageData.type}`;
+                        }
+                    }
+
+                    outputImage.src = imageUrl;
+                    outputImage.style.display = "block";
+                    imageActions.style.display = "flex";
+                    const successMessage = `Gambar berhasil dibuat! Seed: ${workflow["17"]["inputs"]["seed"]}`;
+                    showStatus(status, successMessage, "success");
+
+                    localStorage.setItem("lastGeneratedImage", imageUrl);
+                    localStorage.setItem("lastStatus", successMessage);
+                } catch (err) {
+                    let errorMessage = err.message;
+                    if (errorMessage.includes("fetch")) {
+                        errorMessage = "Tidak dapat terhubung ke server. Pastikan ComfyUI berjalan!";
+                    } else if (errorMessage.includes("Seed")) {
+                        errorMessage = `Masukkan seed yang valid (angka antara 0 dan ${MAX_SEED})!`;
+                    }
+                    showError(error, errorMessage);
+                } finally {
+                    button.disabled = false;
+                }
+            }
+
+            async function downloadImage() {
+                const outputImage = document.getElementById("outputImage");
+                const imageUrl = outputImage.src;
+
+                try {
+                    const response = await fetch(imageUrl);
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `generated-image-${workflow["17"]["inputs"]["seed"]}.png`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                } catch (err) {
+                    showError(document.getElementById("error"), "Gagal mengunduh gambar: " + err.message);
+                }
+            }
+
+            function previewImage() {
+                const outputImage = document.getElementById("outputImage");
+                const imageUrl = outputImage.src;
+                window.open(imageUrl, "_blank");
+            }
+
+            function showStatus(statusElement, message, type = "") {
+                statusElement.textContent = message;
+                statusElement.style.display = "block";
+                statusElement.className = type;
+                if (type !== "success") {
+                    setTimeout(() => {
+                        if (statusElement.className !== "success") {
+                            statusElement.style.display = "none";
+                        }
+                    }, 5000);
+                }
+            }
+
+            function showError(errorElement, message) {
+                errorElement.textContent = message;
+                errorElement.style.display = "block";
+                setTimeout(() => (errorElement.style.display = "none"), 5000);
+            }
+        </script>
+    </body>
+</html>
