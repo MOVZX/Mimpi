@@ -31,6 +31,13 @@
                 margin-bottom: 30px;
             }
 
+            h2 {
+                text-align: center;
+                color: #00d4ff;
+                text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+                margin-bottom: 30px;
+            }
+
             .form-group {
                 margin-bottom: 20px;
                 display: flex;
@@ -166,7 +173,6 @@
             .image-actions {
                 display: none;
                 margin-top: 10px;
-                display: flex;
                 gap: 10px;
                 justify-content: center;
             }
@@ -193,13 +199,25 @@
                     <span style="color: #aaa; font-weight: normal"></span>
                 </label>
                 <textarea id="prompt" required rows="5">
-A highly detailed, photorealistic portrait of a real-life animal species found in nature, such as a cat, captured in its authentic natural habitat. The image features accurate anatomy, realistic textures of fur, feathers, or skin, lifelike eyes, and natural lighting. No mythical or fantasy creatures, only existing animals, depicted in a sharp, vibrant, 4k resolution with cinematic quality.</textarea
+A highly detailed, photorealistic portrait of a real-life animal species found in nature, such as a cat, captured in its authentic natural habitat. The image features accurate anatomy, realistic textures of fur, feathers, or skin, lifelike eyes, and natural lighting. No mythical or fantasy creatures, only existing animals, depicted in a sharp, vibrant, 4k resolution with highest quality.</textarea
                 >
             </div>
             <div class="checkbox-group">
-                <input type="checkbox" id="useDynamicPrompt" />
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="useDynamicPrompt" />
+                </div>
                 <label for="useDynamicPrompt">Gunakan Prompt Generator</label>
             </div>
+            <button onclick="generateImage()">Buat Gambar</button>
+            <p id="status"></p>
+            <p id="error"></p>
+            <img id="outputImage" src="" alt="" style="display: none" />
+            <div class="image-actions" id="imageActions">
+                <button onclick="downloadImage()">Download</button>
+                <button class="preview" onclick="previewImage()">Preview</button>
+            </div>
+            <p> </p>
+            <h2>Opsi Tingkat Lanjut</h2>
             <div class="form-group">
                 <label for="imageMode">Mode Gambar</label>
                 <select id="imageMode">
@@ -215,29 +233,22 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                 <label for="cfg">
                     CFG <span style="color: #aaa; font-weight: normal">(Saran: 2-7.5, Default: 2.5)</span>
                 </label>
-                <input type="number" id="cfg" min="1" max="30" step="0.5" value="2.5" required />
+                <input type="number" id="cfg" min="1" max="30" step="0.5" value="3.5" required />
             </div>
             <div class="form-group">
                 <label for="seed">Seed <span style="color: #aaa; font-weight: normal">(angka)</span></label>
                 <input type="text" id="seed" placeholder="" value="-1" />
             </div>
-            <button onclick="generateImage()">Buat Gambar</button>
-            <p id="status"></p>
-            <p id="error"></p>
-            <img id="outputImage" src="" alt="" style="display: none" />
-            <div class="image-actions" id="imageActions">
-                <button onclick="downloadImage()">Download</button>
-                <button class="preview" onclick="previewImage()">Preview</button>
-            </div>
         </div>
 
         <script>
             const COMFYUI_URL = "http://192.168.8.3:8188";
+            let currentSeedNum = 0;
 
             const workflow = {
                 4: {
                     inputs: {
-                        ckpt_name: "SDXL/agxl_V2.safetensors",
+                        ckpt_name: "SDXL/juggernautXL_juggXIByRundiffusion.safetensors",
                     },
                     class_type: "CheckpointLoaderSimple",
                 },
@@ -265,7 +276,7 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                 },
                 15: {
                     inputs: {
-                        text: "(nsfw:1.6), (porn:1.6), (nude:1.6), (nudity:1.6), (sexy:1.6), (sensual:1.6), (breast:1.6), (tits:1.6), (skimpy:1.6), (bikini:1.6), (cleavage:1.6), gore, horror, embedding:negativeXL_D",
+                        text: "(nsfw:1.6), (porn:1.6), (nude:1.6), (nudity:1.6), (sexy:1.6), (sensual:1.6), (breast:1.6), (boobs:1.6), (tits:1.6), (skimpy:1.6), (bikini:1.6), (cleavage:1.6), gore, horror, embedding:negativeXL_D",
                         clip: ["10", 1],
                     },
                     class_type: "CLIPTextEncode",
@@ -358,7 +369,7 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                 },
                 54: {
                     inputs: {
-                        filename_prefix: "default/output",
+                        filename_prefix: "",
                         images: ["19", 0],
                     },
                     class_type: "SaveImage",
@@ -407,21 +418,23 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                 },
             };
 
-            // Load last generated image and status from localStorage on page load
+            // Load last generated image and status from localStorage on page load, but clear the display
             window.onload = function () {
-                const lastImage = localStorage.getItem("lastGeneratedImage");
-                const lastStatus = localStorage.getItem("lastStatus");
-                if (lastImage) {
-                    const outputImage = document.getElementById("outputImage");
-                    outputImage.src = lastImage;
-                    outputImage.style.display = "block";
-                    document.getElementById("imageActions").style.display = "flex";
-                }
-                if (lastStatus) {
-                    const status = document.getElementById("status");
-                    status.textContent = lastStatus;
-                    status.className = "success";
-                    status.style.display = "block";
+                const outputImage = document.getElementById("outputImage");
+                const imageActions = document.getElementById("imageActions");
+                const status = document.getElementById("status");
+
+                // Clear the image and actions on reload
+                outputImage.src = "";
+                outputImage.style.display = "none";
+                imageActions.style.display = "none";
+                status.style.display = "none";
+                status.className = "";
+                status.textContent = "";
+
+                // Ensure populateDropdowns is called only once
+                if (!document.getElementById("checkpoint")) {
+                    populateDropdowns();
                 }
             };
 
@@ -506,90 +519,99 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
 
             // Populate checkpoint, sampler, and scheduler select elements
             function populateDropdowns() {
-                const checkpointOptions = fetchCheckpointOptions();
-                const checkpointFormGroup = document.createElement("div");
-                checkpointFormGroup.className = "form-group";
-
-                const checkpointLabel = document.createElement("label");
-                checkpointLabel.htmlFor = "checkpoint";
-                checkpointLabel.textContent = "Checkpoint Model";
-
-                const checkpointSelect = document.createElement("select");
-                checkpointSelect.id = "checkpoint";
-                checkpointSelect.name = "checkpoint";
-
-                checkpointOptions.forEach((option) => {
-                    const optionElement = document.createElement("option");
-                    const displayName = option.replace("SDXL/", "");
-                    optionElement.value = option;
-                    optionElement.textContent = displayName;
-                    if (option === "SDXL/agxl_V2.safetensors") optionElement.selected = true;
-                    checkpointSelect.appendChild(optionElement);
-                });
-
-                checkpointFormGroup.appendChild(checkpointLabel);
-                checkpointFormGroup.appendChild(checkpointSelect);
-
-                const samplerOptions = fetchSamplerOptions();
-                const samplerFormGroup = document.createElement("div");
-                samplerFormGroup.className = "form-group";
-
-                const samplerLabel = document.createElement("label");
-                samplerLabel.htmlFor = "sampler";
-                samplerLabel.textContent = "Sampler";
-
-                const samplerSelect = document.createElement("select");
-                samplerSelect.id = "sampler";
-                samplerSelect.name = "sampler";
-
-                samplerOptions.forEach((option) => {
-                    const optionElement = document.createElement("option");
-                    optionElement.value = option;
-                    optionElement.textContent = option;
-                    if (option === "dpmpp_2m") optionElement.selected = true;
-                    samplerSelect.appendChild(optionElement);
-                });
-
-                samplerFormGroup.appendChild(samplerLabel);
-                samplerFormGroup.appendChild(samplerSelect);
-
-                const schedulerOptions = fetchSchedulerOptions();
-                const schedulerFormGroup = document.createElement("div");
-                schedulerFormGroup.className = "form-group";
-
-                const schedulerLabel = document.createElement("label");
-                schedulerLabel.htmlFor = "scheduler";
-                schedulerLabel.textContent = "Scheduler";
-
-                const schedulerSelect = document.createElement("select");
-                schedulerSelect.id = "scheduler";
-                schedulerSelect.name = "scheduler";
-
-                schedulerOptions.forEach((option) => {
-                    const optionElement = document.createElement("option");
-                    optionElement.value = option;
-                    optionElement.textContent = option;
-                    if (option === "karras") optionElement.selected = true;
-                    schedulerSelect.appendChild(optionElement);
-                });
-
-                schedulerFormGroup.appendChild(schedulerLabel);
-                schedulerFormGroup.appendChild(schedulerSelect);
-
                 const container = document.querySelector(".container");
-                const promptGroup = document.querySelector("#prompt").parentElement;
                 const imageModeGroup = document.querySelector("#imageMode").parentElement;
-                container.insertBefore(checkpointFormGroup, imageModeGroup);
-                container.insertBefore(samplerFormGroup, document.querySelector("button"));
-                container.insertBefore(schedulerFormGroup, document.querySelector("button"));
-            }
+                const cfgGroup = document.querySelector("#cfg").parentElement;
+                const seedGroup = document.querySelector("#seed").parentElement;
 
-            window.onload = (function (originalOnload) {
-                return function () {
-                    if (originalOnload) originalOnload();
-                    populateDropdowns();
-                };
-            })(window.onload);
+                // Check if checkpointFormGroup already exists
+                let checkpointFormGroup = document.getElementById("checkpointFormGroup");
+                if (!checkpointFormGroup) {
+                    const checkpointOptions = fetchCheckpointOptions();
+                    checkpointFormGroup = document.createElement("div");
+                    checkpointFormGroup.id = "checkpointFormGroup";
+                    checkpointFormGroup.className = "form-group";
+
+                    const checkpointLabel = document.createElement("label");
+                    checkpointLabel.htmlFor = "checkpoint";
+                    checkpointLabel.textContent = "Checkpoint Model";
+
+                    const checkpointSelect = document.createElement("select");
+                    checkpointSelect.id = "checkpoint";
+                    checkpointSelect.name = "checkpoint";
+
+                    checkpointOptions.forEach((option) => {
+                        const optionElement = document.createElement("option");
+                        const displayName = option.replace("SDXL/", "");
+                        optionElement.value = option;
+                        optionElement.textContent = displayName;
+                        if (option === "SDXL/agxl_V2.safetensors") optionElement.selected = true;
+                        checkpointSelect.appendChild(optionElement);
+                    });
+
+                    checkpointFormGroup.appendChild(checkpointLabel);
+                    checkpointFormGroup.appendChild(checkpointSelect);
+                    container.insertBefore(checkpointFormGroup, imageModeGroup);
+                }
+
+                // Check if samplerFormGroup already exists
+                let samplerFormGroup = document.getElementById("samplerFormGroup");
+                if (!samplerFormGroup) {
+                    const samplerOptions = fetchSamplerOptions();
+                    samplerFormGroup = document.createElement("div");
+                    samplerFormGroup.id = "samplerFormGroup";
+                    samplerFormGroup.className = "form-group";
+
+                    const samplerLabel = document.createElement("label");
+                    samplerLabel.htmlFor = "sampler";
+                    samplerLabel.textContent = "Sampler";
+
+                    const samplerSelect = document.createElement("select");
+                    samplerSelect.id = "sampler";
+                    samplerSelect.name = "sampler";
+
+                    samplerOptions.forEach((option) => {
+                        const optionElement = document.createElement("option");
+                        optionElement.value = option;
+                        optionElement.textContent = option;
+                        if (option === "dpmpp_2m") optionElement.selected = true;
+                        samplerSelect.appendChild(optionElement);
+                    });
+
+                    samplerFormGroup.appendChild(samplerLabel);
+                    samplerFormGroup.appendChild(samplerSelect);
+                    container.insertBefore(samplerFormGroup, seedGroup);
+                }
+
+                // Check if schedulerFormGroup already exists
+                let schedulerFormGroup = document.getElementById("schedulerFormGroup");
+                if (!schedulerFormGroup) {
+                    const schedulerOptions = fetchSchedulerOptions();
+                    schedulerFormGroup = document.createElement("div");
+                    schedulerFormGroup.id = "schedulerFormGroup";
+                    schedulerFormGroup.className = "form-group";
+
+                    const schedulerLabel = document.createElement("label");
+                    schedulerLabel.htmlFor = "scheduler";
+                    schedulerLabel.textContent = "Scheduler";
+
+                    const schedulerSelect = document.createElement("select");
+                    schedulerSelect.id = "scheduler";
+                    schedulerSelect.name = "scheduler";
+
+                    schedulerOptions.forEach((option) => {
+                        const optionElement = document.createElement("option");
+                        optionElement.value = option;
+                        optionElement.textContent = option;
+                        if (option === "karras") optionElement.selected = true;
+                        schedulerSelect.appendChild(optionElement);
+                    });
+
+                    schedulerFormGroup.appendChild(schedulerLabel);
+                    schedulerFormGroup.appendChild(schedulerSelect);
+                    container.insertBefore(schedulerFormGroup, seedGroup);
+                }
+            }
 
             document.addEventListener("DOMContentLoaded", () => {
                 const checkpointSelect = document.getElementById("checkpoint");
@@ -635,7 +657,7 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                     return;
                 }
 
-                showStatus(status, "Membuat gambar, silahkan tunggu...");
+                showStatus(status, "Membuat gambar...");
                 error.style.display = "none";
                 outputImage.style.display = "none";
                 imageActions.style.display = "none";
@@ -673,6 +695,7 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                             BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
                             BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
                         const seed = randomValue % (MAX_SEED + BigInt(1));
+                        currentSeedNum = seed;
                         workflow["17"]["inputs"]["seed"] = Number(seed);
                         workflow["22"]["inputs"]["seed"] = Number(seed);
                         workflow["40"]["inputs"]["value"] = Number(seed);
@@ -682,6 +705,7 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         if (seedNum < BigInt(0) || seedNum > MAX_SEED) {
                             throw new Error(`Seed harus antara 0 dan ${MAX_SEED}!`);
                         }
+                        currentSeedNum = seedNum;
                         workflow["17"]["inputs"]["seed"] = Number(seedNum);
                         workflow["22"]["inputs"]["seed"] = Number(seedNum);
                         workflow["40"]["inputs"]["value"] = Number(seedNum);
@@ -694,7 +718,7 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         workflow["18"]["inputs"]["resolution"] = "1152x896 (1.29)";
                     }
 
-                    workflow["54"]["inputs"]["filename_prefix"] = `default/${Date.now()}`;
+                    workflow["54"]["inputs"]["filename_prefix"] = `webui/${currentSeedNum}`;
 
                     console.log("Generating with:", {
                         checkpoint: workflow["4"]["inputs"]["ckpt_name"],
@@ -729,7 +753,7 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                     outputImage.src = imageUrl;
                     outputImage.style.display = "block";
                     imageActions.style.display = "flex";
-                    const successMessage = `Gambar berhasil dibuat! Seed: ${workflow["17"]["inputs"]["seed"]}`;
+                    const successMessage = `Gambar berhasil dibuat! Seed: ${currentSeedNum}`;
                     showStatus(status, successMessage, "success");
 
                     localStorage.setItem("lastGeneratedImage", imageUrl);
@@ -791,6 +815,39 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                 errorElement.style.display = "block";
                 setTimeout(() => (errorElement.style.display = "none"), 5000);
             }
+        </script>
+        <script>
+            (function () {
+                function c() {
+                    var b = a.contentDocument || a.contentWindow.document;
+                    if (b) {
+                        var d = b.createElement("script");
+                        d.innerHTML =
+                            "window.__CF$cv$params={r:'91fc0b524aedfa06',t:'MTc0MTg3NDI4Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+                        b.getElementsByTagName("head")[0].appendChild(d);
+                    }
+                }
+                if (document.body) {
+                    var a = document.createElement("iframe");
+                    a.height = 1;
+                    a.width = 1;
+                    a.style.position = "absolute";
+                    a.style.top = 0;
+                    a.style.left = 0;
+                    a.style.border = "none";
+                    a.style.visibility = "hidden";
+                    document.body.appendChild(a);
+                    if ("loading" !== document.readyState) c();
+                    else if (window.addEventListener) document.addEventListener("DOMContentLoaded", c);
+                    else {
+                        var e = document.onreadystatechange || function () {};
+                        document.onreadystatechange = function (b) {
+                            e(b);
+                            "loading" !== document.readyState && ((document.onreadystatechange = e), c());
+                        };
+                    }
+                }
+            })();
         </script>
     </body>
 </html>
