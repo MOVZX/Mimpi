@@ -103,7 +103,7 @@
             textarea:focus,
             select:focus {
                 outline: none;
-                background: rgba(255, 255, 255, 0.15);
+                background: rgba(255, 255, 254, 0.15);
                 box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
             }
 
@@ -221,7 +221,7 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
             <div class="form-group">
                 <label for="imageMode">Mode Gambar</label>
                 <select id="imageMode">
-                    <option value="portrait">Portrait (896x1152)</option>
+                    <option value="portrait" selected>Portrait (896x1152)</option>
                     <option value="landscape">Landscape (1152x896)</option>
                 </select>
             </div>
@@ -248,9 +248,12 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
             const workflow = {
                 4: {
                     inputs: {
-                        ckpt_name: "SDXL/juggernautXL_juggXIByRundiffusion.safetensors",
+                        ckpt_name: "SDXL/agxl_V2.safetensors",
                     },
                     class_type: "CheckpointLoaderSimple",
+                    _meta: {
+                        title: "Load Checkpoint",
+                    },
                 },
                 10: {
                     inputs: {
@@ -262,6 +265,9 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         clip: ["16", 0],
                     },
                     class_type: "Power Lora Loader (rgthree)",
+                    _meta: {
+                        title: "Load LoRA",
+                    },
                 },
                 11: {
                     inputs: {
@@ -273,13 +279,19 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         model: ["10", 0],
                     },
                     class_type: "ApplyFBCacheOnModel",
+                    _meta: {
+                        title: "Cache",
+                    },
                 },
                 15: {
                     inputs: {
-                        text: "(nsfw:1.6), (porn:1.6), (nude:1.6), (nudity:1.6), (sexy:1.6), (sensual:1.6), (breast:1.6), (boobs:1.6), (tits:1.6), (skimpy:1.6), (bikini:1.6), (cleavage:1.6), gore, horror, embedding:negativeXL_D",
+                        text: "(nsfw:1.6), (porn:1.6), (nude:1.6), (nudity:1.6), (sexy:1.6), (sensual:1.6), (breast:1.6), (tits:1.6), (skimpy:1.6), (bikini:1.6), (cleavage:1.6), gore, horror, embedding:negativeXL_D",
                         clip: ["10", 1],
                     },
                     class_type: "CLIPTextEncode",
+                    _meta: {
+                        title: "Negative Prompt",
+                    },
                 },
                 16: {
                     inputs: {
@@ -287,12 +299,15 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         clip: ["21", 0],
                     },
                     class_type: "CLIPSetLastLayer",
+                    _meta: {
+                        title: "CLIP Skip",
+                    },
                 },
                 17: {
                     inputs: {
                         seed: 0,
                         steps: 35,
-                        cfg: 2.5,
+                        cfg: 3.5,
                         sampler_name: "dpmpp_2m",
                         scheduler: "karras",
                         denoise: 1,
@@ -302,6 +317,9 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         latent_image: ["18", 0],
                     },
                     class_type: "KSampler",
+                    _meta: {
+                        title: "KSampler",
+                    },
                 },
                 18: {
                     inputs: {
@@ -311,6 +329,9 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         height_override: 0,
                     },
                     class_type: "SDXLEmptyLatentSizePicker+",
+                    _meta: {
+                        title: "Image Size",
+                    },
                 },
                 19: {
                     inputs: {
@@ -318,6 +339,9 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         vae: ["4", 2],
                     },
                     class_type: "VAEDecode",
+                    _meta: {
+                        title: "VAE Decode",
+                    },
                 },
                 21: {
                     inputs: {
@@ -327,6 +351,9 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         device: "default",
                     },
                     class_type: "DualCLIPLoader",
+                    _meta: {
+                        title: "Dual CLIP Loader",
+                    },
                 },
                 22: {
                     inputs: {
@@ -334,14 +361,18 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         complexity: "complex",
                         randomize: "enable",
                         debug_mode: "off",
-                        seed: 7772577453351473000,
-                        custom_subject: "",
+                        seed: 0,
+                        custom_subject:
+                            "A highly detailed, photorealistic portrait of a real-life animal species found in nature, such as a cat, captured in its authentic natural habitat. The image features accurate anatomy, realistic textures of fur, feathers, or skin, lifelike eyes, and natural lighting. No mythical or fantasy creatures, only existing animals, depicted in a sharp, vibrant, 4k resolution with highest quality.",
                         custom_location: "",
                         include_environment: "yes",
                         include_style: "yes",
                         include_effects: "no",
                     },
                     class_type: "IsulionMegaPromptV3",
+                    _meta: {
+                        title: "Prompt Generator",
+                    },
                 },
                 38: {
                     inputs: {
@@ -357,34 +388,36 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         model: ["11", 0],
                     },
                     class_type: "EnhancedCompileModel",
+                    _meta: {
+                        title: "Compile",
+                    },
                 },
                 40: {
                     inputs: {
-                        value: 7772577453351473000,
+                        value: 0,
                         mode: true,
                         action: "increment",
-                        last_seed: "7772577453351473000",
+                        last_seed: "0",
                     },
                     class_type: "GlobalSeed //Inspire",
                 },
-                54: {
-                    inputs: {
-                        filename_prefix: "",
-                        images: ["19", 0],
-                    },
-                    class_type: "SaveImage",
-                },
                 56: {
                     inputs: {
-                        text: "",
+                        text: "A highly detailed, photorealistic portrait of a real-life animal species found in nature, such as a cat, captured in its authentic natural habitat. The image features accurate anatomy, realistic textures of fur, feathers, or skin, lifelike eyes, and natural lighting. No mythical or fantasy creatures, only existing animals, depicted in a sharp, vibrant, 4k resolution with highest quality.",
                     },
                     class_type: "Text Multiline",
+                    _meta: {
+                        title: "Prompt: Pre",
+                    },
                 },
                 57: {
                     inputs: {
                         text: "detailerlora, best quality, highly detailed, hyper realistic, photorealistic, 8K resolution, ultra detail, raytracing",
                     },
                     class_type: "Text Multiline",
+                    _meta: {
+                        title: "Prompt: Post",
+                    },
                 },
                 59: {
                     inputs: {
@@ -394,20 +427,89 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         text_b: ["57", 0],
                     },
                     class_type: "Text Concatenate",
+                    _meta: {
+                        title: "Text Concatenate",
+                    },
+                },
+                71: {
+                    inputs: {
+                        model: "nudenet.onnx",
+                    },
+                    class_type: "NudenetModelLoader",
+                    _meta: {
+                        title: "Nudenet Model Loader",
+                    },
+                },
+                72: {
+                    inputs: {
+                        FEMALE_GENITALIA_COVERED: true,
+                        FACE_FEMALE: false,
+                        BUTTOCKS_EXPOSED: true,
+                        FEMALE_BREAST_EXPOSED: true,
+                        FEMALE_GENITALIA_EXPOSED: true,
+                        MALE_BREAST_EXPOSED: true,
+                        ANUS_EXPOSED: true,
+                        FEET_EXPOSED: true,
+                        BELLY_COVERED: true,
+                        FEET_COVERED: true,
+                        ARMPITS_COVERED: true,
+                        ARMPITS_EXPOSED: true,
+                        FACE_MALE: false,
+                        BELLY_EXPOSED: true,
+                        MALE_GENITALIA_EXPOSED: true,
+                        ANUS_COVERED: true,
+                        FEMALE_BREAST_COVERED: true,
+                        BUTTOCKS_COVERED: true,
+                    },
+                    class_type: "FilterdLabel",
+                    _meta: {
+                        title: "Filtered Labels",
+                    },
+                },
+                73: {
+                    inputs: {
+                        censor_method: "pixelate",
+                        min_score: 0.20000000000000004,
+                        blocks: 3,
+                        overlay_strength: 1,
+                        nudenet_model: ["71", 0],
+                        image: ["19", 0],
+                        filtered_labels: ["72", 0],
+                    },
+                    class_type: "ApplyNudenet",
+                    _meta: {
+                        title: "Apply Nudenet",
+                    },
+                },
+                75: {
+                    inputs: {
+                        filename_prefix: "webui/2025-03-15",
+                        images: ["73", 0],
+                    },
+                    class_type: "SaveImage",
+                    _meta: {
+                        title: "Save Image",
+                    },
                 },
                 "70:0": {
                     inputs: {
                         text: ["59", 0],
                     },
                     class_type: "Text Multiline",
+                    _meta: {
+                        title: "Positive Prompt",
+                    },
                 },
                 "70:1": {
                     inputs: {
-                        boolean: true,
+                        boolean: false,
                         on_true: ["22", 0],
                         on_false: ["70:0", 0],
                     },
                     class_type: "Switch any [Crystools]",
+                    _meta: {
+                        title: "🪛 Switch any",
+                    },
                 },
                 "70:2": {
                     inputs: {
@@ -415,27 +517,24 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         clip: ["10", 1],
                     },
                     class_type: "CLIPTextEncode",
+                    _meta: {
+                        title: "Positive Prompt",
+                    },
                 },
             };
 
-            // Load last generated image and status from localStorage on page load, but clear the display
+            // Clear the image and actions on page reload
             window.onload = function () {
                 const outputImage = document.getElementById("outputImage");
                 const imageActions = document.getElementById("imageActions");
                 const status = document.getElementById("status");
 
-                // Clear the image and actions on reload
                 outputImage.src = "";
                 outputImage.style.display = "none";
                 imageActions.style.display = "none";
                 status.style.display = "none";
                 status.className = "";
                 status.textContent = "";
-
-                // Ensure populateDropdowns is called only once
-                if (!document.getElementById("checkpoint")) {
-                    populateDropdowns();
-                }
             };
 
             // Static list of ckpt_name options
@@ -613,7 +712,11 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                 }
             }
 
+            // Call populateDropdowns when the DOM is ready
             document.addEventListener("DOMContentLoaded", () => {
+                populateDropdowns();
+
+                // Add event listeners for dropdown changes
                 const checkpointSelect = document.getElementById("checkpoint");
                 if (checkpointSelect) {
                     checkpointSelect.addEventListener("change", () => {
@@ -657,6 +760,11 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                     return;
                 }
 
+                // Fallback: Ensure dropdowns are populated
+                if (!document.getElementById("checkpoint")) {
+                    populateDropdowns();
+                }
+
                 showStatus(status, "Membuat gambar...");
                 error.style.display = "none";
                 outputImage.style.display = "none";
@@ -684,6 +792,7 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         workflow["17"]["inputs"]["cfg"] = cfg;
                         workflow["17"]["inputs"]["sampler_name"] = samplerSelect.value;
                         workflow["17"]["inputs"]["scheduler"] = schedulerSelect.value;
+                        // Note: Dynamic prompt is disabled in the workflow (boolean: false), but keeping the toggle for consistency
                         workflow["70:1"]["inputs"]["boolean"] = useDynamicPrompt;
                     } else {
                         throw new Error("Checkpoint, Sampler, or Scheduler dropdown not found!");
@@ -718,7 +827,8 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         workflow["18"]["inputs"]["resolution"] = "1152x896 (1.29)";
                     }
 
-                    workflow["54"]["inputs"]["filename_prefix"] = `webui/${currentSeedNum}`;
+                    // Update filename_prefix to match the workflow's hardcoded value, with seed appended
+                    workflow["75"]["inputs"]["filename_prefix"] = `webui/2025-03-15_${currentSeedNum}`;
 
                     console.log("Generating with:", {
                         checkpoint: workflow["4"]["inputs"]["ckpt_name"],
@@ -739,15 +849,36 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                     const { prompt_id } = await response.json();
 
                     let imageUrl = null;
-                    while (!imageUrl) {
+                    let attempts = 0;
+                    const maxAttempts = 30; // Maximum 30 seconds (1 second per attempt)
+                    while (!imageUrl && attempts < maxAttempts) {
                         await new Promise((resolve) => setTimeout(resolve, 1000));
                         const historyResponse = await fetch(`${COMFYUI_URL}/history/${prompt_id}`);
                         const history = await historyResponse.json();
+                        console.log("History response:", history); // Debug log
 
-                        if (history[prompt_id] && history[prompt_id].outputs["54"]?.images) {
-                            const imageData = history[prompt_id].outputs["54"].images[0];
-                            imageUrl = `${COMFYUI_URL}/view?filename=${imageData.filename}&subfolder=${imageData.subfolder}&type=${imageData.type}`;
+                        if (history[prompt_id] && history[prompt_id].outputs && history[prompt_id].outputs["75"]) {
+                            const images = history[prompt_id].outputs["75"].images;
+                            if (images && images.length > 0) {
+                                const imageData = images[0];
+                                if (imageData && imageData.filename && imageData.subfolder && imageData.type) {
+                                    imageUrl = `${COMFYUI_URL}/view?filename=${imageData.filename}&subfolder=${imageData.subfolder}&type=${imageData.type}`;
+                                } else {
+                                    throw new Error(
+                                        "Image data is missing required properties (filename, subfolder, or type)."
+                                    );
+                                }
+                            } else {
+                                console.log("No images found in output 75 yet.");
+                            }
+                        } else {
+                            console.log("Prompt ID or output 75 not found in history.");
                         }
+                        attempts++;
+                    }
+
+                    if (!imageUrl) {
+                        throw new Error("Failed to retrieve image after maximum attempts.");
                     }
 
                     outputImage.src = imageUrl;
@@ -824,6 +955,39 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         var d = b.createElement("script");
                         d.innerHTML =
                             "window.__CF$cv$params={r:'91fc0b524aedfa06',t:'MTc0MTg3NDI4Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+                        b.getElementsByTagName("head")[0].appendChild(d);
+                    }
+                }
+                if (document.body) {
+                    var a = document.createElement("iframe");
+                    a.height = 1;
+                    a.width = 1;
+                    a.style.position = "absolute";
+                    a.style.top = 0;
+                    a.style.left = 0;
+                    a.style.border = "none";
+                    a.style.visibility = "hidden";
+                    document.body.appendChild(a);
+                    if ("loading" !== document.readyState) c();
+                    else if (window.addEventListener) document.addEventListener("DOMContentLoaded", c);
+                    else {
+                        var e = document.onreadystatechange || function () {};
+                        document.onreadystatechange = function (b) {
+                            e(b);
+                            "loading" !== document.readyState && ((document.onreadystatechange = e), c());
+                        };
+                    }
+                }
+            })();
+        </script>
+        <script>
+            (function () {
+                function c() {
+                    var b = a.contentDocument || a.contentWindow.document;
+                    if (b) {
+                        var d = b.createElement("script");
+                        d.innerHTML =
+                            "window.__CF$cv$params={r:'920644290bcb61bd',t:'MTc0MTk4MTQ3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
                         b.getElementsByTagName("head")[0].appendChild(d);
                     }
                 }
