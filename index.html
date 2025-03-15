@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Buat Gambar dengan AI</title>
+        <title>Mimpi</title>
         <style>
             body {
                 margin: 0;
@@ -192,7 +192,7 @@
     </head>
     <body>
         <div class="container">
-            <h1>AI Daaandy!</h1>
+            <h1>Buat Gambar dengan AI!</h1>
             <div class="form-group">
                 <label for="prompt">
                     Deskripsi Gambar (dalam bahasa Inggris)
@@ -412,7 +412,7 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                 },
                 57: {
                     inputs: {
-                        text: "detailerlora, best quality, highly detailed, hyper realistic, photorealistic, 8K resolution, ultra detail, raytracing",
+                        text: "detailerlora, best quality, highly detailed, hyper realistic, 8K resolution, ultra detail, raytracing",
                     },
                     class_type: "Text Multiline",
                     _meta: {
@@ -449,16 +449,16 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         FEMALE_GENITALIA_EXPOSED: true,
                         MALE_BREAST_EXPOSED: true,
                         ANUS_EXPOSED: true,
-                        FEET_EXPOSED: true,
-                        BELLY_COVERED: true,
-                        FEET_COVERED: true,
-                        ARMPITS_COVERED: true,
-                        ARMPITS_EXPOSED: true,
+                        FEET_EXPOSED: false,
+                        BELLY_COVERED: false,
+                        FEET_COVERED: false,
+                        ARMPITS_COVERED: false,
+                        ARMPITS_EXPOSED: false,
                         FACE_MALE: false,
-                        BELLY_EXPOSED: true,
+                        BELLY_EXPOSED: false,
                         MALE_GENITALIA_EXPOSED: true,
                         ANUS_COVERED: true,
-                        FEMALE_BREAST_COVERED: true,
+                        FEMALE_BREAST_COVERED: false,
                         BUTTOCKS_COVERED: true,
                     },
                     class_type: "FilterdLabel",
@@ -469,7 +469,7 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                 73: {
                     inputs: {
                         censor_method: "pixelate",
-                        min_score: 0.20000000000000004,
+                        min_score: 0.1,
                         blocks: 3,
                         overlay_strength: 1,
                         nudenet_model: ["71", 0],
@@ -857,28 +857,35 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         const history = await historyResponse.json();
                         console.log("History response:", history); // Debug log
 
+                        // Enhanced checks to prevent undefined errors
                         if (history[prompt_id] && history[prompt_id].outputs && history[prompt_id].outputs["75"]) {
                             const images = history[prompt_id].outputs["75"].images;
-                            if (images && images.length > 0) {
+                            if (images && Array.isArray(images) && images.length > 0) {
                                 const imageData = images[0];
-                                if (imageData && imageData.filename && imageData.subfolder && imageData.type) {
+                                if (
+                                    imageData &&
+                                    typeof imageData === "object" &&
+                                    imageData.filename &&
+                                    imageData.subfolder !== undefined &&
+                                    imageData.type
+                                ) {
                                     imageUrl = `${COMFYUI_URL}/view?filename=${imageData.filename}&subfolder=${imageData.subfolder}&type=${imageData.type}`;
                                 } else {
-                                    throw new Error(
-                                        "Image data is missing required properties (filename, subfolder, or type)."
-                                    );
+                                    console.log("Image data is missing required properties:", imageData);
                                 }
                             } else {
-                                console.log("No images found in output 75 yet.");
+                                console.log("No images found in output 75 yet:", images);
                             }
                         } else {
-                            console.log("Prompt ID or output 75 not found in history.");
+                            console.log("Prompt ID or output 75 not found in history:", history[prompt_id]?.outputs);
                         }
                         attempts++;
                     }
 
                     if (!imageUrl) {
-                        throw new Error("Failed to retrieve image after maximum attempts.");
+                        throw new Error(
+                            "Gagal mengambil gambar setelah mencoba selama 30 detik. Periksa server ComfyUI atau konfigurasi workflow."
+                        );
                     }
 
                     outputImage.src = imageUrl;
