@@ -188,26 +188,84 @@
             .image-actions button.preview {
                 background: linear-gradient(45deg, #ff00ff, #00d4ff);
             }
+
+            /* Custom styles for the expandable section */
+            details {
+                margin-bottom: 20px;
+            }
+
+            summary {
+                cursor: pointer;
+                padding: 10px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                color: #00d4ff;
+                font-weight: bold;
+                transition: all 0.3s ease;
+            }
+
+            summary:hover {
+                background: rgba(255, 255, 255, 0.15);
+                box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+            }
+
+            details[open] summary {
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+
+            details > div {
+                padding: 10px;
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 0 0 8px 8px;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
         </style>
     </head>
     <body>
         <div class="container">
-            <h1>Buat Gambar dengan AI!</h1>
+            <h1>Mimpi</h1>
             <div class="form-group">
                 <label for="prompt">
                     Deskripsi Gambar (dalam bahasa Inggris)
                     <span style="color: #aaa; font-weight: normal"></span>
                 </label>
-                <textarea id="prompt" required rows="5">
-A highly detailed, photorealistic portrait of a real-life animal species found in nature, such as a cat, captured in its authentic natural habitat. The image features accurate anatomy, realistic textures of fur, feathers, or skin, lifelike eyes, and natural lighting. No mythical or fantasy creatures, only existing animals, depicted in a sharp, vibrant, 4k resolution with highest quality.</textarea
+                <textarea id="prompt" required rows="13">
+A highly detailed, real-life photo of a cute cat. The image features accurate anatomy, realistic textures of fur, feathers, or skin, lifelike eyes, and natural lighting. No mythical or fantasy creatures, only existing animals, depicted in a sharp, vibrant, 4k resolution with highest quality.</textarea
                 >
             </div>
             <div class="checkbox-group">
                 <div class="checkbox-wrapper">
                     <input type="checkbox" id="useDynamicPrompt" />
                 </div>
-                <label for="useDynamicPrompt">Gunakan Prompt Generator</label>
+                <label for="useDynamicPrompt">Acak tema, gaya, dan lokasi?</label>
             </div>
+            <!-- Expandable "Opsi Tingkat Lanjut" Section -->
+            <details>
+                <summary>Opsi Tingkat Lanjut</summary>
+                <div>
+                    <div class="form-group">
+                        <label for="imageMode">Mode Gambar</label>
+                        <select id="imageMode">
+                            <option value="portrait" selected>Portrait (896x1152)</option>
+                            <option value="landscape">Landscape (1152x896)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="steps">Steps <span style="color: #aaa; font-weight: normal">(1-10)</span></label>
+                        <input type="number" id="steps" min="1" max="10" value="8" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="cfg"> CFG <span style="color: #aaa; font-weight: normal">(1-5)</span> </label>
+                        <input type="number" id="cfg" min="1" max="5" step="0.5" value="2" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="seed">Seed <span style="color: #aaa; font-weight: normal">(angka)</span></label>
+                        <input type="text" id="seed" placeholder="" value="-1" />
+                    </div>
+                    <!-- Dynamically populated dropdowns will be inserted here by populateDropdowns() -->
+                </div>
+            </details>
             <button onclick="generateImage()">Buat Gambar</button>
             <p id="status"></p>
             <p id="error"></p>
@@ -215,29 +273,6 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
             <div class="image-actions" id="imageActions">
                 <button onclick="downloadImage()">Download</button>
                 <button class="preview" onclick="previewImage()">Preview</button>
-            </div>
-            <p> </p>
-            <h2>Opsi Tingkat Lanjut</h2>
-            <div class="form-group">
-                <label for="imageMode">Mode Gambar</label>
-                <select id="imageMode">
-                    <option value="portrait" selected>Portrait (896x1152)</option>
-                    <option value="landscape">Landscape (1152x896)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="steps">Steps <span style="color: #aaa; font-weight: normal">(1-100)</span></label>
-                <input type="number" id="steps" min="1" max="100" value="35" required />
-            </div>
-            <div class="form-group">
-                <label for="cfg">
-                    CFG <span style="color: #aaa; font-weight: normal">(Saran: 2-7.5, Default: 2.5)</span>
-                </label>
-                <input type="number" id="cfg" min="1" max="30" step="0.5" value="3.5" required />
-            </div>
-            <div class="form-group">
-                <label for="seed">Seed <span style="color: #aaa; font-weight: normal">(angka)</span></label>
-                <input type="text" id="seed" placeholder="" value="-1" />
             </div>
         </div>
 
@@ -248,7 +283,7 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
             const workflow = {
                 4: {
                     inputs: {
-                        ckpt_name: "SDXL/agxl_V2.safetensors",
+                        ckpt_name: "SDXL-Lightning/realvisxlV50_v50LightningBakedvae.safetensors",
                     },
                     class_type: "CheckpointLoaderSimple",
                     _meta: {
@@ -260,9 +295,14 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         PowerLoraLoaderHeaderWidget: {
                             type: "PowerLoraLoaderHeaderWidget",
                         },
+                        lora_1: {
+                            on: true,
+                            lora: "SDXL/detailer_v5.safetensors",
+                            strength: 1,
+                        },
                         "➕ Add Lora": "",
                         model: ["4", 0],
-                        clip: ["16", 0],
+                        clip: ["21", 0],
                     },
                     class_type: "Power Lora Loader (rgthree)",
                     _meta: {
@@ -285,8 +325,8 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                 },
                 15: {
                     inputs: {
-                        text: "(nsfw:1.6), (porn:1.6), (nude:1.6), (nudity:1.6), (sexy:1.6), (sensual:1.6), (breast:1.6), (tits:1.6), (skimpy:1.6), (bikini:1.6), (cleavage:1.6), gore, horror, embedding:negativeXL_D",
-                        clip: ["10", 1],
+                        text: "(nsfw:1.6), (porn:1.6), (nude:1.6), (nudity:1.6), (sexy:1.6), (sensual:1.6), (breast:1.6), (tits:1.6), (skimpy:1.6), (bikini:1.6), (cleavage:1.6), gore, horror, simple background, embedding:negativeXL_D",
+                        clip: ["16", 0],
                     },
                     class_type: "CLIPTextEncode",
                     _meta: {
@@ -296,7 +336,7 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                 16: {
                     inputs: {
                         stop_at_clip_layer: -2,
-                        clip: ["21", 0],
+                        clip: ["10", 1],
                     },
                     class_type: "CLIPSetLastLayer",
                     _meta: {
@@ -306,10 +346,10 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                 17: {
                     inputs: {
                         seed: 0,
-                        steps: 35,
-                        cfg: 3.5,
-                        sampler_name: "dpmpp_2m",
-                        scheduler: "karras",
+                        steps: 8,
+                        cfg: 2,
+                        sampler_name: "euler",
+                        scheduler: "simple",
                         denoise: 1,
                         model: ["38", 0],
                         positive: ["70:2", 0],
@@ -361,9 +401,9 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         complexity: "complex",
                         randomize: "enable",
                         debug_mode: "off",
-                        seed: 0,
+                        seed: 0, // Will be set dynamically in generateImage()
                         custom_subject:
-                            "A highly detailed, photorealistic portrait of a real-life animal species found in nature, such as a cat, captured in its authentic natural habitat. The image features accurate anatomy, realistic textures of fur, feathers, or skin, lifelike eyes, and natural lighting. No mythical or fantasy creatures, only existing animals, depicted in a sharp, vibrant, 4k resolution with highest quality.",
+                            "A highly detailed, real-life photo of a cute cat. The image features accurate anatomy, realistic textures of fur, feathers, or skin, lifelike eyes, and natural lighting. No mythical or fantasy creatures, only existing animals, depicted in a sharp, vibrant, 4k resolution with highest quality.",
                         custom_location: "",
                         include_environment: "yes",
                         include_style: "yes",
@@ -392,18 +432,9 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         title: "Compile",
                     },
                 },
-                40: {
-                    inputs: {
-                        value: 0,
-                        mode: true,
-                        action: "increment",
-                        last_seed: "0",
-                    },
-                    class_type: "GlobalSeed //Inspire",
-                },
                 56: {
                     inputs: {
-                        text: "A highly detailed, photorealistic portrait of a real-life animal species found in nature, such as a cat, captured in its authentic natural habitat. The image features accurate anatomy, realistic textures of fur, feathers, or skin, lifelike eyes, and natural lighting. No mythical or fantasy creatures, only existing animals, depicted in a sharp, vibrant, 4k resolution with highest quality.",
+                        text: "A highly detailed, real-life photo of a cute cat. The image features accurate anatomy, realistic textures of fur, feathers, or skin, lifelike eyes, and natural lighting. No mythical or fantasy creatures, only existing animals, depicted in a sharp, vibrant, 4k resolution with highest quality.",
                     },
                     class_type: "Text Multiline",
                     _meta: {
@@ -455,7 +486,7 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         ARMPITS_COVERED: false,
                         ARMPITS_EXPOSED: false,
                         FACE_MALE: false,
-                        BELLY_EXPOSED: false,
+                        BELLY_EXPOSED: true,
                         MALE_GENITALIA_EXPOSED: true,
                         ANUS_COVERED: true,
                         FEMALE_BREAST_COVERED: false,
@@ -483,7 +514,7 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                 },
                 75: {
                     inputs: {
-                        filename_prefix: "webui/2025-03-15",
+                        filename_prefix: "", // Will be set dynamically in generateImage()
                         images: ["73", 0],
                     },
                     class_type: "SaveImage",
@@ -514,7 +545,7 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                 "70:2": {
                     inputs: {
                         text: ["70:1", 0],
-                        clip: ["10", 1],
+                        clip: ["16", 0],
                     },
                     class_type: "CLIPTextEncode",
                     _meta: {
@@ -540,88 +571,38 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
             // Static list of ckpt_name options
             function fetchCheckpointOptions() {
                 const baseCheckpoints = [
-                    "agxl_V2.safetensors",
-                    "boomerArtModelBAM_bamV2.safetensors",
-                    "clarityXL_v20.safetensors",
-                    "cyberrealisticXL_v5.safetensors",
-                    "dreamshaperXL_v21TurboDPMSDE.safetensors",
-                    "epicrealismXL_vxvAnewstoryRealism.safetensors",
-                    "fasercore_xlV1.safetensors",
-                    "juggernautXL_juggXIByRundiffusion.safetensors",
-                    "leosamsHelloworldXL_helloworldXL70.safetensors",
-                    "msSDXLRealV3_v3.safetensors",
-                    "novaRealityXL_v70.safetensors",
-                    "perfectionRealisticILXL_v10.safetensors",
-                    "polyhedronSDXL_v3.safetensors",
-                    "realisticStockPhoto_v20.safetensors",
-                    "realvisxlV50_v50Bakedvae.safetensors",
-                    "stoiqoNewrealityFLUXSD35_XLPRO.safetensors",
+                    "agxl_LightningV10.safetensors",
+                    "dreamshaperXL_lightningDPMSDE.safetensors",
+                    "Epicrealismxl_Hades.safetensors",
+                    "jibMixRealisticXL_v10Lightning46Step.safetensors",
+                    "juggernautXL_v9Rdphoto2Lightning.safetensors",
+                    "realvisxlV50_v50LightningBakedvae.safetensors",
                 ];
-                return baseCheckpoints.map((ckpt) => `SDXL/${ckpt}`);
+                return baseCheckpoints.map((ckpt) => `SDXL-Lightning/${ckpt}`);
             }
 
             // Static list of sampler options
             function fetchSamplerOptions() {
                 return [
                     "euler",
-                    "euler_cfg_pp",
                     "euler_ancestral",
-                    "euler_ancestral_cfg_pp",
-                    "heun",
-                    "heunpp2",
-                    "dpm_2",
-                    "dpm_2_ancestral",
-                    "lms",
-                    "dpm_fast",
-                    "dpm_adaptive",
-                    "dpmpp_2s_ancestral",
-                    "dpmpp_2s_ancestral_cfg_pp",
                     "dpmpp_sde",
-                    "dpmpp_sde_gpu",
                     "dpmpp_2m",
-                    "dpmpp_2m_cfg_pp",
                     "dpmpp_2m_sde",
-                    "dpmpp_2m_sde_gpu",
                     "dpmpp_3m_sde",
-                    "dpmpp_3m_sde_gpu",
-                    "ddpm",
-                    "lcm",
-                    "ipndm",
-                    "ipndm_v",
-                    "deis",
                     "res_multistep",
-                    "res_multistep_cfg_pp",
-                    "res_multistep_ancestral",
-                    "res_multistep_ancestral_cfg_pp",
-                    "gradient_estimation",
-                    "er_sde",
-                    "ddim",
-                    "uni_pc",
-                    "uni_pc_bh2",
                 ];
             }
 
             // Static list of scheduler options
             function fetchSchedulerOptions() {
-                return [
-                    "normal",
-                    "karras",
-                    "exponential",
-                    "sgm_uniform",
-                    "simple",
-                    "ddim_uniform",
-                    "beta",
-                    "linear_quadratic",
-                    "kl_optimal",
-                ];
+                return ["normal", "karras", "exponential", "sgm_uniform", "simple", "beta"];
             }
 
             // Populate checkpoint, sampler, and scheduler select elements
             function populateDropdowns() {
                 const container = document.querySelector(".container");
-                const imageModeGroup = document.querySelector("#imageMode").parentElement;
-                const cfgGroup = document.querySelector("#cfg").parentElement;
-                const seedGroup = document.querySelector("#seed").parentElement;
+                const detailsContent = container.querySelector("details > div"); // Target the div inside details
 
                 // Check if checkpointFormGroup already exists
                 let checkpointFormGroup = document.getElementById("checkpointFormGroup");
@@ -641,16 +622,17 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
 
                     checkpointOptions.forEach((option) => {
                         const optionElement = document.createElement("option");
-                        const displayName = option.replace("SDXL/", "");
+                        const displayName = option.replace("SDXL-Lightning/", "");
                         optionElement.value = option;
                         optionElement.textContent = displayName;
-                        if (option === "SDXL/agxl_V2.safetensors") optionElement.selected = true;
+                        if (option === "SDXL-Lightning/realvisxlV50_v50LightningBakedvae.safetensors")
+                            optionElement.selected = true;
                         checkpointSelect.appendChild(optionElement);
                     });
 
                     checkpointFormGroup.appendChild(checkpointLabel);
                     checkpointFormGroup.appendChild(checkpointSelect);
-                    container.insertBefore(checkpointFormGroup, imageModeGroup);
+                    detailsContent.insertBefore(checkpointFormGroup, detailsContent.firstChild); // Insert at the top
                 }
 
                 // Check if samplerFormGroup already exists
@@ -673,13 +655,13 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         const optionElement = document.createElement("option");
                         optionElement.value = option;
                         optionElement.textContent = option;
-                        if (option === "dpmpp_2m") optionElement.selected = true;
+                        if (option === "euler") optionElement.selected = true; // Updated default to match workflow
                         samplerSelect.appendChild(optionElement);
                     });
 
                     samplerFormGroup.appendChild(samplerLabel);
                     samplerFormGroup.appendChild(samplerSelect);
-                    container.insertBefore(samplerFormGroup, seedGroup);
+                    detailsContent.appendChild(samplerFormGroup); // Append after other inputs
                 }
 
                 // Check if schedulerFormGroup already exists
@@ -702,13 +684,13 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         const optionElement = document.createElement("option");
                         optionElement.value = option;
                         optionElement.textContent = option;
-                        if (option === "karras") optionElement.selected = true;
+                        if (option === "simple") optionElement.selected = true; // Updated default to match workflow
                         schedulerSelect.appendChild(optionElement);
                     });
 
                     schedulerFormGroup.appendChild(schedulerLabel);
                     schedulerFormGroup.appendChild(schedulerSelect);
-                    container.insertBefore(schedulerFormGroup, seedGroup);
+                    detailsContent.appendChild(schedulerFormGroup); // Append after sampler
                 }
             }
 
@@ -792,7 +774,6 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         workflow["17"]["inputs"]["cfg"] = cfg;
                         workflow["17"]["inputs"]["sampler_name"] = samplerSelect.value;
                         workflow["17"]["inputs"]["scheduler"] = schedulerSelect.value;
-                        // Note: Dynamic prompt is disabled in the workflow (boolean: false), but keeping the toggle for consistency
                         workflow["70:1"]["inputs"]["boolean"] = useDynamicPrompt;
                     } else {
                         throw new Error("Checkpoint, Sampler, or Scheduler dropdown not found!");
@@ -807,8 +788,6 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         currentSeedNum = seed;
                         workflow["17"]["inputs"]["seed"] = Number(seed);
                         workflow["22"]["inputs"]["seed"] = Number(seed);
-                        workflow["40"]["inputs"]["value"] = Number(seed);
-                        workflow["40"]["inputs"]["last_seed"] = Number(seed) - 1;
                     } else {
                         const seedNum = BigInt(seedInput);
                         if (seedNum < BigInt(0) || seedNum > MAX_SEED) {
@@ -817,8 +796,6 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         currentSeedNum = seedNum;
                         workflow["17"]["inputs"]["seed"] = Number(seedNum);
                         workflow["22"]["inputs"]["seed"] = Number(seedNum);
-                        workflow["40"]["inputs"]["value"] = Number(seedNum);
-                        workflow["40"]["inputs"]["last_seed"] = Number(seedNum) - 1;
                     }
 
                     if (imageMode === "portrait") {
@@ -827,8 +804,17 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                         workflow["18"]["inputs"]["resolution"] = "1152x896 (1.29)";
                     }
 
-                    // Update filename_prefix to match the workflow's hardcoded value, with seed appended
-                    workflow["75"]["inputs"]["filename_prefix"] = `webui/2025-03-15_${currentSeedNum}`;
+                    // Update filename_prefix dynamically
+                    const formatDateISO = (date) => {
+                        const isoString = date.toISOString();
+                        const formattedDate = isoString.split("T")[0];
+                        return formattedDate;
+                    };
+
+                    const currentDate = new Date();
+                    const formattedDate = formatDateISO(currentDate);
+
+                    workflow["75"]["inputs"]["filename_prefix"] = `webui/${formattedDate}/${currentSeedNum}`;
 
                     console.log("Generating with:", {
                         checkpoint: workflow["4"]["inputs"]["ckpt_name"],
@@ -850,14 +836,13 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
 
                     let imageUrl = null;
                     let attempts = 0;
-                    const maxAttempts = 30; // Maximum 30 seconds (1 second per attempt)
+                    const maxAttempts = 30;
                     while (!imageUrl && attempts < maxAttempts) {
                         await new Promise((resolve) => setTimeout(resolve, 1000));
                         const historyResponse = await fetch(`${COMFYUI_URL}/history/${prompt_id}`);
                         const history = await historyResponse.json();
-                        console.log("History response:", history); // Debug log
+                        console.log("History response:", history);
 
-                        // Enhanced checks to prevent undefined errors
                         if (history[prompt_id] && history[prompt_id].outputs && history[prompt_id].outputs["75"]) {
                             const images = history[prompt_id].outputs["75"].images;
                             if (images && Array.isArray(images) && images.length > 0) {
@@ -953,72 +938,6 @@ A highly detailed, photorealistic portrait of a real-life animal species found i
                 errorElement.style.display = "block";
                 setTimeout(() => (errorElement.style.display = "none"), 5000);
             }
-        </script>
-        <script>
-            (function () {
-                function c() {
-                    var b = a.contentDocument || a.contentWindow.document;
-                    if (b) {
-                        var d = b.createElement("script");
-                        d.innerHTML =
-                            "window.__CF$cv$params={r:'91fc0b524aedfa06',t:'MTc0MTg3NDI4Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
-                        b.getElementsByTagName("head")[0].appendChild(d);
-                    }
-                }
-                if (document.body) {
-                    var a = document.createElement("iframe");
-                    a.height = 1;
-                    a.width = 1;
-                    a.style.position = "absolute";
-                    a.style.top = 0;
-                    a.style.left = 0;
-                    a.style.border = "none";
-                    a.style.visibility = "hidden";
-                    document.body.appendChild(a);
-                    if ("loading" !== document.readyState) c();
-                    else if (window.addEventListener) document.addEventListener("DOMContentLoaded", c);
-                    else {
-                        var e = document.onreadystatechange || function () {};
-                        document.onreadystatechange = function (b) {
-                            e(b);
-                            "loading" !== document.readyState && ((document.onreadystatechange = e), c());
-                        };
-                    }
-                }
-            })();
-        </script>
-        <script>
-            (function () {
-                function c() {
-                    var b = a.contentDocument || a.contentWindow.document;
-                    if (b) {
-                        var d = b.createElement("script");
-                        d.innerHTML =
-                            "window.__CF$cv$params={r:'920644290bcb61bd',t:'MTc0MTk4MTQ3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
-                        b.getElementsByTagName("head")[0].appendChild(d);
-                    }
-                }
-                if (document.body) {
-                    var a = document.createElement("iframe");
-                    a.height = 1;
-                    a.width = 1;
-                    a.style.position = "absolute";
-                    a.style.top = 0;
-                    a.style.left = 0;
-                    a.style.border = "none";
-                    a.style.visibility = "hidden";
-                    document.body.appendChild(a);
-                    if ("loading" !== document.readyState) c();
-                    else if (window.addEventListener) document.addEventListener("DOMContentLoaded", c);
-                    else {
-                        var e = document.onreadystatechange || function () {};
-                        document.onreadystatechange = function (b) {
-                            e(b);
-                            "loading" !== document.readyState && ((document.onreadystatechange = e), c());
-                        };
-                    }
-                }
-            })();
         </script>
     </body>
 </html>

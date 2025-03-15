@@ -1,6 +1,6 @@
 #!/bin/env bash
 
-readonly DIR="/multimedia/AI/daaandy";
+readonly DIR="/multimedia/AI/Mimpi";
 readonly VENV_DIR="$DIR/venv";
 
 if [[ ! -d "$VENV_DIR" ]]; then

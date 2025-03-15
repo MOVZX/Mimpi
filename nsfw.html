@@ -188,6 +188,38 @@
             .image-actions button.preview {
                 background: linear-gradient(45deg, #ff00ff, #00d4ff);
             }
+
+            /* Custom styles for the expandable section */
+            details {
+                margin-bottom: 20px;
+            }
+
+            summary {
+                cursor: pointer;
+                padding: 10px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                color: #00d4ff;
+                font-weight: bold;
+                transition: all 0.3s ease;
+            }
+
+            summary:hover {
+                background: rgba(255, 255, 255, 0.15);
+                box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+            }
+
+            details[open] summary {
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+
+            details > div {
+                padding: 10px;
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 0 0 8px 8px;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
         </style>
     </head>
     <body>
@@ -198,7 +230,7 @@
                     Deskripsi Gambar (dalam bahasa Inggris)
                     <span style="color: #aaa; font-weight: normal"></span>
                 </label>
-                <textarea id="prompt" required rows="8">
+                <textarea id="prompt" required rows="13">
 1girl, (solo:1.6), beautiful 35 y.o hotwife, kneeling, looking up, eyes closed, long hair, tongue out, anticipation, pov, realistic natural teeth, detailed skin texture, goosebumps, bedroom, cinematic, highly detailed, best quality, intricate details, (photorealistic:1.4), medium close shot,  (fisheye lens:1.2), (wears black casual outfit, with bra and panties:1.1), average medium breasts, (candid photograph), natural white light, muted color</textarea
                 >
             </div>
@@ -208,35 +240,38 @@
                 </div>
                 <label for="useDynamicPrompt">Gunakan Prompt Generator</label>
             </div>
+            <!-- Expandable "Opsi Tingkat Lanjut" Section -->
+            <details>
+                <summary>Opsi Tingkat Lanjut</summary>
+                <div>
+                    <div class="form-group">
+                        <label for="imageMode">Mode Gambar</label>
+                        <select id="imageMode">
+                            <option value="portrait" selected>Portrait (896x1152)</option>
+                            <option value="landscape">Landscape (1152x896)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="steps">Steps <span style="color: #aaa; font-weight: normal">(1-100)</span></label>
+                        <input type="number" id="steps" min="1" max="100" value="35" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="cfg"> CFG <span style="color: #aaa; font-weight: normal">(1-10)</span> </label>
+                        <input type="number" id="cfg" min="1" max="10" step="0.5" value="3.5" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="seed">Seed <span style="color: #aaa; font-weight: normal">(angka)</span></label>
+                        <input type="text" id="seed" placeholder="" value="-1" />
+                    </div>
+                    <!-- Dynamically populated dropdowns will be inserted here by populateDropdowns() -->
+                </div>
+            </details>
             <button onclick="generateImage()">Buat Gambar</button>
             <p id="status"></p>
             <p id="error"></p>
             <img id="outputImage" src="" alt="" style="display: none" />
             <div class="image-actions" id="imageActions">
                 <button class="preview" onclick="previewImage()">Preview</button>
-            </div>
-            <p> </p>
-            <h2>Opsi Tingkat Lanjut</h2>
-            <div class="form-group">
-                <label for="imageMode">Mode Gambar</label>
-                <select id="imageMode">
-                    <option value="portrait" selected>Portrait (896x1152)</option>
-                    <option value="landscape">Landscape (1152x896)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="steps">Steps <span style="color: #aaa; font-weight: normal">(1-100)</span></label>
-                <input type="number" id="steps" min="1" max="100" value="35" required />
-            </div>
-            <div class="form-group">
-                <label for="cfg">
-                    CFG <span style="color: #aaa; font-weight: normal">(Saran: 2-7.5, Default: 2.5)</span>
-                </label>
-                <input type="number" id="cfg" min="1" max="10" step="0.5" value="3.5" required />
-            </div>
-            <div class="form-group">
-                <label for="seed">Seed <span style="color: #aaa; font-weight: normal">(angka)</span></label>
-                <input type="text" id="seed" placeholder="" value="-1" />
             </div>
         </div>
 
@@ -465,25 +500,61 @@
             // Static list of ckpt_name options
             function fetchCheckpointOptions() {
                 const baseCheckpoints = [
-                    "agxl_V2.safetensors",
-                    "boomerArtModelBAM_bamV2.safetensors",
-                    "clarityXL_v20.safetensors",
-                    "cyberrealisticXL_v5.safetensors",
-                    "dreamshaperXL_v21TurboDPMSDE.safetensors",
-                    "epicrealismXL_vxvAnewstoryRealism.safetensors",
-                    "fasercore_xlV1.safetensors",
-                    "juggernautXL_juggXIByRundiffusion.safetensors",
-                    "leosamsHelloworldXL_helloworldXL70.safetensors",
-                    "msSDXLRealV3_v3.safetensors",
-                    "novaRealityXL_v70.safetensors",
-                    "perfectionRealisticILXL_v10.safetensors",
-                    "polyhedronSDXL_v3.safetensors",
-                    "realisticStockPhoto_v20.safetensors",
-                    "realvisxlV50_v50Bakedvae.safetensors",
-                    "stoiqoNewrealityFLUXSD35_XLPRO.safetensors",
-                    "lustimix_.safetensors", // Added to match new workflow
+                    "---- Illustrious ----",
+                    "Illustrious/cyberillustrious_v30.safetensors",
+                    "Illustrious/novaRealityXL_illustriousV20.safetensors",
+                    "Illustrious/realismIllustriousBy_v30FP16.safetensors",
+                    "Illustrious/redcraftCADSUpdatedMar11_illust3relustion.safetensors",
+                    "Illustrious/rillusmRealistic_v20.safetensors",
+                    "---- Pony ----",
+                    "Pony/3xthreat2kModelThatUsesPONY_v10.safetensors",
+                    "Pony/babesByStableYogi_ponyV4VAEFix.safetensors",
+                    "Pony/cyberrealisticPony_v85.safetensors",
+                    "Pony/fasercore_v30PonyFP16.safetensors",
+                    "Pony/iniverseMixSFWNSFW_ponyRealGuofengV50C.safetensors",
+                    "Pony/ponyDiffusionV6XL.safetensors",
+                    "Pony/pornyPonyByStable_v20FP16.safetensors",
+                    "Pony/realDream_sdxlPony15.safetensors",
+                    "Pony/realismByStableYogi_v40FP16.safetensors",
+                    "Pony/uberRealisticPornMergePonyxl_ponyxlHybridV1.safetensors",
+                    "---- SDXL ----",
+                    "SDXL/acornIsBoningXL_xlV2.safetensors",
+                    "SDXL/agxl_V2.safetensors",
+                    "SDXL/animaPencilXL_v500.safetensors",
+                    "SDXL/babesByStableYogi_v4XLFP16.safetensors",
+                    "SDXL/biglovexl2.wBWt.safetensors",
+                    "SDXL/biglust16.kst6.safetensors",
+                    "SDXL/boomerArtModelBAM_bamV2.safetensors",
+                    "SDXL/clarityXL_v20.safetensors",
+                    "SDXL/cyberrealisticXL_v5.safetensors",
+                    "SDXL/epicrealismXL_vxvAnewstoryRealism.safetensors",
+                    "SDXL/fasercore_xlV1.safetensors",
+                    "SDXL/jibMixRealisticXL_v160Aphrodite.safetensors",
+                    "SDXL/juggernautXL_juggXIByRundiffusion.safetensors",
+                    "SDXL/leosamsHelloworldXL_helloworldXL70.safetensors",
+                    "SDXL/lustifySDXLNSFW_endgame.safetensors",
+                    "SDXL/lustifySDXLNSFW_oltONELASTTIME.safetensors",
+                    "SDXL/lustimix_.safetensors",
+                    "SDXL/lustimix_big.safetensors",
+                    "SDXL/msSDXLRealV3_v3.safetensors",
+                    "SDXL/novaRealityXL_v70.safetensors",
+                    "SDXL/omnigenxlNSFWSFW_v10.safetensors",
+                    "SDXL/perfectionRealisticILXL_v10.safetensors",
+                    "SDXL/polyhedronSDXL_v3.safetensors",
+                    "SDXL/pornmaster_proSDXLV3VAE.safetensors",
+                    "SDXL/realismByStableYogi_v5XLFP16.safetensors",
+                    "SDXL/realismEngineSDXL_v30VAE.safetensors",
+                    "SDXL/realisticLustXL_v05.safetensors",
+                    "SDXL/realisticStockPhoto_v20.safetensors",
+                    "SDXL/realvisxlV50_v50Bakedvae.safetensors",
+                    "SDXL/sd_xl_base_1.0_0.9vae.safetensors",
+                    "SDXL/sd_xl_refiner_1.0.safetensors",
+                    "SDXL/sdXL_v10VAEFix.safetensors",
+                    "SDXL/sdxlPhotorealisticMix_v10.safetensors",
+                    "SDXL/sdxxxl_v30.safetensors",
+                    "SDXL/stoiqoNewrealityFLUXSD35_XLPRO.safetensors",
                 ];
-                return baseCheckpoints.map((ckpt) => `SDXL/${ckpt}`);
+                return baseCheckpoints.map((ckpt) => `${ckpt}`);
             }
 
             // Static list of sampler options
@@ -507,9 +578,7 @@
             // Populate checkpoint, sampler, and scheduler select elements
             function populateDropdowns() {
                 const container = document.querySelector(".container");
-                const imageModeGroup = document.querySelector("#imageMode").parentElement;
-                const cfgGroup = document.querySelector("#cfg").parentElement;
-                const seedGroup = document.querySelector("#seed").parentElement;
+                const detailsContent = container.querySelector("details > div"); // Target the div inside details
 
                 // Check if checkpointFormGroup already exists
                 let checkpointFormGroup = document.getElementById("checkpointFormGroup");
@@ -529,7 +598,8 @@
 
                     checkpointOptions.forEach((option) => {
                         const optionElement = document.createElement("option");
-                        const displayName = option.replace("SDXL/", "");
+                        // Replace either "SDXL/" or "Pony/" with an empty string
+                        const displayName = option.replace(/^(SDXL\/|Pony\/|Illustrious\/)/, "");
                         optionElement.value = option;
                         optionElement.textContent = displayName;
                         if (option === "SDXL/lustimix_.safetensors") optionElement.selected = true; // Updated default
@@ -538,7 +608,7 @@
 
                     checkpointFormGroup.appendChild(checkpointLabel);
                     checkpointFormGroup.appendChild(checkpointSelect);
-                    container.insertBefore(checkpointFormGroup, imageModeGroup);
+                    detailsContent.insertBefore(checkpointFormGroup, detailsContent.firstChild); // Insert at the top
                 }
 
                 // Check if samplerFormGroup already exists
@@ -567,7 +637,7 @@
 
                     samplerFormGroup.appendChild(samplerLabel);
                     samplerFormGroup.appendChild(samplerSelect);
-                    container.insertBefore(samplerFormGroup, seedGroup);
+                    detailsContent.appendChild(samplerFormGroup); // Append after other inputs
                 }
 
                 // Check if schedulerFormGroup already exists
@@ -596,7 +666,7 @@
 
                     schedulerFormGroup.appendChild(schedulerLabel);
                     schedulerFormGroup.appendChild(schedulerSelect);
-                    container.insertBefore(schedulerFormGroup, seedGroup);
+                    detailsContent.appendChild(schedulerFormGroup); // Append after sampler
                 }
             }
 
