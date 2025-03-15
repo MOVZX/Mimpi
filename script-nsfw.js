@@ -455,7 +455,7 @@ async function generateImage() {
 
         let imageUrl = null;
         let attempts = 0;
-        const maxAttempts = 20;
+        const maxAttempts = 30;
         while (!imageUrl && attempts < maxAttempts) {
             await new Promise((resolve) => setTimeout(resolve, 1000));
             const historyResponse = await fetch(`${COMFYUI_URL}/history/${prompt_id}`);
@@ -499,6 +499,7 @@ async function deleteImage() {
     const imageActions = document.getElementById("imageActions");
     const button = document.querySelector(".delete");
     const lightbox = document.getElementById("lightbox");
+    const seedInput = document.getElementById("seed");
 
     if (!lastImageData || !lastImageData.filename) {
         showError(error, "Tidak ada gambar yang dapat dihapus!");
@@ -528,6 +529,16 @@ async function deleteImage() {
         const result = await response.json();
         console.log("Delete response:", result);
 
+        // Randomize the seed
+        const MAX_SEED = BigInt("18446744073709551615");
+        const randomValue =
+            BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
+            BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
+        currentSeedNum = randomValue % (MAX_SEED + BigInt(1));
+        workflow["105"]["inputs"]["seed"] = Number(currentSeedNum);
+        workflow["171"]["inputs"]["seed"] = Number(currentSeedNum);
+        seedInput.value = currentSeedNum.toString(); // Update the seed input field
+
         outputImage.src = "";
         outputImage.style.display = "none";
         imageActions.style.display = "none";
@@ -537,6 +548,54 @@ async function deleteImage() {
     } catch (err) {
         console.error("Delete error:", err);
         showError(error, `Gagal menghapus gambar: ${err.message}`);
+    } finally {
+        button.disabled = false;
+    }
+}
+
+function clearImage() {
+    const status = document.getElementById("status");
+    const outputImage = document.getElementById("outputImage");
+    const imageActions = document.getElementById("imageActions");
+    const lightbox = document.getElementById("lightbox");
+    const seedInput = document.getElementById("seed");
+    const button = document.querySelector(".clear");
+
+    if (!status || !outputImage || !imageActions || !lightbox || !seedInput || !button) {
+        console.error("[DEBUG] Missing DOM elements in clearImage:", {
+            status: !!status,
+            outputImage: !!outputImage,
+            imageActions: !!imageActions,
+            lightbox: !!lightbox,
+            seedInput: !!seedInput,
+            button: !!button,
+        });
+        showError(document.getElementById("error"), "Kesalahan internal: Elemen UI tidak ditemukan!");
+        return;
+    }
+
+    showStatus(status, "Membersihkan gambar...");
+    button.disabled = true;
+
+    try {
+        const MAX_SEED = BigInt("18446744073709551615");
+        const randomValue =
+            BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
+            BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
+        currentSeedNum = randomValue % (MAX_SEED + BigInt(1));
+        workflow["105"]["inputs"]["seed"] = Number(currentSeedNum);
+        workflow["171"]["inputs"]["seed"] = Number(currentSeedNum);
+        seedInput.value = currentSeedNum.toString();
+        console.log("[DEBUG] Seed randomized in clearImage:", currentSeedNum.toString());
+
+        outputImage.src = "";
+        outputImage.style.display = "none";
+        imageActions.style.display = "none";
+        lightbox.style.display = "none";
+        showStatus(status, `Gambar dibersihkan! Seed baru: ${currentSeedNum}`, "success");
+    } catch (err) {
+        console.error("[DEBUG] Error in clearImage:", err);
+        showError(document.getElementById("error"), "Gagal membersihkan gambar!");
     } finally {
         button.disabled = false;
     }

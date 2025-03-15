@@ -175,8 +175,17 @@ img {
     width: 100%;
     padding: 8px;
     font-size: 16px;
-    background: linear-gradient(45deg, #ff4444, #ff8800);
+    background: linear-gradient(45deg, #bb4f4f, #af1919);
     margin-top: 0;
+}
+
+.image-actions button.clear {
+    background: linear-gradient(45deg, #3a9aad, #2ea77e); /* Cyan to green gradient */
+}
+
+.image-actions button.clear:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
 }
 
 /* Custom styles for the expandable section */
