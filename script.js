@@ -435,6 +435,29 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("Scheduler updated to:", schedulerSelect.value);
         });
     }
+
+    // Lightbox functionality
+    const outputImage = document.getElementById("outputImage");
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImage = document.getElementById("lightboxImage");
+    const closeLightbox = document.getElementById("closeLightbox");
+
+    outputImage.addEventListener("click", () => {
+        if (outputImage.src && outputImage.style.display !== "none") {
+            lightboxImage.src = outputImage.src;
+            lightbox.style.display = "flex";
+        }
+    });
+
+    closeLightbox.addEventListener("click", () => {
+        lightbox.style.display = "none";
+    });
+
+    lightbox.addEventListener("click", (e) => {
+        if (e.target === lightbox) {
+            lightbox.style.display = "none";
+        }
+    });
 });
 
 async function generateImage() {
@@ -625,12 +648,6 @@ async function downloadImage() {
     } catch (err) {
         showError(document.getElementById("error"), "Gagal mengunduh gambar: " + err.message);
     }
-}
-
-function previewImage() {
-    const outputImage = document.getElementById("outputImage");
-    const imageUrl = outputImage.src;
-    window.open(imageUrl, "_blank");
 }
 
 function showStatus(statusElement, message, type = "") {

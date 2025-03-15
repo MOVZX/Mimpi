@@ -171,7 +171,7 @@ img {
 }
 
 .image-actions button {
-    width: 50%;
+    width: 100%;
     padding: 8px;
     font-size: 16px;
     background: linear-gradient(45deg, #00d4ff, #00ff00);
@@ -212,4 +212,42 @@ details > div {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 0 0 8px 8px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Lightbox Styles */
+.lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+}
+
+.lightbox img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    margin: auto;
+}
+
+.lightbox .close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    text-shadow: 0 0 5px rgba(0, 212, 255, 0.5);
+}
+
+.lightbox .close:hover {
+    color: #00d4ff;
 }

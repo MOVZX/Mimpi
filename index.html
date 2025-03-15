@@ -11,7 +11,7 @@
             <h1>Mimpi</h1>
             <div class="form-group">
                 <label for="prompt">Deskripsi Gambar (dalam bahasa Inggris) </label>
-                <textarea id="prompt" required rows="13">
+                <textarea id="prompt" required rows="8">
 A highly detailed, real-life photo of a cute cat. The image features accurate anatomy, realistic textures of fur, feathers, or skin, lifelike eyes, and natural lighting. No mythical or fantasy creatures, only existing animals, depicted in a sharp, vibrant, 4k resolution with highest quality.
                 </textarea>
             </div>
@@ -48,8 +48,11 @@ A highly detailed, real-life photo of a cute cat. The image features accurate an
             <p id="error"></p>
             <img id="outputImage" src="" alt="" style="display: none" />
             <div class="image-actions" id="imageActions">
-                <button onclick="downloadImage()">Download</button>
-                <button class="preview" onclick="previewImage()">Preview</button>
+                <button onclick="downloadImage()">Unduh</button>
+            </div>
+            <div class="lightbox" id="lightbox">
+                <span class="close" id="closeLightbox">&times;</span>
+                <img id="lightboxImage" src="" alt="Gambar" />
             </div>
         </div>
 
