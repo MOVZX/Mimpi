@@ -10,14 +10,57 @@
         <div class="container">
             <h1>Mimpi (NSFW)</h1>
             <div class="form-group">
-                <label for="prompt">Deskripsi Gambar (dalam bahasa Inggris)</label>
-                <textarea id="prompt" required rows="13">
-1girl, (solo:1.6), beautiful 35 y.o hotwife, kneeling, looking up, eyes closed, long hair, tongue out, anticipation, pov, realistic natural teeth, detailed skin texture, goosebumps, bedroom, cinematic, highly detailed, best quality, intricate details, (photorealistic:1.4), medium close shot, (fisheye lens:1.2), (wears black casual outfit, with bra and panties:1.1), average medium breasts, (candid photograph), natural white light, muted color
-                </textarea>
+                <label for="prompt">Deskripsi Gambar (Positif)</label>
+                <textarea id="prompt" required rows="8" style="background: rgb(77 133 94)"></textarea>
+                <label for="prompt-negative">Hindari (Negatif)</label>
+                <textarea id="prompt-negative" required rows="5" style="background: rgb(133 77 89)">
+gore, horror, text, watermark, low quality, medium quality, blurry, deformed, mutated, anime, toon, render, 3d, illustration, bad eyes, bad hands, bad fingers, tongue piercing</textarea
+                >
             </div>
             <div class="checkbox-group">
                 <div class="checkbox-wrapper"><input type="checkbox" id="useDynamicPrompt" /></div>
                 <label for="useDynamicPrompt">Gunakan Prompt Generator</label>
+            </div>
+            <div class="form-group">
+                <label for="preset">Preset</label>
+                <select id="preset">
+                    <option value="none">Tidak Ada</option>
+                    <option value="cum on face 1">Cum on Face 1</option>
+                    <option value="cumshot on tongue 1">Cumshot on Tongue 1</option>
+                    <option value="dildo 1">Dildo 1</option>
+                    <option value="from behind 1">From Behind 1</option>
+                    <option value="from behind 2">From Behind 2</option>
+                    <option value="from behind 3">From Behind 3</option>
+                    <option value="from behind 4">From Behind 4</option>
+                    <option value="from behind 5">From Behind 5</option>
+                    <option value="from behind 6">From Behind 6</option>
+                    <option value="from behind 7">From Behind 7</option>
+                    <option value="from behind 8">From Behind 8</option>
+                    <option value="kneeling blowjob 1">Kneeling Blowjob 1</option>
+                    <option value="kneeling blowjob 2">Kneeling Blowjob 2</option>
+                    <option value="kneeling blowjob 3">Kneeling Blowjob 3</option>
+                    <option value="kneeling blowjob 4">Kneeling Blowjob 4</option>
+                    <option value="kneeling blowjob 5">Kneeling Blowjob 5</option>
+                    <option value="kneeling blowjob 6">Kneeling Blowjob 6</option>
+                    <option value="kneeling blowjob 7">Kneeling Blowjob 7</option>
+                    <option value="kneeling blowjob 8">Kneeling Blowjob 8</option>
+                    <option value="kneeling tongue out 1">Kneeling Tongue Out 1</option>
+                    <option value="penetration 1">Penetration 1</option>
+                    <option value="pov blowjob 1">POV Blowjob 1</option>
+                    <option value="pov blowjob 2">POV Blowjob 2</option>
+                    <option value="pov blowjob 3">POV Blowjob 3</option>
+                    <option value="spreading legs 1">Spreading Legs 1</option>
+                    <option value="spreading legs 2">Spreading Legs 2</option>
+                    <option value="spreading legs 3">Spreading Legs 3</option>
+                    <option value="spreading legs 4">Spreading Legs 4</option>
+                    <option value="spreading legs 5">Spreading Legs 5</option>
+                    <option value="spreading legs 6">Spreading Legs 6</option>
+                    <option value="spreading legs 7">Spreading Legs 7</option>
+                    <option value="spreading legs 8">Spreading Legs 8</option>
+                    <option value="spreading legs 9">Spreading Legs 9</option>
+                    <option value="spreading legs 10">Spreading Legs 10</option>
+                    <option value="spreading legs 11">Spreading Legs 11</option>
+                </select>
             </div>
             <details aria-expanded="false">
                 <summary>Opsi Tingkat Lanjut</summary>
@@ -27,15 +70,16 @@
                         <select id="imageMode">
                             <option value="portrait" selected>Portrait (896x1152)</option>
                             <option value="landscape">Landscape (1152x896)</option>
+                            <option value="square">Square (1024x1024)</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="steps">Steps <span style="color: #aaa; font-weight: normal">(1-100)</span></label>
-                        <input type="number" id="steps" min="1" max="100" value="35" required />
+                        <input type="number" id="steps" min="1" max="100" value="8" required />
                     </div>
                     <div class="form-group">
                         <label for="cfg"> CFG <span style="color: #aaa; font-weight: normal">(1-30)</span></label>
-                        <input type="number" id="cfg" min="1" max="30" step="0.5" value="3.5" required />
+                        <input type="number" id="cfg" min="1" max="30" step="0.5" value="2" required />
                     </div>
                     <div class="form-group">
                         <label for="seed">Seed <span style="color: #aaa; font-weight: normal">(angka)</span></label>
@@ -44,13 +88,14 @@
                 </div>
             </details>
             <button onclick="generateImage()">Buat Gambar</button>
-            <p id="status"></p>
-            <p id="error"></p>
             <img id="outputImage" src="" alt="" style="display: none" />
             <div class="image-actions" id="imageActions">
                 <button class="clear" onclick="clearImage()">Reset</button>
                 <button class="delete" onclick="deleteImage()">Hapus</button>
             </div>
+            <p id="info"></p>
+            <p id="status"></p>
+            <p id="error"></p>
             <div class="lightbox" id="lightbox">
                 <span class="close" id="closeLightbox">&times;</span>
                 <img id="lightboxImage" src="" alt="Gambar" />

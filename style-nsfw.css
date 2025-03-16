@@ -138,15 +138,7 @@ img {
     margin-top: 20px;
     border-radius: 8px;
     box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
-    cursor: pointer; /* Indicate the image is clickable */
-}
-
-#status {
-    margin-top: 20px;
-    text-align: center;
-    padding: 10px;
-    border-radius: 8px;
-    display: none;
+    cursor: pointer;
 }
 
 #error {
@@ -159,9 +151,18 @@ img {
     color: #ff4444;
 }
 
+#info {
+    margin-top: 20px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    display: none;
+    background: rgba(255, 253, 110, 0.774);
+    color: #222222;
+}
+
 .success {
-    background: rgba(0, 255, 0, 0.1);
-    color: #00ff00;
+    color: #222222;
 }
 
 .image-actions {
@@ -180,7 +181,7 @@ img {
 }
 
 .image-actions button.clear {
-    background: linear-gradient(45deg, #3a9aad, #2ea77e); /* Cyan to green gradient */
+    background: linear-gradient(45deg, #3a9aad, #2ea77e);
 }
 
 .image-actions button.clear:hover:not(:disabled) {
@@ -188,7 +189,6 @@ img {
     box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
 }
 
-/* Custom styles for the expandable section */
 details {
     margin-bottom: 20px;
 }
@@ -256,4 +256,48 @@ details > div {
 
 .lightbox .close:hover {
     color: #00d4ff;
+}
+
+.success-table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 600px;
+    background-color: #f9f9f9;
+    border: 2px solid #4caf50;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    margin: 10px 0;
+}
+
+.success-table th {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.success-table td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+}
+
+.success-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.success-table tr:hover {
+    background-color: #ddd;
+}
+
+.success-table td:nth-child(2) {
+    max-width: 400px;
+    word-wrap: break-word;
+}
+
+#status {
+    border-radius: 5px;
+    text-align: left;
+    font-size: 0.9em;
 }
