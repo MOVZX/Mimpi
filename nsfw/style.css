@@ -24,13 +24,6 @@ h1 {
     margin-bottom: 30px;
 }
 
-h2 {
-    text-align: center;
-    color: #00d4ff;
-    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
-    margin-bottom: 30px;
-}
-
 .form-group {
     margin-bottom: 20px;
     display: flex;
@@ -151,20 +144,6 @@ img {
     color: #ff4444;
 }
 
-#info {
-    margin-top: 20px;
-    text-align: center;
-    padding: 10px;
-    border-radius: 8px;
-    display: none;
-    background: rgba(255, 253, 110, 0.774);
-    color: #222222;
-}
-
-.success {
-    color: #222222;
-}
-
 .image-actions {
     display: none;
     margin-top: 10px;
@@ -220,7 +199,6 @@ details > div {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Lightbox Styles */
 .lightbox {
     display: none;
     position: fixed;
@@ -268,6 +246,7 @@ details > div {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     font-family: Arial, sans-serif;
     margin: 10px 0;
+    color: #333;
 }
 
 .success-table th {
@@ -276,11 +255,13 @@ details > div {
     padding: 10px;
     text-align: center;
     font-size: 1.2em;
+    border-bottom: 2px solid #fff;
 }
 
 .success-table td {
     padding: 8px 12px;
     border: 1px solid #ddd;
+    vertical-align: top;
 }
 
 .success-table tr:nth-child(even) {
@@ -291,13 +272,28 @@ details > div {
     background-color: #ddd;
 }
 
+.success-table td:first-child {
+    width: 120px;
+    font-weight: bold;
+    text-align: right;
+    background-color: #e0f7e0;
+    white-space: nowrap;
+}
+
 .success-table td:nth-child(2) {
-    max-width: 400px;
+    max-width: 0;
     word-wrap: break-word;
+    padding-left: 15px;
+}
+
+details[open] .success-table {
+    margin-top: 10px;
 }
 
 #status {
+    padding: 10px;
     border-radius: 5px;
     text-align: left;
     font-size: 0.9em;
+    color: #fff;
 }

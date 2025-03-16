@@ -1,4 +1,4 @@
-const COMFYUI_URL = "http://gambar.ai:8188";
+const COMFYUI_URL = "http://103.255.132.129:8088";
 let currentSeedNum = 0;
 let lastImageData = null;
 
@@ -115,8 +115,8 @@ const workflow = {
     105: {
         inputs: {
             seed: 0,
-            steps: 6,
-            cfg: 1.5,
+            steps: 8,
+            cfg: 2,
             sampler_name: "euler_ancestral",
             scheduler: "normal",
             denoise: 1,
@@ -194,7 +194,6 @@ const workflow = {
 window.onload = function () {
     const outputImage = document.getElementById("outputImage");
     const imageActions = document.getElementById("imageActions");
-    const info = document.getElementById("info");
     const status = document.getElementById("status");
     const savedSeed = localStorage.getItem("lastSeed");
     if (savedSeed) document.getElementById("seed").value = savedSeed;
@@ -202,9 +201,6 @@ window.onload = function () {
     outputImage.src = "";
     outputImage.style.display = "none";
     imageActions.style.display = "none";
-    info.style.display = "none";
-    info.className = "";
-    info.textContent = "";
     status.style.display = "none";
     status.className = "";
     status.textContent = "";
@@ -465,7 +461,6 @@ async function generateImage() {
     const imageMode = document.getElementById("imageMode").value;
     const seedInput = document.getElementById("seed").value;
     const useDynamicPrompt = document.getElementById("useDynamicPrompt").checked;
-    const info = document.getElementById("info");
     const status = document.getElementById("status");
     const error = document.getElementById("error");
     const button = document.querySelector("button");
@@ -479,7 +474,7 @@ async function generateImage() {
 
     if (!document.getElementById("checkpoint")) populateDropdowns();
 
-    showInfo(info, "Membuat gambar...");
+    showStatus(status, "<center><b>Membuat gambar...</b></center>");
     error.style.display = "none";
     outputImage.style.display = "none";
     imageActions.style.display = "none";
@@ -585,9 +580,10 @@ async function generateImage() {
 
         const successMessage = `
             <details aria-expanded="false">
-                <summary>Data Pembuatan Gambar</summary>
+                <summary style="color: #fff78e;">Data Pembuatan Gambar</summary>
                 <table class="success-table">
-                    <tr><th colspan="2">${promptInput}</th></tr>
+                    <tr><td>Positive Prompt:</td><td>${promptInput}</td></tr>
+                    <tr><td>Negative Prompt:</td><td>${promptNegativeInput}</td></tr>
                     <tr><td>Checkpoint:</td><td>${checkpointSelect.value}</td></tr>
                     <tr><td>Mode:</td><td>${imageMode}</td></tr>
                     <tr><td>Steps:</td><td>${steps}</td></tr>
@@ -626,7 +622,7 @@ async function deleteImage() {
         return;
     }
 
-    showInfo(info, "Menghapus gambar...");
+    showStatus(status, "<center><b>Menghapus gambar...</b></center>");
     button.disabled = true;
 
     try {
@@ -663,8 +659,7 @@ async function deleteImage() {
         imageActions.style.display = "none";
         lightbox.style.display = "none";
         lastImageData = null;
-        showStatus(status, "Gambar berhasil dihapus!", "success");
-        showInfo(info, "Gambar berhasil dihapus!", "success");
+        showStatus(status, "<center><b>Gambar berhasil dihapus!</b></center>", "success");
     } catch (err) {
         console.error("Delete error:", err);
         showError(error, `Gagal menghapus gambar: ${err.message}`);
@@ -674,7 +669,6 @@ async function deleteImage() {
 }
 
 function clearImage() {
-    const info = document.getElementById("info");
     const status = document.getElementById("status");
     const outputImage = document.getElementById("outputImage");
     const imageActions = document.getElementById("imageActions");
@@ -682,9 +676,8 @@ function clearImage() {
     const seedInput = document.getElementById("seed");
     const button = document.querySelector(".clear");
 
-    if (!info || !status || !outputImage || !imageActions || !lightbox || !seedInput || !button) {
+    if (!status || !outputImage || !imageActions || !lightbox || !seedInput || !button) {
         console.error("[DEBUG] Missing DOM elements in clearImage:", {
-            info: !!info,
             status: !!status,
             outputImage: !!outputImage,
             imageActions: !!imageActions,
@@ -696,7 +689,7 @@ function clearImage() {
         return;
     }
 
-    showInfo(info, "Membersihkan gambar...");
+    showStatus(status, "<center><b>Membersihkan gambar...</b></center>");
     button.disabled = true;
 
     try {
@@ -714,20 +707,13 @@ function clearImage() {
         outputImage.style.display = "none";
         imageActions.style.display = "none";
         lightbox.style.display = "none";
-        showStatus(status, `Gambar dibersihkan! Seed baru: ${currentSeedNum}`, "success");
-        showInfo(info, `Gambar dibersihkan! Seed baru: ${currentSeedNum}`, "success");
+        showStatus(status, `<center><b>Seed baru: ${currentSeedNum}</b></center>`, "success");
     } catch (err) {
         console.error("[DEBUG] Error in clearImage:", err);
         showError(document.getElementById("error"), "Gagal membersihkan gambar!");
     } finally {
         button.disabled = false;
     }
-}
-
-function showInfo(errorElement, message) {
-    errorElement.textContent = message;
-    errorElement.style.display = "block";
-    setTimeout(() => (errorElement.style.display = "none"), 5000);
 }
 
 function showStatus(statusElement, message, type = "") {

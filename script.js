@@ -1,4 +1,4 @@
-const COMFYUI_URL = "http://gambar.ai:8188";
+const COMFYUI_URL = "http://103.255.132.129:8088";
 let currentSeedNum = 0;
 
 const workflow = {
