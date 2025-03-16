@@ -297,3 +297,20 @@ details[open] .success-table {
     font-size: 0.9em;
     color: #fff;
 }
+
+#subcategory-container-sfw,
+#subcategory-container-nsfw,
+#subcategory-container {
+    margin-top: 10px;
+}
+
+#sfw-preset,
+#preset,
+#main-preset {
+    background: rgba(255, 255, 255, 0.08);
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+}

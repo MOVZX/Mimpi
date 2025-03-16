@@ -15,14 +15,14 @@
                     id="prompt"
                     required
                     rows="8"
-                    style="background: linear-gradient(45deg, rgb(87 255 116 / 25%), rgb(0 99 17 / 25%))"
+                    style="background: linear-gradient(45deg, rgba(221, 255, 226, 0.25), rgba(203, 255, 212, 0.25))"
                 ></textarea>
                 <label for="prompt-negative">Hindari (Negatif)</label>
                 <textarea
                     id="prompt-negative"
                     required
                     rows="5"
-                    style="background: linear-gradient(45deg, rgb(255 87 87 / 25%), rgb(99 0 0 / 25%))"
+                    style="background: linear-gradient(45deg, rgba(255, 206, 206, 0.25), rgba(255, 209, 209, 0.25))"
                 >
 low quality, blurry, overexposed, underexposed, distorted anatomy, extra limbs, missing limbs, deformed hands, extra fingers, fused fingers, unrealistic proportions, unnatural poses, anal penetration, anal focus, multiple men, multiple women, group scenes, children, animals, gore, blood, violence, weapons, text artifacts, watermarks, logos, clothing when nude is specified, cartoonish, 2D, sketch, painting, abstract, surreal, sci-fi elements, futuristic, robots, aliens, extra objects, cluttered background, monochrome, grayscale, oversaturated colors, undersaturated colors, noise, graininess beyond intent, censorship bars, pixelation</textarea
                 >
@@ -32,32 +32,15 @@ low quality, blurry, overexposed, underexposed, distorted anatomy, extra limbs, 
                 <label for="useDynamicPrompt">Gunakan Prompt Generator</label>
             </div>
             <div class="form-group">
-                <label for="preset">Preset (NSFW)</label>
-                <select id="preset">
+                <label for="main-preset">Tema</label>
+                <select id="main-preset">
                     <option value="none">Tidak Ada</option>
-                    <option value="cum on face">Cum on Face</option>
-                    <option value="cumshot on tongue">Cumshot on Tongue</option>
-                    <option value="dildo">Dildo</option>
-                    <option value="from behind">From Behind</option>
-                    <option value="kneeling blowjob">Kneeling Blowjob</option>
-                    <option value="kneeling tongue out">Kneeling Tongue Out</option>
-                    <option value="penetration">Penetration</option>
-                    <option value="pov blowjob">POV Blowjob</option>
-                    <option value="spreading legs">Spreading Legs</option>
-                    <option value="shower tease">Shower Tease</option>
-                    <option value="missionary passion">Missionary Passion</option>
-                    <option value="topless beach">Topless Beach</option>
-                    <option value="kitchen seduction">Kitchen Seduction</option>
-                    <option value="reverse cowgirl">Reverse Cowgirl</option>
-                    <option value="bathtub solo">Bathtub Solo</option>
-                    <option value="standing quickie">Standing Quickie</option>
-                    <option value="mirror selfie">Mirror Selfie</option>
-                    <option value="car backseat">Car Backseat</option>
-                    <option value="balcony tease">Balcony Tease</option>
+                    <optgroup label="SFW"></optgroup>
+                    <optgroup label="NSFW"></optgroup>
                 </select>
             </div>
             <div id="subcategory-container" class="form-group" style="display: none">
-                <label for="subcategory">Preset Subcategory</label>
+                <label for="subcategory">Preset</label>
                 <select id="subcategory"></select>
             </div>
             <details aria-expanded="false">
@@ -109,6 +92,9 @@ low quality, blurry, overexposed, underexposed, distorted anatomy, extra limbs, 
             </div>
         </div>
 
+        <script type="text/javascript" src="presets-sfw.js"></script>
+        <script type="text/javascript" src="presets-nsfw.js"></script>
+        <script type="text/javascript" src="checkpoints.js"></script>
         <script type="text/javascript" src="script.js"></script>
     </body>
 </html>
