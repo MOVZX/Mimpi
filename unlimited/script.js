@@ -415,7 +415,7 @@ async function generateImage() {
             workflow["178:1"]["inputs"]["boolean"] = useDynamicPrompt;
         } else throw new Error("Dropdowns tidak ditemukan!");
 
-        const MAX_SEED = BigInt("18446744073709551615");
+        const MAX_SEED = BigInt("9007199254740991");
         if (useDynamicSeed || !seedInput || isNaN(seedInput) || seedInput === "-1") {
             const randomValue =
                 BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
@@ -424,12 +424,14 @@ async function generateImage() {
             currentSeedNum = seed;
             workflow["105"]["inputs"]["seed"] = Number(seed);
             workflow["171"]["inputs"]["seed"] = Number(seed);
+            seedInput.value = Number(seed);
         } else {
             const seedNum = BigInt(seedInput);
             if (seedNum < BigInt(0) || seedNum > MAX_SEED) throw new Error(`Seed harus antara 0 dan ${MAX_SEED}!`);
             currentSeedNum = seedNum;
             workflow["105"]["inputs"]["seed"] = Number(seedNum);
             workflow["171"]["inputs"]["seed"] = Number(seedNum);
+            seedInput.value = Number(seedNum);
         }
 
         if (imageMode === "portrait") workflow["152"]["inputs"]["resolution"] = "896x1152 (0.78)";
@@ -500,7 +502,9 @@ async function generateImage() {
                     <tr><td>Negative Prompt:</td><td>${promptNegativeInput}</td></tr>
                     <tr><td>CLIP Skip:</td><td>${clipSkip}</td></tr>
                     <tr><td>Checkpoint:</td><td>${checkpointSelect.value}</td></tr>
-                    <tr><td>Mode:</td><td>${imageMode}</td></tr>
+                    <tr><td>Mode:</td><td>${imageMode.charAt(0).toUpperCase() + imageMode.slice(1)} - ${
+            workflow["152"]["inputs"]["resolution"]
+        }</td></tr>
                     <tr><td>Steps:</td><td>${steps}</td></tr>
                     <tr><td>CFG:</td><td>${cfg}</td></tr>
                     <tr><td>Seed:</td><td>${currentSeedNum}</td></tr>
@@ -562,7 +566,7 @@ async function deleteImage() {
         console.log("Delete response:", result);
 
         if (useDynamicSeed) {
-            const MAX_SEED = BigInt("18446744073709551615");
+            const MAX_SEED = BigInt("9007199254740991");
             const randomValue =
                 BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
                 BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
@@ -613,7 +617,7 @@ function clearImage() {
 
     try {
         if (useDynamicSeed) {
-            const MAX_SEED = BigInt("18446744073709551615");
+            const MAX_SEED = BigInt("9007199254740991");
             const randomValue =
                 BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
                 BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
