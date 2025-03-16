@@ -11,10 +11,20 @@
             <h1>Mimpi (NSFW)</h1>
             <div class="form-group">
                 <label for="prompt">Deskripsi Gambar (Positif)</label>
-                <textarea id="prompt" required rows="8" style="background: linear-gradient(45deg, rgb(87 255 116 / 25%), rgb(0 99 17 / 25%))"></textarea>
+                <textarea
+                    id="prompt"
+                    required
+                    rows="8"
+                    style="background: linear-gradient(45deg, rgb(87 255 116 / 25%), rgb(0 99 17 / 25%))"
+                ></textarea>
                 <label for="prompt-negative">Hindari (Negatif)</label>
-                <textarea id="prompt-negative" required rows="5" style="background: linear-gradient(45deg, rgb(255 87 87 / 25%), rgb(99 0 0 / 25%))">
-gore, horror, text, watermark, low quality, medium quality, blurry, deformed, mutated, anime, toon, render, 3d, illustration, bad eyes, bad hands, bad fingers, tongue piercing</textarea
+                <textarea
+                    id="prompt-negative"
+                    required
+                    rows="5"
+                    style="background: linear-gradient(45deg, rgb(255 87 87 / 25%), rgb(99 0 0 / 25%))"
+                >
+(penis:1.6), (male:1.6), (man:1.6), (men:1.6), gore, horror, text, watermark, low quality, medium quality, blurry, deformed, mutated, anime, toon, render, 3d, illustration, bad eyes, bad hands, bad fingers, asian, chinese, japanese, smiling, (tanned skin:1.4)</textarea
                 >
             </div>
             <div class="checkbox-group">
@@ -66,6 +76,12 @@ gore, horror, text, watermark, low quality, medium quality, blurry, deformed, mu
                 <summary>Opsi Tingkat Lanjut</summary>
                 <div>
                     <div class="form-group">
+                        <label for="steps"
+                            >CLIP Skip <span style="color: #aaa; font-weight: normal">(1-10)</span></label
+                        >
+                        <input type="number" id="clip-skip" min="-10" max="-1" value="-2" required />
+                    </div>
+                    <div class="form-group">
                         <label for="imageMode">Mode Gambar</label>
                         <select id="imageMode">
                             <option value="portrait" selected>Portrait (896x1152)</option>
@@ -75,15 +91,19 @@ gore, horror, text, watermark, low quality, medium quality, blurry, deformed, mu
                     </div>
                     <div class="form-group">
                         <label for="steps">Steps <span style="color: #aaa; font-weight: normal">(1-100)</span></label>
-                        <input type="number" id="steps" min="1" max="100" value="8" required />
+                        <input type="number" id="steps" min="1" max="100" value="7" required />
                     </div>
                     <div class="form-group">
                         <label for="cfg"> CFG <span style="color: #aaa; font-weight: normal">(1-30)</span></label>
-                        <input type="number" id="cfg" min="1" max="30" step="0.5" value="2" required />
+                        <input type="number" id="cfg" min="1" max="30" step="0.5" value="1" required />
+                    </div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-wrapper"><input type="checkbox" id="useDynamicSeed" checked /></div>
+                        <label for="useDynamicSeed">Acak Nomor Seed</label>
                     </div>
                     <div class="form-group">
                         <label for="seed">Seed <span style="color: #aaa; font-weight: normal">(angka)</span></label>
-                        <input type="text" id="seed" placeholder="" value="-1" />
+                        <input type="number" id="seed" placeholder="" value="-1" />
                     </div>
                 </div>
             </details>

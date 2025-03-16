@@ -240,13 +240,13 @@ details > div {
     border-collapse: collapse;
     width: 100%;
     max-width: 600px;
-    background-color: #f9f9f9;
+    background-color: rgba(255, 255, 255, 0.05);
     border: 2px solid #4caf50;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     font-family: Arial, sans-serif;
     margin: 10px 0;
-    color: #333;
+    color: #fff;
 }
 
 .success-table th {
@@ -260,23 +260,23 @@ details > div {
 
 .success-table td {
     padding: 8px 12px;
-    border: 1px solid #ddd;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     vertical-align: top;
 }
 
 .success-table tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .success-table tr:hover {
-    background-color: #ddd;
+    background-color: rgba(255, 255, 255, 0.15);
 }
 
 .success-table td:first-child {
     width: 120px;
     font-weight: bold;
     text-align: right;
-    background-color: #e0f7e0;
+    background-color: rgba(76, 175, 80, 0.2);
     white-space: nowrap;
 }
 

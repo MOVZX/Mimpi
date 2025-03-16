@@ -2,6 +2,74 @@ const COMFYUI_URL = "http://103.255.132.129:8088";
 let currentSeedNum = 0;
 let lastImageData = null;
 
+const checkpointNameMapping = {
+    "Illustrious/cyberillustrious_v30.safetensors": "CyberIllustrious V30",
+    "Illustrious/novaRealityXL_illustriousV20.safetensors": "NovaRealityXL V20",
+    "Illustrious/realismIllustriousBy_v30FP16.safetensors": "RealismIllustrious V30",
+    "Illustrious/redcraftCADSUpdatedMar11_illust3relustion.safetensors": "RedcraftCADS Mar11",
+    "Illustrious/rillusmRealistic_v20.safetensors": "RillusmRealistic V20",
+    "Pony/3xthreat2kModelThatUsesPONY_v10.safetensors": "3xThreat2k V10",
+    "Pony/babesByStableYogi_ponyV4VAEFix.safetensors": "BabesByStableYogi V4",
+    "Pony/cyberrealisticPony_v85.safetensors": "CyberRealisticPony V85",
+    "Pony/fasercore_v30PonyFP16.safetensors": "Fasercore V30",
+    "Pony/iniverseMixSFWNSFW_ponyRealGuofengV50C.safetensors": "IniverseMix V50C",
+    "Pony/ponyDiffusionV6XL.safetensors": "PonyDiffusion V6XL",
+    "Pony/pornyPonyByStable_v20FP16.safetensors": "PornyPony V20",
+    "Pony/realDream_sdxlPony15.safetensors": "RealDream Pony15",
+    "Pony/realismByStableYogi_v40FP16.safetensors": "RealismByStableYogi V40",
+    "Pony/uberRealisticPornMergePonyxl_ponyxlHybridV1.safetensors": "UberRealisticPornMerge V1",
+    "SDXL/acornIsBoningXL_xlV2.safetensors": "AcornIsBoningXL V2",
+    "SDXL/agxl_V2.safetensors": "AGXL V2",
+    "SDXL/animaPencilXL_v500.safetensors": "AnimaPencilXL V500",
+    "SDXL/babesByStableYogi_v4XLFP16.safetensors": "BabesByStableYogi V4XL",
+    "SDXL/biglovexl2.wBWt.safetensors": "BigLoveXL2",
+    "SDXL/biglust16.kst6.safetensors": "BigLust16",
+    "SDXL/boomerArtModelBAM_bamV2.safetensors": "BoomerArtModel V2",
+    "SDXL/clarityXL_v20.safetensors": "ClarityXL V20",
+    "SDXL/cyberrealisticXL_v5.safetensors": "CyberRealisticXL V5",
+    "SDXL/epicrealismXL_vxvAnewstoryRealism.safetensors": "EpicRealismXL VxV",
+    "SDXL/fasercore_xlV1.safetensors": "Fasercore XL V1",
+    "SDXL/jibMixRealisticXL_v160Aphrodite.safetensors": "JibMixRealisticXL V160",
+    "SDXL/juggernautXL_juggXIByRundiffusion.safetensors": "JuggernautXL XI",
+    "SDXL/leosamsHelloworldXL_helloworldXL70.safetensors": "HelloworldXL V70",
+    "SDXL/lustifySDXLNSFW_endgame.safetensors": "LustifySDXL Endgame",
+    "SDXL/lustifySDXLNSFW_oltONELASTTIME.safetensors": "LustifySDXL OLT",
+    "SDXL/lustimix_.safetensors": "Lustimix",
+    "SDXL/lustimix_big.safetensors": "Lustimix Big",
+    "SDXL/msSDXLRealV3_v3.safetensors": "MSSDXLReal V3",
+    "SDXL/novaRealityXL_v70.safetensors": "NovaRealityXL V70",
+    "SDXL/omnigenxlNSFWSFW_v10.safetensors": "OmnigenXL V10",
+    "SDXL/perfectionRealisticILXL_v10.safetensors": "PerfectionRealisticILXL V10",
+    "SDXL/photopediaXL_45.safetensors": "PhotopediaXL V45",
+    "SDXL/polyhedronSDXL_v3.safetensors": "PolyhedronSDXL V3",
+    "SDXL/pornmaster_proSDXLV3VAE.safetensors": "Pornmaster ProSDXL V3",
+    "SDXL/realismByStableYogi_v5XLFP16.safetensors": "RealismByStableYogi V5XL",
+    "SDXL/realismEngineSDXL_v30VAE.safetensors": "RealismEngineSDXL V30",
+    "SDXL/realisticLustXL_v05.safetensors": "RealisticLustXL V05",
+    "SDXL/realisticStockPhoto_v20.safetensors": "RealisticStockPhoto V20",
+    "SDXL/realvisxlV50_v50Bakedvae.safetensors": "RealvisXL V50",
+    "SDXL/sd_xl_base_1.0_0.9vae.safetensors": "SDXL Base 1.0",
+    "SDXL/sd_xl_refiner_1.0.safetensors": "SDXL Refiner 1.0",
+    "SDXL/sdXL_v10VAEFix.safetensors": "SDXL V10",
+    "SDXL/sdxlPhotorealisticMix_v10.safetensors": "SDXLPhotorealisticMix V10",
+    "SDXL/sdxxxl_v30.safetensors": "SDXXXL V30",
+    "SDXL/STOIQOAfroditeFLUXXL_XL31.safetensors": "STOIQOAfroditeFLUXXL V31",
+    "SDXL/stoiqoNewrealityFLUXSD35_XLPRO.safetensors": "StoiqoNewrealityFLUXSD35",
+    "SDXL-Lightning/agxl_LightningV10.safetensors": "AGXL Lightning V10",
+    "SDXL-Lightning/babesByStableYogi_v4XLLightning.safetensors": "BabesByStableYogi V4XL Lightning",
+    "SDXL-Lightning/copaxTimeless_photorealismSDXL8Step.safetensors": "CopaxTimeless PhotorealismSDXL",
+    "SDXL-Lightning/dreamshaperXL_lightningDPMSDE.safetensors": "DreamshaperXL Lightning",
+    "SDXL-Lightning/Epicrealismxl_Hades.safetensors": "EpicRealismXL Hades",
+    "SDXL-Lightning/jibMixRealisticXL_v10Lightning46Step.safetensors": "JibMixRealisticXL V10 Lightning",
+    "SDXL-Lightning/juggernautXL_v9Rdphoto2Lightning.safetensors": "JuggernautXL V9 Lightning",
+    "SDXL-Lightning/leosamsHelloworldXL_hw50EulerALightning.safetensors": "HelloworldXL V50 Lightning",
+    "SDXL-Lightning/lustifySDXLNSFW_v40DMD2.safetensors": "LustifySDXL v4.0 DMD",
+    "SDXL-Lightning/realismByStableYogi_v5XLLightning.safetensors": "RealismByStableYogi V5XL Lightning",
+    "SDXL-Lightning/realvisxlV50_v50LightningBakedvae.safetensors": "RealvisXL V50 Lightning",
+    "SDXL-Lightning/stoiqoNewrealityFLUXSD35_XLLight10.safetensors": "StoiqoNewrealityFLUXSD35 Lightning",
+    "SDXL-Turbo/wildcardxXLTURBO_wildcardxXLTURBOV10.safetensors": "WildcardXXLTURBO V10",
+};
+
 // Daftar Preset
 const presets = {
     none: "Tidak Ada",
@@ -44,7 +112,7 @@ const presets = {
     "kneeling blowjob 8":
         "A high-quality, explicit medium photo for r/18_19 and Brazzers, featuring a 21-year-old Danish girl with a thicc, curvy yet slim sexy figure and a round face, kneeling nude on a bedroom floor. She has wavy chestnut hair and a sleepy, sad expression with half-closed eyes visible through her hair, accented by bohemian makeup. She’s performing a forced deep blowjob on a man with a huge penis, with excessive cum in her mouth, on her face, dripping as drops, and in her hair. He grabs her hair and wrist, head held firmly, in a side-view candid shot. The professional, balanced photo uses natural daylight with low contrast, studio lighting, and a rear light, styled with lomography and gritty contrast. The close-up background shows a cozy, messy room with an adult in bed, a laptop open, fairy lights, plants, boho decor, and a sunbeam through the window.",
     "kneeling tongue out 1":
-        "1girl, (solo:1.6), beautiful 30 y.o hotwife, kneeling, looking up, eyes closed, long lush hair, tongue out, anticipation, (pov), view from top, realistic natural teeth, pale skin, detailed skin texture, natural skin tone, goosebumps, moles, bedroom, cinematic, highly detailed, best quality, intricate details, medium close shot, (wears black casual outfit, with bra and panties:1.1), average medium breasts, natural vivid lighting, bright indoor, vibrant",
+        "1girl, (solo:1.6), beautiful 35 y.o hotwife, kneeling, looking up, eyes closed, long hair, tongue out, anticipation, pov, realistic natural teeth, detailed skin texture, goosebumps, bedroom, cinematic, highly detailed, best quality, intricate details, (photorealistic:1.4), medium close shot,  (fisheye lens:1.2), (wears black casual outfit, with bra and panties:1.1), average medium breasts, (candid photograph), natural white light, muted color",
     "penetration 1":
         "A cinematic, medium-quality 4K still of a gorgeous, thicc woman with freckles, lips, and a sexy figure, moaning as she has sex with a man on a bed in a squatting cowwoman position. Shot from a closeup POV below, she bounces with vaginal penetration, captured with motion blur. The uncensored, emotional scene for r/18_19 has sharp focus, a moody vignette, and epic, grainy detail, blending realistic human textures and puffy nipples.",
     "pov blowjob 1":
@@ -115,9 +183,9 @@ const workflow = {
     105: {
         inputs: {
             seed: 0,
-            steps: 8,
-            cfg: 2,
-            sampler_name: "euler_ancestral",
+            steps: 7,
+            cfg: 1,
+            sampler_name: "lcm",
             scheduler: "normal",
             denoise: 1,
             model: ["193", 0],
@@ -130,7 +198,7 @@ const workflow = {
     106: {
         inputs: {
             object_to_patch: "diffusion_model",
-            residual_diff_threshold: 0.1,
+            residual_diff_threshold: 0.2,
             start: 0,
             end: 1,
             max_consecutive_cache_hits: -1,
@@ -274,8 +342,13 @@ function fetchCheckpointOptions() {
         "SDXL-Lightning/Epicrealismxl_Hades.safetensors",
         "SDXL-Lightning/jibMixRealisticXL_v10Lightning46Step.safetensors",
         "SDXL-Lightning/juggernautXL_v9Rdphoto2Lightning.safetensors",
+        "SDXL-Lightning/leosamsHelloworldXL_hw50EulerALightning.safetensors",
+        "SDXL-Lightning/lustifySDXLNSFW_v40DMD2.safetensors",
         "SDXL-Lightning/realismByStableYogi_v5XLLightning.safetensors",
         "SDXL-Lightning/realvisxlV50_v50LightningBakedvae.safetensors",
+        "SDXL-Lightning/stoiqoNewrealityFLUXSD35_XLLight10.safetensors",
+        "---- SDXL Turbo ----",
+        "SDXL-Turbo/wildcardxXLTURBO_wildcardxXLTURBOV10.safetensors",
     ];
 
     checkpointCache.checkpoints = baseCheckpoints.map((ckpt) => ckpt);
@@ -287,10 +360,14 @@ function fetchSamplerOptions() {
         "euler",
         "euler_ancestral",
         "dpmpp_sde",
+        "dpmpp_sde_gpu",
         "dpmpp_2m",
         "dpmpp_2m_sde",
+        "dpmpp_2m_sde_gpu",
         "dpmpp_3m_sde",
+        "dpmpp_3m_sde_gpu",
         "deis",
+        "lcm",
         "res_multistep",
     ];
 }
@@ -320,11 +397,14 @@ function populateDropdowns() {
 
         checkpointOptions.forEach((option) => {
             const optionElement = document.createElement("option");
-            const displayName = option.replace(/^(SDXL\/|SDXL-Lightning\/|Pony\/|Illustrious\/)/, "");
+            const displayName =
+                checkpointNameMapping[option] ||
+                option
+                    .replace(/^(SDXL\/|SDXL-Lightning\/|SDXL-Turbo\/|Pony\/|Illustrious\/)/, "") // Remove prefix
+                    .replace(/\.safetensors$/, ""); // Remove .safetensors
             optionElement.value = option;
             optionElement.textContent = displayName;
-            if (option === "SDXL-Lightning/realismByStableYogi_v5XLLightning.safetensors")
-                optionElement.selected = true;
+            if (option === "SDXL-Lightning/lustifySDXLNSFW_v40DMD2.safetensors") optionElement.selected = true;
             checkpointSelect.appendChild(optionElement);
         });
 
@@ -352,7 +432,7 @@ function populateDropdowns() {
             const optionElement = document.createElement("option");
             optionElement.value = option;
             optionElement.textContent = option;
-            if (option === "euler_ancestral") optionElement.selected = true;
+            if (option === "lcm") optionElement.selected = true;
             samplerSelect.appendChild(optionElement);
         });
 
@@ -456,11 +536,13 @@ document.addEventListener("DOMContentLoaded", () => {
 async function generateImage() {
     const promptInput = document.getElementById("prompt").value;
     const promptNegativeInput = document.getElementById("prompt-negative").value;
+    const clipSkipInput = document.getElementById("clip-skip").value;
     const stepsInput = document.getElementById("steps").value;
     const cfgInput = document.getElementById("cfg").value;
     const imageMode = document.getElementById("imageMode").value;
     const seedInput = document.getElementById("seed").value;
     const useDynamicPrompt = document.getElementById("useDynamicPrompt").checked;
+    const useDynamicSeed = document.getElementById("useDynamicSeed").checked;
     const status = document.getElementById("status");
     const error = document.getElementById("error");
     const button = document.querySelector("button");
@@ -483,8 +565,11 @@ async function generateImage() {
     try {
         const steps = parseInt(stepsInput);
         const cfg = parseFloat(cfgInput);
+        const clipSkip = parseInt(clipSkipInput);
         if (isNaN(steps) || steps < 1 || steps > 100) throw new Error("Steps harus berupa angka antara 1 dan 100!");
         if (isNaN(cfg) || cfg < 1 || cfg > 30) throw new Error("CFG harus berupa angka antara 1 dan 30!");
+        if (isNaN(clipSkip) || clipSkip < -10 || clipSkip > -1)
+            throw new Error("CLIP Skip harus berupa angka antara -1 dan -10!");
 
         const checkpointSelect = document.getElementById("checkpoint");
         const samplerSelect = document.getElementById("sampler");
@@ -494,6 +579,7 @@ async function generateImage() {
             workflow["178:0"]["inputs"]["text"] = promptInput;
             workflow["171"]["inputs"]["custom_subject"] = promptInput;
             workflow["103"]["inputs"]["text"] = promptNegativeInput;
+            workflow["76"]["inputs"]["stop_at_clip_layer"] = clipSkip;
             workflow["105"]["inputs"]["steps"] = steps;
             workflow["105"]["inputs"]["cfg"] = cfg;
             workflow["105"]["inputs"]["sampler_name"] = samplerSelect.value;
@@ -502,7 +588,7 @@ async function generateImage() {
         } else throw new Error("Dropdowns tidak ditemukan!");
 
         const MAX_SEED = BigInt("18446744073709551615");
-        if (!seedInput || isNaN(seedInput) || seedInput === "-1") {
+        if (useDynamicSeed || !seedInput || isNaN(seedInput) || seedInput === "-1") {
             const randomValue =
                 BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
                 BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
@@ -584,6 +670,7 @@ async function generateImage() {
                 <table class="success-table">
                     <tr><td>Positive Prompt:</td><td>${promptInput}</td></tr>
                     <tr><td>Negative Prompt:</td><td>${promptNegativeInput}</td></tr>
+                    <tr><td>CLIP Skip:</td><td>${clipSkip}</td></tr>
                     <tr><td>Checkpoint:</td><td>${checkpointSelect.value}</td></tr>
                     <tr><td>Mode:</td><td>${imageMode}</td></tr>
                     <tr><td>Steps:</td><td>${steps}</td></tr>
@@ -616,6 +703,7 @@ async function deleteImage() {
     const button = document.querySelector(".delete");
     const lightbox = document.getElementById("lightbox");
     const seedInput = document.getElementById("seed");
+    const useDynamicSeed = document.getElementById("useDynamicSeed").checked;
 
     if (!lastImageData || !lastImageData.filename) {
         showError(error, "Tidak ada gambar yang dapat dihapus!");
@@ -645,14 +733,16 @@ async function deleteImage() {
         const result = await response.json();
         console.log("Delete response:", result);
 
-        const MAX_SEED = BigInt("18446744073709551615");
-        const randomValue =
-            BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
-            BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
-        currentSeedNum = randomValue % (MAX_SEED + BigInt(1));
-        workflow["105"]["inputs"]["seed"] = Number(currentSeedNum);
-        workflow["171"]["inputs"]["seed"] = Number(currentSeedNum);
-        seedInput.value = currentSeedNum.toString();
+        if (useDynamicSeed) {
+            const MAX_SEED = BigInt("18446744073709551615");
+            const randomValue =
+                BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
+                BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
+            currentSeedNum = randomValue % (MAX_SEED + BigInt(1));
+            workflow["105"]["inputs"]["seed"] = Number(currentSeedNum);
+            workflow["171"]["inputs"]["seed"] = Number(currentSeedNum);
+            seedInput.value = Number(currentSeedNum);
+        }
 
         outputImage.src = "";
         outputImage.style.display = "none";
@@ -674,6 +764,7 @@ function clearImage() {
     const imageActions = document.getElementById("imageActions");
     const lightbox = document.getElementById("lightbox");
     const seedInput = document.getElementById("seed");
+    const useDynamicSeed = document.getElementById("useDynamicSeed").checked;
     const button = document.querySelector(".clear");
 
     if (!status || !outputImage || !imageActions || !lightbox || !seedInput || !button) {
@@ -693,15 +784,17 @@ function clearImage() {
     button.disabled = true;
 
     try {
-        const MAX_SEED = BigInt("18446744073709551615");
-        const randomValue =
-            BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
-            BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
-        currentSeedNum = randomValue % (MAX_SEED + BigInt(1));
-        workflow["105"]["inputs"]["seed"] = Number(currentSeedNum);
-        workflow["171"]["inputs"]["seed"] = Number(currentSeedNum);
-        seedInput.value = currentSeedNum.toString();
-        console.log("[DEBUG] Seed randomized in clearImage:", currentSeedNum.toString());
+        if (useDynamicSeed) {
+            const MAX_SEED = BigInt("18446744073709551615");
+            const randomValue =
+                BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
+                BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
+            currentSeedNum = randomValue % (MAX_SEED + BigInt(1));
+            workflow["105"]["inputs"]["seed"] = Number(currentSeedNum);
+            workflow["171"]["inputs"]["seed"] = Number(currentSeedNum);
+            seedInput.value = Number(currentSeedNum);
+            console.log("[DEBUG] Seed randomized in clearImage:", Number(currentSeedNum));
+        }
 
         outputImage.src = "";
         outputImage.style.display = "none";
