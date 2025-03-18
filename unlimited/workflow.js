@@ -53,7 +53,7 @@ const workflow = {
     106: {
         inputs: {
             object_to_patch: "diffusion_model",
-            residual_diff_threshold: 0.2,
+            residual_diff_threshold: 0.12,
             start: 0,
             end: 1,
             max_consecutive_cache_hits: -1,

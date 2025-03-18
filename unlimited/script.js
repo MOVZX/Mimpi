@@ -319,7 +319,7 @@ async function generateImage() {
 
     if (!document.getElementById("checkpoint")) populateDropdowns();
 
-    showStatus(status, "<b>Membuat gambar...</b>");
+    showStatus(status, "<h4>Membuat gambar...</h4>");
 
     error.style.display = "none";
     outputImage.style.display = "none";
@@ -569,7 +569,7 @@ async function deleteImage() {
         lightbox.style.display = "none";
         lastImageData = null;
 
-        showStatus(status, "<b>Gambar berhasil dihapus!</b>", "success");
+        showStatus(status, "<h4>Gambar berhasil dihapus!</h4>", "success");
     } catch (err) {
         console.error("Delete error:", err);
         showError(error, `Gagal menghapus gambar: ${err.message}`);
@@ -603,7 +603,7 @@ function clearImage() {
         return;
     }
 
-    showStatus(status, "<b>Membersihkan gambar...</b>");
+    showStatus(status, "<h4>Membersihkan gambar...</h4>");
 
     button.disabled = true;
 
@@ -628,7 +628,7 @@ function clearImage() {
         imageActions.style.display = "none";
         lightbox.style.display = "none";
 
-        showStatus(status, `<b>Seed baru: ${currentSeedNum}</b>`, "success");
+        showStatus(status, `<h4>Seed baru: ${currentSeedNum}</h4>`, "success");
     } catch (err) {
         console.error("[DEBUG] Error in clearImage:", err);
         showError(document.getElementById("error"), "Gagal membersihkan gambar!");
