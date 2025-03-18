@@ -1,3 +1,4 @@
+// NSFW Presets
 const SFWPresets = {
     none: { label: "Tidak Ada", prompts: {} },
     "bedroom elegance": {
@@ -377,27 +378,32 @@ const SFWPresets = {
     },
 };
 
+// Fungsi untuk memilih warna rambut secara acak
 function randomHairColours() {
     return hairColours[Math.floor(Math.random() * hairColours.length)];
 }
 
+// Fungsi untuk memilih gaya rambut secara acak
 function randomHairStyles() {
     return hairStyles[Math.floor(Math.random() * hairStyles.length)];
 }
 
+// Fungsi untuk memilih kata sifat rambut secara acak
 function randomHairAdjective() {
     return hairAdjectives[Math.floor(Math.random() * hairAdjectives.length)];
 }
 
+// Fungsi untuk menghasilkan usia acak (25-34)
 function randomAge() {
     return (Math.random() * 10) | 25;
 }
 
+// Fungsi untuk menghasilkan prompt berdasarkan ruangan dan profil
 function generatePrompts(room, profiles) {
     return profiles.reduce((prompts, profile, index) => {
         prompts[
             index + 1
-        ] = `hyperrealistic 8K, ${profile.age}-year-old woman, ${profile.hairAdjective} ${profile.hairstyle} ${profile.haircolour} hair, stunningly beautiful, wearing ${profile.attire}, dynamic pose, ${room}, high resolution, best quality, real human aesthetic`;
+        ] = `hyperrealistic 8K, ${profile.age}-year-old woman, ${profile.hairAdjective} ${profile.hairstyle} ${profile.haircolour} hair, stunningly beautiful, wearing ${profile.attire}, dynamic pose, ${room}, high resolution, best quality, real human aesthetic, sfw`;
 
         return prompts;
     }, {});

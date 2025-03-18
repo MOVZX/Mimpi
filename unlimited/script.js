@@ -1,4 +1,4 @@
-const COMFYUI_URL = "http://192.168.8.3:8188";
+const COMFYUI_URL = "http://gambar.ai:8188";
 let currentSeedNum = 0;
 let lastImageData = null;
 
@@ -8,14 +8,17 @@ const mainPresets = {
     nsfw: NSFWPresets,
 };
 
+// Fungsi yang dijalankan saat halaman dimuat
 window.onload = function () {
     const outputImage = document.getElementById("outputImage");
     const imageActions = document.getElementById("imageActions");
     const status = document.getElementById("status");
     const savedSeed = localStorage.getItem("lastSeed");
 
+    // Mengatur nilai seed terakhir jika ada
     if (savedSeed) document.getElementById("seed").value = savedSeed;
 
+    // Mengosongkan dan menyembunyikan elemen gambar serta aksi
     outputImage.src = "";
     outputImage.style.display = "none";
     imageActions.style.display = "none";
@@ -24,12 +27,14 @@ window.onload = function () {
     status.textContent = "";
 };
 
+// Mengisi dropdown untuk opsi checkpoint, sampler, dan scheduler
 function populateDropdowns() {
     const container = document.querySelector(".container");
     const detailsContent = container.querySelector("details > div");
 
     let checkpointFormGroup = document.getElementById("checkpointFormGroup");
 
+    // Membuat dropdown checkpoint jika belum ada
     if (!checkpointFormGroup) {
         const checkpointOptions = fetchCheckpointOptions();
         checkpointFormGroup = document.createElement("div");
@@ -65,6 +70,7 @@ function populateDropdowns() {
         detailsContent.insertBefore(checkpointFormGroup, detailsContent.firstChild);
     }
 
+    // Membuat dropdown sampler jika belum ada
     let samplerFormGroup = document.getElementById("samplerFormGroup");
 
     if (!samplerFormGroup) {
@@ -96,6 +102,7 @@ function populateDropdowns() {
         detailsContent.appendChild(samplerFormGroup);
     }
 
+    // Membuat dropdown scheduler jika belum ada
     let schedulerFormGroup = document.getElementById("schedulerFormGroup");
 
     if (!schedulerFormGroup) {
@@ -128,6 +135,7 @@ function populateDropdowns() {
     }
 }
 
+// Mengisi dropdown preset utama
 function populatePresetDropdowns() {
     const presetSelect = document.getElementById("main-preset");
     const subcategoryContainer = document.getElementById("subcategory-container");
@@ -172,6 +180,7 @@ function populatePresetDropdowns() {
 
         presetSelect.appendChild(nsfwOptgroup);
 
+        // Event listener untuk perubahan preset utama
         presetSelect.addEventListener("change", () => {
             const selectedValue = presetSelect.value;
             promptTextarea.value = "";
@@ -207,6 +216,7 @@ function populatePresetDropdowns() {
             }
         });
 
+        // Event listener untuk perubahan subkategori
         subcategorySelect.addEventListener("change", () => {
             const selectedValue = presetSelect.value;
             const [categoryType, categoryKey] = selectedValue.split(":");
@@ -217,6 +227,7 @@ function populatePresetDropdowns() {
     }
 }
 
+// Inisialisasi event listener saat DOM dimuat
 document.addEventListener("DOMContentLoaded", () => {
     populateDropdowns();
     populatePresetDropdowns();
@@ -248,6 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Event listener untuk lightbox gambar
     const outputImage = document.getElementById("outputImage");
     const lightbox = document.getElementById("lightbox");
     const lightboxImage = document.getElementById("lightboxImage");
@@ -271,6 +283,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+function loadImage(imageUrl) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = imageUrl;
+
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error(`Failed to load image at ${imageUrl}`));
+    });
+  }
+
+// Fungsi untuk menghasilkan gambar
 async function generateImage() {
     const promptInput = document.getElementById("prompt").value;
     const promptNegativeInput = document.getElementById("prompt-negative").value;
@@ -287,6 +310,7 @@ async function generateImage() {
     const outputImage = document.getElementById("outputImage");
     const imageActions = document.getElementById("imageActions");
 
+    // Validasi input prompt
     if (!promptInput) {
         showError(error, "Deskripsi gambar tidak boleh kosong!");
 
@@ -295,7 +319,7 @@ async function generateImage() {
 
     if (!document.getElementById("checkpoint")) populateDropdowns();
 
-    showStatus(status, "<center><b>Membuat gambar...</b></center>");
+    showStatus(status, "<b>Membuat gambar...</b>");
 
     error.style.display = "none";
     outputImage.style.display = "none";
@@ -307,6 +331,7 @@ async function generateImage() {
         const cfg = parseFloat(cfgInput);
         const clipSkip = parseInt(clipSkipInput);
 
+        // Validasi parameter numerik
         if (isNaN(steps) || steps < 1 || steps > 100) throw new Error("Steps harus berupa angka antara 1 dan 100!");
         if (isNaN(cfg) || cfg < 1 || cfg > 30) throw new Error("CFG harus berupa angka antara 1 dan 30!");
         if (isNaN(clipSkip) || clipSkip < -10 || clipSkip > -1)
@@ -316,6 +341,7 @@ async function generateImage() {
         const samplerSelect = document.getElementById("sampler");
         const schedulerSelect = document.getElementById("scheduler");
 
+        // Mengatur workflow dengan input pengguna
         if (checkpointSelect && samplerSelect && schedulerSelect) {
             workflow["4"]["inputs"]["ckpt_name"] = checkpointSelect.value;
             workflow["178:0"]["inputs"]["text"] = promptInput;
@@ -331,6 +357,7 @@ async function generateImage() {
 
         const MAX_SEED = BigInt("9007199254740991");
 
+        // Menentukan seed secara acak atau manual
         if (useDynamicSeed || !seedInput || isNaN(seedInput) || seedInput === "-1") {
             const randomValue =
                 BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
@@ -351,10 +378,12 @@ async function generateImage() {
             seedInput.value = Number(seedNum);
         }
 
+        // Mengatur resolusi berdasarkan mode gambar
         if (imageMode === "portrait") workflow["152"]["inputs"]["resolution"] = "896x1152 (0.78)";
         else if (imageMode === "landscape") workflow["152"]["inputs"]["resolution"] = "1152x896 (1.29)";
         else if (imageMode === "square") workflow["152"]["inputs"]["resolution"] = "1024x1024 (1.0)";
 
+        // Mengatur prefix nama file berdasarkan tanggal dan seed
         const currentDate = new Date();
         const formattedDate = currentDate.toISOString().split("T")[0];
         workflow["217"]["inputs"]["filename_prefix"] = `webui-rated-r/${formattedDate}/${currentSeedNum}`;
@@ -370,6 +399,7 @@ async function generateImage() {
             useDynamicPrompt: useDynamicPrompt,
         });
 
+        // Mengirim permintaan ke server
         const response = await fetch(`${COMFYUI_URL}/prompt`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -386,9 +416,10 @@ async function generateImage() {
 
         console.log("[DEBUG] Prompt ID:", prompt_id);
 
+        // Menunggu dan mengambil URL gambar yang dihasilkan
         let imageUrl = null;
         let attempts = 0;
-        const maxAttempts = 30;
+        const maxAttempts = 60;
 
         while (!imageUrl && attempts < maxAttempts) {
             await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -413,8 +444,9 @@ async function generateImage() {
             attempts++;
         }
 
-        if (!imageUrl) throw new Error("Gagal mengambil gambar setelah 30 detik.");
+        if (!imageUrl) throw new Error("Gagal mengambil gambar setelah 60 detik.");
 
+        // Menampilkan gambar yang dihasilkan
         outputImage.src = imageUrl;
         outputImage.style.display = "block";
         imageActions.style.display = "flex";
@@ -443,6 +475,22 @@ async function generateImage() {
 
         localStorage.setItem("lastGeneratedImage", imageUrl);
         localStorage.setItem("lastSeed", currentSeedNum);
+
+        // Scroll ke bawah halaman setelah gambar berhasil dibuat & ditampilkan
+        (async () => {
+            try {
+              const img = await loadImage(imageUrl);
+
+              window.scrollTo({
+                top: document.documentElement.scrollHeight,
+                behavior: 'smooth'
+              });
+
+              console.log('Image loaded successfully:', img);
+            } catch (error) {
+              console.error(error.message);
+            }
+          })();
     } catch (err) {
         let errorMessage = err.message;
 
@@ -457,6 +505,7 @@ async function generateImage() {
     }
 }
 
+// Fungsi untuk menghapus gambar dari server
 async function deleteImage() {
     const status = document.getElementById("status");
     const error = document.getElementById("error");
@@ -473,7 +522,7 @@ async function deleteImage() {
         return;
     }
 
-    showStatus(status, "<center><h4>Menghapus gambar...</h4></center>");
+    showStatus(status, "<h4>Menghapus gambar...</h4>");
 
     button.disabled = true;
 
@@ -501,6 +550,7 @@ async function deleteImage() {
 
         console.log("Delete response:", result);
 
+        // Mengacak seed jika dynamic seed aktif
         if (useDynamicSeed) {
             const MAX_SEED = BigInt("9007199254740991");
             const randomValue =
@@ -512,13 +562,14 @@ async function deleteImage() {
             seedInput.value = Number(currentSeedNum);
         }
 
+        // Menyembunyikan gambar dan aksi setelah dihapus
         outputImage.src = "";
         outputImage.style.display = "none";
         imageActions.style.display = "none";
         lightbox.style.display = "none";
         lastImageData = null;
 
-        showStatus(status, "<center><b>Gambar berhasil dihapus!</b></center>", "success");
+        showStatus(status, "<b>Gambar berhasil dihapus!</b>", "success");
     } catch (err) {
         console.error("Delete error:", err);
         showError(error, `Gagal menghapus gambar: ${err.message}`);
@@ -527,6 +578,7 @@ async function deleteImage() {
     }
 }
 
+// Fungsi untuk mereset tampilan gambar tanpa menghapus dari server
 function clearImage() {
     const status = document.getElementById("status");
     const outputImage = document.getElementById("outputImage");
@@ -551,11 +603,12 @@ function clearImage() {
         return;
     }
 
-    showStatus(status, "<center><b>Membersihkan gambar...</b></center>");
+    showStatus(status, "<b>Membersihkan gambar...</b>");
 
     button.disabled = true;
 
     try {
+        // Mengacak seed jika dynamic seed aktif
         if (useDynamicSeed) {
             const MAX_SEED = BigInt("9007199254740991");
             const randomValue =
@@ -569,12 +622,13 @@ function clearImage() {
             console.log("[DEBUG] Seed randomized in clearImage:", Number(currentSeedNum));
         }
 
+        // Menyembunyikan gambar dan aksi
         outputImage.src = "";
         outputImage.style.display = "none";
         imageActions.style.display = "none";
         lightbox.style.display = "none";
 
-        showStatus(status, `<center><b>Seed baru: ${currentSeedNum}</b></center>`, "success");
+        showStatus(status, `<b>Seed baru: ${currentSeedNum}</b>`, "success");
     } catch (err) {
         console.error("[DEBUG] Error in clearImage:", err);
         showError(document.getElementById("error"), "Gagal membersihkan gambar!");
@@ -583,6 +637,7 @@ function clearImage() {
     }
 }
 
+// Menampilkan status dengan pesan tertentu
 function showStatus(statusElement, message, type = "") {
     statusElement.innerHTML = message;
     statusElement.style.display = "block";
@@ -594,6 +649,7 @@ function showStatus(statusElement, message, type = "") {
         }, 5000);
 }
 
+// Menampilkan pesan error
 function showError(errorElement, message) {
     errorElement.textContent = message;
     errorElement.style.display = "block";

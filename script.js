@@ -1,4 +1,4 @@
-const COMFYUI_URL = "http://gambar.ai:8188";
+const COMFYUI_URL = "https://comfyui.blackmarch.net";
 let currentSeedNum = 0;
 
 window.onload = function () {
@@ -13,27 +13,6 @@ window.onload = function () {
     status.className = "";
     status.textContent = "";
 };
-
-function fetchCheckpointOptions() {
-    const baseCheckpoints = [
-        "agxl_LightningV10.safetensors",
-        "dreamshaperXL_lightningDPMSDE.safetensors",
-        "Epicrealismxl_Hades.safetensors",
-        "jibMixRealisticXL_v10Lightning46Step.safetensors",
-        "juggernautXL_v9Rdphoto2Lightning.safetensors",
-        "realvisxlV50_v50LightningBakedvae.safetensors",
-    ];
-
-    return baseCheckpoints.map((ckpt) => `SDXL-Lightning/${ckpt}`);
-}
-
-function fetchSamplerOptions() {
-    return ["euler", "euler_ancestral", "dpmpp_sde", "dpmpp_2m", "dpmpp_2m_sde", "dpmpp_3m_sde", "res_multistep"];
-}
-
-function fetchSchedulerOptions() {
-    return ["normal", "karras", "exponential", "sgm_uniform", "simple", "beta"];
-}
 
 function populateDropdowns() {
     const container = document.querySelector(".container");

@@ -1,3 +1,7 @@
+// Cached Checkpoints
+const checkpointCache = {};
+
+// Checkpoints Maps
 const checkpointNameMapping = {
     "Illustrious/cyberillustrious_v30.safetensors": "CyberIllustrious V30",
     "Illustrious/novaRealityXL_illustriousV20.safetensors": "NovaRealityXL V20",
@@ -18,6 +22,7 @@ const checkpointNameMapping = {
     "SDXL/agxl_V2.safetensors": "AGXL V2",
     "SDXL/animaPencilXL_v500.safetensors": "AnimaPencilXL V500",
     "SDXL/babesByStableYogi_v4XLFP16.safetensors": "BabesByStableYogi V4XL",
+    "SDXL/bestPornMergeBPM_v10.safetensors": "BestPornMergeBPM v10 V4XL",
     "SDXL/biglovexl2.wBWt.safetensors": "BigLoveXL2",
     "SDXL/biglust16.kst6.safetensors": "BigLust16",
     "SDXL/boomerArtModelBAM_bamV2.safetensors": "BoomerArtModel V2",
@@ -68,10 +73,11 @@ const checkpointNameMapping = {
     "SDXL-Turbo/wildcardxXLTURBO_wildcardxXLTURBOV10.safetensors": "WildcardXXLTURBO V10",
 };
 
-const checkpointCache = {};
+// Checkpoints
 function fetchCheckpointOptions() {
     if (checkpointCache.checkpoints) return checkpointCache.checkpoints;
 
+    // Daftar checkpoint dasar
     const baseCheckpoints = [
         "---- Illustrious ----",
         "Illustrious/cyberillustrious_v30.safetensors",
@@ -95,6 +101,7 @@ function fetchCheckpointOptions() {
         "SDXL/agxl_V2.safetensors",
         "SDXL/animaPencilXL_v500.safetensors",
         "SDXL/babesByStableYogi_v4XLFP16.safetensors",
+        "SDXL/bestPornMergeBPM_v10.safetensors",
         "SDXL/biglovexl2.wBWt.safetensors",
         "SDXL/biglust16.kst6.safetensors",
         "SDXL/boomerArtModelBAM_bamV2.safetensors",
@@ -151,6 +158,7 @@ function fetchCheckpointOptions() {
     return checkpointCache.checkpoints;
 }
 
+// Samplers
 function fetchSamplerOptions() {
     return [
         "euler",
@@ -188,6 +196,7 @@ function fetchSamplerOptions() {
     ];
 }
 
+// Schedulers
 function fetchSchedulerOptions() {
     return [
         "normal",

@@ -1,3 +1,4 @@
+// NSFW Presets
 const NSFWPresets = {
     none: { label: "Tidak Ada", prompts: {} },
     "cum on face": {
@@ -383,70 +384,70 @@ const NSFWPresets = {
                 haircolour: randomHairColours(),
                 hairAdjective: randomHairAdjective(),
                 age: randomAge(),
-                attire: "wearing decent dress, kneeling with tongue out, seductive gaze, (1girl:1.6), (solo:1.6), (alone:1.6), (pov), eyes closed, anticipation, (looking up), (close top view), (facing straight up into the camera), cinematic, photorealistic",
+                attire: "wearing decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
             },
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
                 hairAdjective: randomHairAdjective(),
                 age: randomAge(),
-                attire: "wearing decent dress, kneeling with tongue out and wet lips, intense expression, (1girl:1.6), (solo:1.6), (alone:1.6), (pov), eyes closed, anticipation, (looking up), (close top view), (facing straight up into the camera), cinematic, photorealistic",
+                attire: "wearing decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
             },
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
                 hairAdjective: randomHairAdjective(),
                 age: randomAge(),
-                attire: "wearing decent dress, kneeling with tongue out and glistening skin, (1girl:1.6), (solo:1.6), (alone:1.6), (pov), eyes closed, anticipation, (looking up), (close top view), (facing straight up into the camera), cinematic, photorealistic",
+                attire: "wearing decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
             },
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
                 hairAdjective: randomHairAdjective(),
                 age: randomAge(),
-                attire: "wearing decent dress, kneeling with tongue out and playful pose, (1girl:1.6), (solo:1.6), (alone:1.6), (pov), eyes closed, anticipation, (looking up), (close top view), (facing straight up into the camera), cinematic, photorealistic",
+                attire: "wearing decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
             },
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
                 hairAdjective: randomHairAdjective(),
                 age: randomAge(),
-                attire: "wearing decent dress, kneeling with tongue out and dynamic angle, (1girl:1.6), (solo:1.6), (alone:1.6), (pov), eyes closed, anticipation, (looking up), (close top view), (facing straight up into the camera), cinematic, photorealistic",
+                attire: "wearing decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
             },
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
                 hairAdjective: randomHairAdjective(),
                 age: randomAge(),
-                attire: "wearing decent dress, kneeling with tongue out and steamy background, (1girl:1.6), (solo:1.6), (alone:1.6), (pov), eyes closed, anticipation, (looking up), (close top view), (facing straight up into the camera), cinematic, photorealistic",
+                attire: "wearing decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
             },
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
                 hairAdjective: randomHairAdjective(),
                 age: randomAge(),
-                attire: "wearing decent dress, kneeling with tongue out and parted lips, (1girl:1.6), (solo:1.6), (alone:1.6), (pov), eyes closed, anticipation, (looking up), (close top view), (facing straight up into the camera), cinematic, photorealistic",
+                attire: "wearing decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
             },
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
                 hairAdjective: randomHairAdjective(),
                 age: randomAge(),
-                attire: "wearing decent dress, kneeling with tongue out and flushed cheeks, (1girl:1.6), (solo:1.6), (alone:1.6), (pov), eyes closed, anticipation, (looking up), (close top view), (facing straight up into the camera), cinematic, photorealistic",
+                attire: "wearing decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
             },
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
                 hairAdjective: randomHairAdjective(),
                 age: randomAge(),
-                attire: "wearing decent dress, kneeling with tongue out and sweat on skin, (1girl:1.6), (solo:1.6), (alone:1.6), (pov), eyes closed, anticipation, (looking up), (close top view), (facing straight up into the camera), cinematic, photorealistic",
+                attire: "wearing decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
             },
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
                 hairAdjective: randomHairAdjective(),
                 age: randomAge(),
-                attire: "wearing decent dress, kneeling with tongue out and high detail, (1girl:1.6), (solo:1.6), (alone:1.6), (pov), eyes closed, anticipation, (looking up), (close top view), (facing straight up into the camera), cinematic, photorealistic",
+                attire: "wearing decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
             },
         ]),
     },
@@ -1427,27 +1428,32 @@ const NSFWPresets = {
     },
 };
 
+// Fungsi untuk memilih warna rambut secara acak
 function randomHairColours() {
     return hairColours[Math.floor(Math.random() * hairColours.length)];
 }
 
+// Fungsi untuk memilih gaya rambut secara acak
 function randomHairStyles() {
     return hairStyles[Math.floor(Math.random() * hairStyles.length)];
 }
 
+// Fungsi untuk memilih kata sifat rambut secara acak
 function randomHairAdjective() {
     return hairAdjectives[Math.floor(Math.random() * hairAdjectives.length)];
 }
 
+// Fungsi untuk menghasilkan usia acak (25-38)
 function randomAge() {
-    return (Math.random() * 10) | 25;
+    return (Math.random() * 13) | 25;
 }
 
+// Fungsi untuk menghasilkan prompt berdasarkan ruangan dan profil
 function generatePrompts(room, profiles) {
     return profiles.reduce((prompts, profile, index) => {
         prompts[
             index + 1
-        ] = `hyperrealistic 8K, ${profile.age}-year-old woman, ${profile.hairAdjective} ${profile.hairstyle} ${profile.haircolour} hair, stunningly beautiful, ${profile.attire}, dynamic pose, ${room}, high detail, realistic textures, uncensored`;
+        ] = `beautiful ${profile.age}-year-old woman, 1girl, solo, ${profile.hairAdjective} ${profile.hairstyle} ${profile.haircolour} hair, ${profile.attire}, dynamic pose, ${room}, intricate details, realistic skin textures, skin pores`;
 
         return prompts;
     }, {});
