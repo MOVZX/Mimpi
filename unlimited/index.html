@@ -36,7 +36,7 @@
             </div>
             <div class="checkbox-group">
                 <div class="checkbox-wrapper"><input type="checkbox" id="useDynamicPrompt" /></div>
-                <label for="useDynamicPrompt">Gunakan Prompt Generator</label>
+                <label for="useDynamicPrompt">Gunakan Prompt Generator?</label>
             </div>
             <div class="form-group">
                 <label for="main-preset">Tema</label>
@@ -53,6 +53,14 @@
             <details aria-expanded="false">
                 <summary>Opsi Tingkat Lanjut</summary>
                 <div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-wrapper"><input type="checkbox" id="useCheckpointCache" checked /></div>
+                        <label for="useCheckpointCache">Gunakan Checkpoint Cache?</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-wrapper"><input type="checkbox" id="useClipSkip" checked /></div>
+                        <label for="useClipSkip">Gunakan CLIP Skip?</label>
+                    </div>
                     <div class="form-group">
                         <label for="steps"
                             >CLIP Skip <span style="color: #aaa; font-weight: normal">(1-10)</span></label
@@ -77,7 +85,7 @@
                     </div>
                     <div class="checkbox-group">
                         <div class="checkbox-wrapper"><input type="checkbox" id="useDynamicSeed" checked /></div>
-                        <label for="useDynamicSeed">Acak Nomor Seed</label>
+                        <label for="useDynamicSeed">Acak Nomor Seed?</label>
                     </div>
                     <div class="form-group">
                         <label for="seed">Seed <span style="color: #aaa; font-weight: normal">(angka)</span></label>

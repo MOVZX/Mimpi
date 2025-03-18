@@ -285,19 +285,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function loadImage(imageUrl) {
     return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.src = imageUrl;
+        const img = new Image();
+        img.src = imageUrl;
 
-      img.onload = () => resolve(img);
-      img.onerror = () => reject(new Error(`Failed to load image at ${imageUrl}`));
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error(`Failed to load image at ${imageUrl}`));
     });
-  }
+}
 
 // Fungsi untuk menghasilkan gambar
 async function generateImage() {
     const promptInput = document.getElementById("prompt").value;
     const promptNegativeInput = document.getElementById("prompt-negative").value;
+    const useCheckpointCache = document.getElementById("useCheckpointCache").checked;
     const clipSkipInput = document.getElementById("clip-skip").value;
+    const useClipSkip = document.getElementById("useClipSkip").checked;
     const stepsInput = document.getElementById("steps").value;
     const cfgInput = document.getElementById("cfg").value;
     const imageMode = document.getElementById("imageMode").value;
@@ -347,7 +349,21 @@ async function generateImage() {
             workflow["178:0"]["inputs"]["text"] = promptInput;
             workflow["171"]["inputs"]["custom_subject"] = promptInput;
             workflow["103"]["inputs"]["text"] = promptNegativeInput;
-            workflow["76"]["inputs"]["stop_at_clip_layer"] = clipSkip;
+
+            // Set Checkpoint Cache
+            if (!useCheckpointCache) {
+                workflow["193"]["inputs"]["model"] = ["84", 0];
+            } else {
+                workflow["193"]["inputs"]["model"] = ["106", 0];
+            }
+
+            if (!useClipSkip) {
+                workflow["103"]["inputs"]["clip"] = ["84", 1];
+                workflow["178:2"]["inputs"]["clip"] = ["84", 1];
+            } else {
+                workflow["76"]["inputs"]["stop_at_clip_layer"] = clipSkip;
+            }
+
             workflow["105"]["inputs"]["steps"] = steps;
             workflow["105"]["inputs"]["cfg"] = cfg;
             workflow["105"]["inputs"]["sampler_name"] = samplerSelect.value;
@@ -479,18 +495,18 @@ async function generateImage() {
         // Scroll ke bawah halaman setelah gambar berhasil dibuat & ditampilkan
         (async () => {
             try {
-              const img = await loadImage(imageUrl);
+                const img = await loadImage(imageUrl);
 
-              window.scrollTo({
-                top: document.documentElement.scrollHeight,
-                behavior: 'smooth'
-              });
+                window.scrollTo({
+                    top: document.documentElement.scrollHeight,
+                    behavior: "smooth",
+                });
 
-              console.log('Image loaded successfully:', img);
+                console.log("Image loaded successfully:", img);
             } catch (error) {
-              console.error(error.message);
+                console.error(error.message);
             }
-          })();
+        })();
     } catch (err) {
         let errorMessage = err.message;
 
@@ -515,6 +531,9 @@ async function deleteImage() {
     const lightbox = document.getElementById("lightbox");
     const seedInput = document.getElementById("seed");
     const useDynamicSeed = document.getElementById("useDynamicSeed").checked;
+    const useCheckpointCache = document.getElementById("useCheckpointCache").checked;
+    const clipSkipInput = document.getElementById("clip-skip").value;
+    const useClipSkip = document.getElementById("useClipSkip").checked;
 
     if (!lastImageData || !lastImageData.filename) {
         showError(error, "Tidak ada gambar yang dapat dihapus!");
@@ -549,6 +568,22 @@ async function deleteImage() {
         const result = await response.json();
 
         console.log("Delete response:", result);
+
+        // Set Checkpoint Cache
+        if (!useCheckpointCache) {
+            workflow["193"]["inputs"]["model"] = ["84", 0];
+        } else {
+            workflow["193"]["inputs"]["model"] = ["106", 0];
+        }
+
+        // Set CLIP Skip
+        if (!useClipSkip) {
+            workflow["103"]["inputs"]["clip"] = ["84", 1];
+            workflow["178:2"]["inputs"]["clip"] = ["84", 1];
+        } else {
+            const clipSkip = parseInt(clipSkipInput);
+            workflow["76"]["inputs"]["stop_at_clip_layer"] = clipSkip;
+        }
 
         // Mengacak seed jika dynamic seed aktif
         if (useDynamicSeed) {
@@ -586,6 +621,9 @@ function clearImage() {
     const lightbox = document.getElementById("lightbox");
     const seedInput = document.getElementById("seed");
     const useDynamicSeed = document.getElementById("useDynamicSeed").checked;
+    const useCheckpointCache = document.getElementById("useCheckpointCache").checked;
+    const clipSkipInput = document.getElementById("clip-skip").value;
+    const useClipSkip = document.getElementById("useClipSkip").checked;
     const button = document.querySelector(".clear");
 
     if (!status || !outputImage || !imageActions || !lightbox || !seedInput || !button) {
@@ -608,6 +646,22 @@ function clearImage() {
     button.disabled = true;
 
     try {
+        // Set Checkpoint Cache
+        if (!useCheckpointCache) {
+            workflow["193"]["inputs"]["model"] = ["84", 0];
+        } else {
+            workflow["193"]["inputs"]["model"] = ["106", 0];
+        }
+
+        // Set CLIP Skip
+        if (!useClipSkip) {
+            workflow["103"]["inputs"]["clip"] = ["84", 1];
+            workflow["178:2"]["inputs"]["clip"] = ["84", 1];
+        } else {
+            const clipSkip = parseInt(clipSkipInput);
+            workflow["76"]["inputs"]["stop_at_clip_layer"] = clipSkip;
+        }
+
         // Mengacak seed jika dynamic seed aktif
         if (useDynamicSeed) {
             const MAX_SEED = BigInt("9007199254740991");
