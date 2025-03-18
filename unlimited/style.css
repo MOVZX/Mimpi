@@ -17,7 +17,12 @@ body {
     backdrop-filter: blur(10px);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     text-align: center;
     color: #00d4ff;
     text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);

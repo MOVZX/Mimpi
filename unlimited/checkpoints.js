@@ -77,7 +77,8 @@ const checkpointNameMapping = {
     "SDXL-Lightning/RealitiesEdgeXLLIGHTNING_LIGHTNING34Step.safetensors": "RealitiesEdgeXL Lightning",
     "SDXL-Lightning/realvisxlV50_v50LightningBakedvae.safetensors": "RealvisXL V50 Lightning",
     "SDXL-Lightning/stoiqoNewrealityFLUXSD35_XLLight10.safetensors": "StoiqoNewrealityFLUXSD35 Lightning",
-    "SDXL-Lightning/wildcardxXLLIGHTNING_wildcardxXL.safetensors": "WildCardX-XL (dpmpp_sde/karras, 6, 1.5, CLIP Skip 2)"
+    "SDXL-Lightning/wildcardxXLLIGHTNING_wildcardxXL.safetensors":
+        "WildCardX-XL (dpmpp_sde/karras, 6, 1.5, CLIP Skip 2)",
 };
 
 // Checkpoints
@@ -164,7 +165,7 @@ function fetchCheckpointOptions() {
         "SDXL-Lightning/RealitiesEdgeXLLIGHTNING_LIGHTNING34Step.safetensors",
         "SDXL-Lightning/realvisxlV50_v50LightningBakedvae.safetensors",
         "SDXL-Lightning/stoiqoNewrealityFLUXSD35_XLLight10.safetensors",
-        "SDXL-Lightning/wildcardxXLLIGHTNING_wildcardxXL.safetensors"
+        "SDXL-Lightning/wildcardxXLLIGHTNING_wildcardxXL.safetensors",
     ];
 
     checkpointCache.checkpoints = baseCheckpoints.map((ckpt) => ckpt);

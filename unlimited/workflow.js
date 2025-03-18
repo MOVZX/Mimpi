@@ -19,8 +19,7 @@ const workflow = {
                 on: true,
                 lora: "SDXL_1.0/Breast Slider - Pony_alpha1.0_rank4_noxattn_last.safetensors",
                 strength: 0.9,
-            lora_3: { on: true, lora: "hand 5.5.safetensors", strength: 0.95 },
-
+                lora_3: { on: true, lora: "hand 5.5.safetensors", strength: 0.95 },
             },
             "➕ Add Lora": "",
             model: ["4", 0],

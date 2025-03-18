@@ -227,6 +227,65 @@ function populatePresetDropdowns() {
     }
 }
 
+// Fungsi untuk meregenerasi preset yang dipilih
+function regenerateSelectedPreset() {
+    const presetSelect = document.getElementById("main-preset");
+    const subcategoryContainer = document.getElementById("subcategory-container");
+    const subcategorySelect = document.getElementById("subcategory");
+    const promptTextarea = document.getElementById("prompt");
+
+    if (!presetSelect || !subcategoryContainer || !subcategorySelect || !promptTextarea) return;
+
+    const selectedValue = presetSelect.value;
+    if (selectedValue === "none") return; // Tidak perlu regenerasi jika tidak ada preset yang dipilih
+
+    const [categoryType, categoryKey] = selectedValue.split(":");
+    const presetObject = mainPresets[categoryType];
+
+    // Mendapatkan definisi preset asli dari SFWPresets atau NSFWPresets
+    const originalPreset = categoryType === "sfw" ? SFWPresets[categoryKey] : NSFWPresets[categoryKey];
+    if (!originalPreset) return;
+
+    // Mendapatkan room dari label preset (misalnya, "bedroom" dari "Missionary Passion")
+    const room = categoryKey.split(" ")[0]; // Asumsi kata pertama adalah room
+
+    // Membuat profil baru dengan nilai acak
+    const newProfiles = Array.from({ length: 10 }, () => ({
+        hairstyle: randomHairStyles(),
+        haircolour: randomHairColours(),
+        hairAdjective: randomHairAdjective(),
+        age: randomAge(),
+        attire: originalPreset.prompts["1"].split(", ")[4].replace("wearing ", ""), // Mengambil attire dari prompt pertama
+    }));
+
+    // Meregenerasi prompts
+    const newPrompts = generatePrompts(room, newProfiles);
+
+    // Memperbarui mainPresets dengan prompts baru
+    presetObject[categoryKey].prompts = newPrompts;
+
+    // Memperbarui dropdown subcategory
+    subcategoryContainer.style.display = "block";
+    subcategorySelect.innerHTML = "";
+
+    Object.keys(newPrompts).forEach((promptKey) => {
+        const option = document.createElement("option");
+        option.value = promptKey;
+        option.textContent = promptKey.replace(
+            /^\w+\s+\w+\s+(\d+)$/,
+            (match, number) => `${presetObject[categoryKey].label} ${number}`
+        );
+        subcategorySelect.appendChild(option);
+    });
+
+    // Mengatur prompt textarea ke prompt pertama yang baru
+    if (subcategorySelect.options.length > 0) {
+        subcategorySelect.value = subcategorySelect.options[0].value;
+        promptTextarea.value = newPrompts[subcategorySelect.value];
+    }
+    console.log("[DEBUG] Prompt diperbarui ke:", promptTextarea.value); // Tambahkan log untuk debugging
+}
+
 // Inisialisasi event listener saat DOM dimuat
 document.addEventListener("DOMContentLoaded", () => {
     populateDropdowns();
@@ -286,10 +345,11 @@ document.addEventListener("DOMContentLoaded", () => {
 function loadImage(imageUrl) {
     return new Promise((resolve, reject) => {
         const img = new Image();
+        img.crossOrigin = "anonymous"; // Tambahkan untuk mengatasi potensi CORS
         img.src = imageUrl;
 
         img.onload = () => resolve(img);
-        img.onerror = () => reject(new Error(`Failed to load image at ${imageUrl}`));
+        img.onerror = (e) => reject(new Error(`Gagal memuat gambar di ${imageUrl}: ${e.message}`));
     });
 }
 
@@ -299,12 +359,14 @@ async function generateImage() {
     const promptNegativeInput = document.getElementById("prompt-negative").value;
     const useCheckpointCache = document.getElementById("useCheckpointCache").checked;
     const clipSkipInput = document.getElementById("clip-skip").value;
+    const useLoRA = document.getElementById("useLoRA").checked;
     const useClipSkip = document.getElementById("useClipSkip").checked;
     const stepsInput = document.getElementById("steps").value;
     const cfgInput = document.getElementById("cfg").value;
     const imageMode = document.getElementById("imageMode").value;
     const seedInput = document.getElementById("seed").value;
     const useDynamicPrompt = document.getElementById("useDynamicPrompt").checked;
+    const alwaysRandomisePrompt = document.getElementById("alwaysRandomisePrompt").checked;
     const useDynamicSeed = document.getElementById("useDynamicSeed").checked;
     const status = document.getElementById("status");
     const error = document.getElementById("error");
@@ -333,43 +395,62 @@ async function generateImage() {
         const cfg = parseFloat(cfgInput);
         const clipSkip = parseInt(clipSkipInput);
 
-        // Validasi parameter numerik
-        if (isNaN(steps) || steps < 1 || steps > 100) throw new Error("Steps harus berupa angka antara 1 dan 100!");
-        if (isNaN(cfg) || cfg < 1 || cfg > 30) throw new Error("CFG harus berupa angka antara 1 dan 30!");
-        if (isNaN(clipSkip) || clipSkip < -10 || clipSkip > -1)
+        // Validasi input numerik
+        if (isNaN(steps) || steps < 1 || steps > 100) throw new Error("Steps harus antara 1 dan 100!");
+        if (isNaN(cfg) || cfg < 1 || cfg > 30) throw new Error("CFG harus antara 1 dan 30!");
+        if (useClipSkip && (isNaN(clipSkip) || clipSkip < -10 || clipSkip > -1))
             throw new Error("CLIP Skip harus berupa angka antara -1 dan -10!");
 
         const checkpointSelect = document.getElementById("checkpoint");
         const samplerSelect = document.getElementById("sampler");
         const schedulerSelect = document.getElementById("scheduler");
 
-        // Mengatur workflow dengan input pengguna
-        if (checkpointSelect && samplerSelect && schedulerSelect) {
-            workflow["4"]["inputs"]["ckpt_name"] = checkpointSelect.value;
-            workflow["178:0"]["inputs"]["text"] = promptInput;
-            workflow["171"]["inputs"]["custom_subject"] = promptInput;
-            workflow["103"]["inputs"]["text"] = promptNegativeInput;
+        if (!checkpointSelect || !samplerSelect || !schedulerSelect) {
+            throw new Error("Dropdowns tidak ditemukan!");
+        }
 
-            // Set Checkpoint Cache
-            if (!useCheckpointCache) {
-                workflow["193"]["inputs"]["model"] = ["84", 0];
-            } else {
+        // Mengatur checkpoint dasar
+        workflow["4"]["inputs"]["ckpt_name"] = checkpointSelect.value;
+
+        // Mengatur koneksi model berdasarkan useLoRA dan useCheckpointCache
+        if (useLoRA) {
+            workflow["84"]["inputs"]["model"] = ["4", 0];
+
+            if (useCheckpointCache) {
+                workflow["106"]["inputs"]["model"] = ["84", 0];
                 workflow["193"]["inputs"]["model"] = ["106", 0];
-            }
-
-            if (!useClipSkip) {
-                workflow["103"]["inputs"]["clip"] = ["84", 1];
-                workflow["178:2"]["inputs"]["clip"] = ["84", 1];
             } else {
-                workflow["76"]["inputs"]["stop_at_clip_layer"] = clipSkip;
+                workflow["193"]["inputs"]["model"] = ["84", 0];
             }
+        } else {
+            if (useCheckpointCache) {
+                workflow["106"]["inputs"]["model"] = ["4", 0];
+                workflow["193"]["inputs"]["model"] = ["106", 0];
+            } else {
+                workflow["193"]["inputs"]["model"] = ["4", 0];
+            }
+        }
 
-            workflow["105"]["inputs"]["steps"] = steps;
-            workflow["105"]["inputs"]["cfg"] = cfg;
-            workflow["105"]["inputs"]["sampler_name"] = samplerSelect.value;
-            workflow["105"]["inputs"]["scheduler"] = schedulerSelect.value;
-            workflow["178:1"]["inputs"]["boolean"] = useDynamicPrompt;
-        } else throw new Error("Dropdowns tidak ditemukan!");
+        // Mengatur koneksi CLIP berdasarkan useClipSkip dan useLoRA
+        if (useClipSkip) {
+            workflow["76"]["inputs"]["stop_at_clip_layer"] = clipSkip;
+            workflow["76"]["inputs"]["clip"] = useLoRA ? ["84", 1] : ["4", 1];
+            workflow["103"]["inputs"]["clip"] = ["76", 0];
+            workflow["178:2"]["inputs"]["clip"] = ["76", 0];
+        } else {
+            workflow["103"]["inputs"]["clip"] = useLoRA ? ["84", 1] : ["4", 1];
+            workflow["178:2"]["inputs"]["clip"] = useLoRA ? ["84", 1] : ["4", 1];
+        }
+
+        // Mengatur prompt dan parameter lainnya dengan nilai terbaru
+        workflow["178:0"]["inputs"]["text"] = promptInput;
+        workflow["171"]["inputs"]["custom_subject"] = promptInput;
+        workflow["103"]["inputs"]["text"] = promptNegativeInput;
+        workflow["105"]["inputs"]["steps"] = steps;
+        workflow["105"]["inputs"]["cfg"] = cfg;
+        workflow["105"]["inputs"]["sampler_name"] = samplerSelect.value;
+        workflow["105"]["inputs"]["scheduler"] = schedulerSelect.value;
+        workflow["178:1"]["inputs"]["boolean"] = useDynamicPrompt;
 
         const MAX_SEED = BigInt("9007199254740991");
 
@@ -402,7 +483,13 @@ async function generateImage() {
         // Mengatur prefix nama file berdasarkan tanggal dan seed
         const currentDate = new Date();
         const formattedDate = currentDate.toISOString().split("T")[0];
-        workflow["217"]["inputs"]["filename_prefix"] = `webui-rated-r/${formattedDate}/${currentSeedNum}`;
+        const hours = String(currentDate.getHours()).padStart(2, "0");
+        const minutes = String(currentDate.getMinutes()).padStart(2, "0");
+        const seconds = String(currentDate.getSeconds()).padStart(2, "0");
+        const formattedTime = `${hours}-${minutes}-${seconds}`;
+        workflow["217"]["inputs"][
+            "filename_prefix"
+        ] = `webui-rated-r/${formattedDate}/${formattedTime}_${currentSeedNum}`;
 
         console.log("[DEBUG] Parameter pembuatan gambar:", {
             checkpoint: workflow["4"]["inputs"]["ckpt_name"],
@@ -413,6 +500,11 @@ async function generateImage() {
             cfg: cfg,
             imageMode: imageMode,
             useDynamicPrompt: useDynamicPrompt,
+            useLoRA: useLoRA,
+            useClipSkip: useClipSkip,
+            useCheckpointCache: useCheckpointCache,
+            prompt: promptInput,
+            filename_prefix: workflow["217"]["inputs"]["filename_prefix"],
         });
 
         // Mengirim permintaan ke server
@@ -441,6 +533,7 @@ async function generateImage() {
             await new Promise((resolve) => setTimeout(resolve, 1000));
             const historyResponse = await fetch(`${COMFYUI_URL}/history/${prompt_id}`);
             const history = await historyResponse.json();
+            console.log("[DEBUG] History response:", history);
 
             if (history[prompt_id] && history[prompt_id].outputs["217"]) {
                 const images = history[prompt_id].outputs["217"].images;
@@ -473,7 +566,7 @@ async function generateImage() {
                 <table class="success-table">
                     <tr><td>Positive Prompt:</td><td>${promptInput}</td></tr>
                     <tr><td>Negative Prompt:</td><td>${promptNegativeInput}</td></tr>
-                    <tr><td>CLIP Skip:</td><td>${clipSkip}</td></tr>
+                    <tr><td>CLIP Skip:</td><td>${useClipSkip ? clipSkip : "Tidak Digunakan"}</td></tr>
                     <tr><td>Checkpoint:</td><td>${checkpointSelect.value}</td></tr>
                     <tr><td>Mode:</td><td>${imageMode.charAt(0).toUpperCase() + imageMode.slice(1)} - ${
             workflow["152"]["inputs"]["resolution"]
@@ -483,6 +576,8 @@ async function generateImage() {
                     <tr><td>Seed:</td><td>${currentSeedNum}</td></tr>
                     <tr><td>Sampler:</td><td>${samplerSelect.value}</td></tr>
                     <tr><td>Scheduler:</td><td>${schedulerSelect.value}</td></tr>
+                    <tr><td>LoRA:</td><td>${useLoRA ? "Aktif" : "Tidak Aktif"}</td></tr>
+                    <tr><td>Checkpoint Cache:</td><td>${useCheckpointCache ? "Aktif" : "Tidak Aktif"}</td></tr>
                 </table>
             </details>
         `;
@@ -491,6 +586,9 @@ async function generateImage() {
 
         localStorage.setItem("lastGeneratedImage", imageUrl);
         localStorage.setItem("lastSeed", currentSeedNum);
+
+        // Meregenerasi preset hanya jika alwaysRandomisePrompt diaktifkan
+        if (alwaysRandomisePrompt) regenerateSelectedPreset();
 
         // Scroll ke bawah halaman setelah gambar berhasil dibuat & ditampilkan
         (async () => {
@@ -501,10 +599,10 @@ async function generateImage() {
                     top: document.documentElement.scrollHeight,
                     behavior: "smooth",
                 });
-
-                console.log("Image loaded successfully:", img);
+                console.log("Gambar berhasil dimuat:", img);
             } catch (error) {
-                console.error(error.message);
+                console.error("Kesalahan saat memuat gambar:", error.message);
+                showError(error, `Gagal memuat gambar: ${error.message}`);
             }
         })();
     } catch (err) {
@@ -531,9 +629,7 @@ async function deleteImage() {
     const lightbox = document.getElementById("lightbox");
     const seedInput = document.getElementById("seed");
     const useDynamicSeed = document.getElementById("useDynamicSeed").checked;
-    const useCheckpointCache = document.getElementById("useCheckpointCache").checked;
-    const clipSkipInput = document.getElementById("clip-skip").value;
-    const useClipSkip = document.getElementById("useClipSkip").checked;
+    const alwaysRandomisePrompt = document.getElementById("alwaysRandomisePrompt").checked;
 
     if (!lastImageData || !lastImageData.filename) {
         showError(error, "Tidak ada gambar yang dapat dihapus!");
@@ -546,13 +642,11 @@ async function deleteImage() {
     button.disabled = true;
 
     try {
-        console.log("Attempting to delete image with data:", lastImageData);
-
         const url = new URL(`${COMFYUI_URL}/comfyapi/v1/output-images/${encodeURIComponent(lastImageData.filename)}`);
         url.searchParams.append("temp", "false");
         url.searchParams.append("subfolder", lastImageData.subfolder);
 
-        console.log("DELETE request URL:", url.toString());
+        console.log("URL permintaan DELETE:", url.toString());
 
         const response = await fetch(url, {
             method: "DELETE",
@@ -569,35 +663,17 @@ async function deleteImage() {
 
         console.log("Delete response:", result);
 
-        // Set Checkpoint Cache
-        if (!useCheckpointCache) {
-            workflow["193"]["inputs"]["model"] = ["84", 0];
-        } else {
-            workflow["193"]["inputs"]["model"] = ["106", 0];
+        // Tidak mengacak seed jika useDynamicSeed tidak dicentang
+        // Regenerasi prompt hanya jika alwaysRandomisePrompt diaktifkan
+        if (alwaysRandomisePrompt) {
+            regenerateSelectedPreset();
         }
 
-        // Set CLIP Skip
-        if (!useClipSkip) {
-            workflow["103"]["inputs"]["clip"] = ["84", 1];
-            workflow["178:2"]["inputs"]["clip"] = ["84", 1];
-        } else {
-            const clipSkip = parseInt(clipSkipInput);
-            workflow["76"]["inputs"]["stop_at_clip_layer"] = clipSkip;
+        // Simpan seed terakhir sebelum menghapus data gambar
+        if (seedInput.value) {
+            currentSeedNum = BigInt(seedInput.value);
         }
 
-        // Mengacak seed jika dynamic seed aktif
-        if (useDynamicSeed) {
-            const MAX_SEED = BigInt("9007199254740991");
-            const randomValue =
-                BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
-                BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
-            currentSeedNum = randomValue % (MAX_SEED + BigInt(1));
-            workflow["105"]["inputs"]["seed"] = Number(currentSeedNum);
-            workflow["171"]["inputs"]["seed"] = Number(currentSeedNum);
-            seedInput.value = Number(currentSeedNum);
-        }
-
-        // Menyembunyikan gambar dan aksi setelah dihapus
         outputImage.src = "";
         outputImage.style.display = "none";
         imageActions.style.display = "none";
@@ -606,7 +682,7 @@ async function deleteImage() {
 
         showStatus(status, "<h4>Gambar berhasil dihapus!</h4>", "success");
     } catch (err) {
-        console.error("Delete error:", err);
+        console.error("Kesalahan penghapusan:", err);
         showError(error, `Gagal menghapus gambar: ${err.message}`);
     } finally {
         button.disabled = false;
@@ -614,20 +690,17 @@ async function deleteImage() {
 }
 
 // Fungsi untuk mereset tampilan gambar tanpa menghapus dari server
-function clearImage() {
+async function clearImage() {
     const status = document.getElementById("status");
     const outputImage = document.getElementById("outputImage");
     const imageActions = document.getElementById("imageActions");
     const lightbox = document.getElementById("lightbox");
     const seedInput = document.getElementById("seed");
     const useDynamicSeed = document.getElementById("useDynamicSeed").checked;
-    const useCheckpointCache = document.getElementById("useCheckpointCache").checked;
-    const clipSkipInput = document.getElementById("clip-skip").value;
-    const useClipSkip = document.getElementById("useClipSkip").checked;
     const button = document.querySelector(".clear");
 
     if (!status || !outputImage || !imageActions || !lightbox || !seedInput || !button) {
-        console.error("[DEBUG] Missing DOM elements in clearImage:", {
+        console.error("[DEBUG] Elemen DOM hilang di clearImage:", {
             status: !!status,
             outputImage: !!outputImage,
             imageActions: !!imageActions,
@@ -646,23 +719,6 @@ function clearImage() {
     button.disabled = true;
 
     try {
-        // Set Checkpoint Cache
-        if (!useCheckpointCache) {
-            workflow["193"]["inputs"]["model"] = ["84", 0];
-        } else {
-            workflow["193"]["inputs"]["model"] = ["106", 0];
-        }
-
-        // Set CLIP Skip
-        if (!useClipSkip) {
-            workflow["103"]["inputs"]["clip"] = ["84", 1];
-            workflow["178:2"]["inputs"]["clip"] = ["84", 1];
-        } else {
-            const clipSkip = parseInt(clipSkipInput);
-            workflow["76"]["inputs"]["stop_at_clip_layer"] = clipSkip;
-        }
-
-        // Mengacak seed jika dynamic seed aktif
         if (useDynamicSeed) {
             const MAX_SEED = BigInt("9007199254740991");
             const randomValue =
@@ -676,7 +732,6 @@ function clearImage() {
             console.log("[DEBUG] Seed randomized in clearImage:", Number(currentSeedNum));
         }
 
-        // Menyembunyikan gambar dan aksi
         outputImage.src = "";
         outputImage.style.display = "none";
         imageActions.style.display = "none";
@@ -684,7 +739,7 @@ function clearImage() {
 
         showStatus(status, `<h4>Seed baru: ${currentSeedNum}</h4>`, "success");
     } catch (err) {
-        console.error("[DEBUG] Error in clearImage:", err);
+        console.error("[DEBUG] Kesalahan di clearImage:", err);
         showError(document.getElementById("error"), "Gagal membersihkan gambar!");
     } finally {
         button.disabled = false;
