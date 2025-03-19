@@ -61,7 +61,7 @@ function populateDropdowns() {
             optionElement.value = option;
             optionElement.textContent = displayName;
 
-            if (option === "SDXL-Lightning/lustifySDXLNSFW_v40DMD2.safetensors") optionElement.selected = true;
+            if (option === "SDXL-Lightning/lustifySDXLNSFW_endgameDMD2.safetensors") optionElement.selected = true;
 
             checkpointSelect.appendChild(optionElement);
         });
@@ -369,6 +369,7 @@ async function generateImage() {
     const useDynamicPrompt = document.getElementById("useDynamicPrompt").checked;
     const alwaysRandomisePrompt = document.getElementById("alwaysRandomisePrompt").checked;
     const useDynamicSeed = document.getElementById("useDynamicSeed").checked;
+    const useFaceDetailer = document.getElementById("useFaceDetailer").checked;
     const status = document.getElementById("status");
     const error = document.getElementById("error");
     const button = document.querySelector("button");
@@ -453,6 +454,14 @@ async function generateImage() {
         workflow["105"]["inputs"]["scheduler"] = schedulerSelect.value;
         workflow["178:1"]["inputs"]["boolean"] = useDynamicPrompt;
 
+        if (useFaceDetailer) {
+            workflow["225"]["inputs"]["boolean"] = true;
+            workflow["226"]["inputs"]["boolean"] = true;
+        } else {
+            workflow["225"]["inputs"]["boolean"] = false;
+            workflow["226"]["inputs"]["boolean"] = false;
+        }
+
         // Menentukan seed secara acak atau manual
         if (useDynamicSeed || !seedInput || isNaN(seedInput) || seedInput === "-1") {
             const randomValue =
@@ -462,6 +471,7 @@ async function generateImage() {
             currentSeedNum = seed;
             workflow["105"]["inputs"]["seed"] = Number(seed);
             workflow["171"]["inputs"]["seed"] = Number(seed);
+            workflow["222"]["inputs"]["noise_seed"] = Number(seed);
             seedInput.value = Number(seed);
         } else {
             const seedNum = BigInt(seedInput);
@@ -471,6 +481,7 @@ async function generateImage() {
             currentSeedNum = seedNum;
             workflow["105"]["inputs"]["seed"] = Number(seedNum);
             workflow["171"]["inputs"]["seed"] = Number(seedNum);
+            workflow["222"]["inputs"]["noise_seed"] = Number(seedNum);
             seedInput.value = Number(seedNum);
         }
 
@@ -499,6 +510,7 @@ async function generateImage() {
             cfg: cfg,
             imageMode: imageMode,
             useDynamicPrompt: useDynamicPrompt,
+            useFaceDetailer: useFaceDetailer,
             useLoRA: useLoRA,
             useClipSkip: useClipSkip,
             useCheckpointCache: useCheckpointCache,
@@ -577,6 +589,7 @@ async function generateImage() {
                     <tr><td>Scheduler:</td><td>${schedulerSelect.value}</td></tr>
                     <tr><td>LoRA:</td><td>${useLoRA ? "Aktif" : "Tidak Aktif"}</td></tr>
                     <tr><td>Checkpoint Cache:</td><td>${useCheckpointCache ? "Aktif" : "Tidak Aktif"}</td></tr>
+                    <tr><td>Face Detailer:</td><td>${useFaceDetailer ? "Aktif" : "Tidak Aktif"}</td></tr>
                 </table>
             </details>
         `;
@@ -725,6 +738,7 @@ async function clearImage() {
             currentSeedNum = randomValue % (MAX_SEED + BigInt(1));
             workflow["105"]["inputs"]["seed"] = Number(currentSeedNum);
             workflow["171"]["inputs"]["seed"] = Number(currentSeedNum);
+            workflow["222"]["inputs"]["noise_seed"] = Number(currentSeedNum);
             seedInput.value = Number(currentSeedNum);
 
             console.log("[DEBUG] Seed randomized in clearImage:", Number(currentSeedNum));
