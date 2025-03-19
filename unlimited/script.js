@@ -1,4 +1,5 @@
 const COMFYUI_URL = "http://gambar.ai:8188";
+const MAX_SEED = BigInt("9007199254740991");
 let currentSeedNum = 0;
 let lastImageData = null;
 
@@ -452,8 +453,6 @@ async function generateImage() {
         workflow["105"]["inputs"]["scheduler"] = schedulerSelect.value;
         workflow["178:1"]["inputs"]["boolean"] = useDynamicPrompt;
 
-        const MAX_SEED = BigInt("9007199254740991");
-
         // Menentukan seed secara acak atau manual
         if (useDynamicSeed || !seedInput || isNaN(seedInput) || seedInput === "-1") {
             const randomValue =
@@ -720,7 +719,6 @@ async function clearImage() {
 
     try {
         if (useDynamicSeed) {
-            const MAX_SEED = BigInt("9007199254740991");
             const randomValue =
                 BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
                 BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
