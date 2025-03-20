@@ -86,7 +86,7 @@ function populateDropdowns() {
                 optionElement.value = option;
                 optionElement.textContent = displayName;
 
-                if (option === "SDXL-Lightning/juggernautXL_v9Rdphoto2Lightning.safetensors") {
+                if (option === "SDXL-Lightning/lustifySDXLNSFW_v40DMD2.safetensors") {
                     optionElement.selected = true;
                 }
 
@@ -347,7 +347,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Set Sampler secara otomatis mengikuti pilihan Checkpoint
             const mapping = checkpointNameMapping[checkpointSelect.value] || {};
-            const preferredSampler = mapping.sampler || "dpmpp_2m_sde_gpu"; // Default ke "dpmpp_2m_sde_gpu"
+            const preferredSampler = mapping.sampler || "dpmpp_2m"; // Default ke "dpmpp_2m"
 
             if (samplerSelect) {
                 samplerSelect.value = preferredSampler;

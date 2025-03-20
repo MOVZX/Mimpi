@@ -9,7 +9,7 @@ const workflow = {
         class_type: "VAEDecode",
         inputs: {
             samples: ["220", 0],
-            vae: ["4", 2],
+            vae: ["253", 0],
         },
     },
     76: {
@@ -49,7 +49,7 @@ const workflow = {
         class_type: "CLIPTextEncode",
         inputs: {
             clip: ["76", 0],
-            text: "embedding:negativeXL_D, embedding:negative_hand-neg, ",
+            text: "",
         },
     },
     106: {
@@ -154,13 +154,19 @@ const workflow = {
     221: {
         class_type: "KSamplerSelect",
         inputs: {
-            sampler_name: "dpmpp_2m_sde",
+            sampler_name: "dpmpp_2m",
         },
     },
     222: {
         class_type: "RandomNoise",
         inputs: {
             noise_seed: 0,
+        },
+    },
+    253: {
+        class_type: "VAELoader",
+        inputs: {
+            vae_name: "taesdxl",
         },
     },
 };
