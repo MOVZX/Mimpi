@@ -28,7 +28,7 @@ window.onload = function () {
     status.textContent = "";
 };
 
-// Mengisi dropdown untuk opsi checkpoint, sampler, dan scheduler
+// Mengisi dropdown untuk opsi checkpoint, sampler
 function populateDropdowns() {
     const container = document.querySelector(".container");
     const detailsContent = container.querySelector("details > div");
@@ -101,38 +101,6 @@ function populateDropdowns() {
         samplerFormGroup.appendChild(samplerLabel);
         samplerFormGroup.appendChild(samplerSelect);
         detailsContent.appendChild(samplerFormGroup);
-    }
-
-    // Membuat dropdown scheduler jika belum ada
-    let schedulerFormGroup = document.getElementById("schedulerFormGroup");
-
-    if (!schedulerFormGroup) {
-        const schedulerOptions = fetchSchedulerOptions();
-        schedulerFormGroup = document.createElement("div");
-        schedulerFormGroup.id = "schedulerFormGroup";
-        schedulerFormGroup.className = "form-group";
-
-        const schedulerLabel = document.createElement("label");
-        schedulerLabel.htmlFor = "scheduler";
-        schedulerLabel.textContent = "Scheduler";
-
-        const schedulerSelect = document.createElement("select");
-        schedulerSelect.id = "scheduler";
-        schedulerSelect.name = "scheduler";
-
-        schedulerOptions.forEach((option) => {
-            const optionElement = document.createElement("option");
-            optionElement.value = option;
-            optionElement.textContent = option;
-
-            if (option === "normal") optionElement.selected = true;
-
-            schedulerSelect.appendChild(optionElement);
-        });
-
-        schedulerFormGroup.appendChild(schedulerLabel);
-        schedulerFormGroup.appendChild(schedulerSelect);
-        detailsContent.appendChild(schedulerFormGroup);
     }
 }
 
@@ -254,9 +222,10 @@ function regenerateSelectedPreset() {
     if (!originalPreset) {
         const normalizedCategoryKey = categoryKey
             .split(" ")
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
             .join(" ");
-        originalPreset = categoryType === "sfw" ? SFWPresets[normalizedCategoryKey] : NSFWPresets[normalizedCategoryKey];
+        originalPreset =
+            categoryType === "sfw" ? SFWPresets[normalizedCategoryKey] : NSFWPresets[normalizedCategoryKey];
         console.log("[DEBUG] Trying Normalized Key:", normalizedCategoryKey);
     }
 
@@ -271,8 +240,8 @@ function regenerateSelectedPreset() {
 
     // Parse the original prompt dynamically
     const parts = originalPrompt.split(", ");
-    let agePartIndex = parts.findIndex(part => part.includes("year-old woman"));
-    let hairPartIndex = parts.findIndex(part => part.includes("hair"));
+    let agePartIndex = parts.findIndex((part) => part.includes("year-old woman"));
+    let hairPartIndex = parts.findIndex((part) => part.includes("hair"));
 
     if (agePartIndex === -1 || hairPartIndex === -1) {
         console.error("[ERROR] Could not parse age or hair from prompt:", originalPrompt);
@@ -321,7 +290,14 @@ function regenerateSelectedPreset() {
     subcategorySelect.value = newPrompts[currentSubcategory] ? currentSubcategory : "1";
     promptTextarea.value = newPrompts[subcategorySelect.value];
 
-    console.log("[DEBUG] Regenerated - Preset:", selectedValue, "Subcategory:", subcategorySelect.value, "Prompt:", promptTextarea.value);
+    console.log(
+        "[DEBUG] Regenerated - Preset:",
+        selectedValue,
+        "Subcategory:",
+        subcategorySelect.value,
+        "Prompt:",
+        promptTextarea.value
+    );
 }
 
 // Inisialisasi event listener saat DOM dimuat
@@ -341,18 +317,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const samplerSelect = document.getElementById("sampler");
     if (samplerSelect) {
         samplerSelect.addEventListener("change", () => {
-            workflow["105"]["inputs"]["sampler_name"] = samplerSelect.value;
+            workflow["221"]["inputs"]["sampler_name"] = samplerSelect.value;
 
             console.log("Sampler disetel ke:", samplerSelect.value);
-        });
-    }
-
-    const schedulerSelect = document.getElementById("scheduler");
-    if (schedulerSelect) {
-        schedulerSelect.addEventListener("change", () => {
-            workflow["105"]["inputs"]["scheduler"] = schedulerSelect.value;
-
-            console.log("Scheduler disetel ke:", schedulerSelect.value);
         });
     }
 
@@ -406,7 +373,6 @@ async function generateImage() {
     const useDynamicPrompt = document.getElementById("useDynamicPrompt").checked;
     const alwaysRandomisePrompt = document.getElementById("alwaysRandomisePrompt").checked;
     const useDynamicSeed = document.getElementById("useDynamicSeed").checked;
-    const useFaceDetailer = document.getElementById("useFaceDetailer").checked;
     const status = document.getElementById("status");
     const error = document.getElementById("error");
     const button = document.querySelector("button");
@@ -442,9 +408,8 @@ async function generateImage() {
 
         const checkpointSelect = document.getElementById("checkpoint");
         const samplerSelect = document.getElementById("sampler");
-        const schedulerSelect = document.getElementById("scheduler");
 
-        if (!checkpointSelect || !samplerSelect || !schedulerSelect) {
+        if (!checkpointSelect || !samplerSelect) {
             throw new Error("Dropdowns tidak ditemukan!");
         }
 
@@ -485,29 +450,10 @@ async function generateImage() {
         workflow["178:0"]["inputs"]["text"] = promptInput;
         workflow["171"]["inputs"]["custom_subject"] = promptInput;
         workflow["103"]["inputs"]["text"] = promptNegativeInput;
-        workflow["105"]["inputs"]["steps"] = steps;
-        workflow["105"]["inputs"]["cfg"] = cfg;
-        workflow["105"]["inputs"]["sampler_name"] = samplerSelect.value;
-        workflow["105"]["inputs"]["scheduler"] = schedulerSelect.value;
+        workflow["218"]["inputs"]["cfg"] = cfg;
+        workflow["219"]["inputs"]["interpolate_to_steps"] = steps;
+        workflow["221"]["inputs"]["sampler_name"] = samplerSelect.value;
         workflow["178:1"]["inputs"]["boolean"] = useDynamicPrompt;
-
-        if (useFaceDetailer) {
-            workflow["225"]["inputs"]["boolean"] = true;
-            workflow["226"]["inputs"]["boolean"] = true;
-            workflow["218"]["inputs"]["cfg"] = cfg;
-            workflow["220"]["inputs"]["interpolate_to_steps"] = steps;
-            workflow["221"]["inputs"]["sampler_name"] = samplerSelect.value;
-            workflow["223"]["inputs"]["steps"] = steps;
-            workflow["223"]["inputs"]["cfg"] = cfg;
-        } else {
-            workflow["225"]["inputs"]["boolean"] = false;
-            workflow["226"]["inputs"]["boolean"] = false;
-            workflow["218"]["inputs"]["cfg"] = 1;
-            workflow["220"]["inputs"]["interpolate_to_steps"] = 10;
-            workflow["221"]["inputs"]["sampler_name"] = "lcm";
-            workflow["223"]["inputs"]["steps"] = 10;
-            workflow["223"]["inputs"]["cfg"] = 1;
-        }
 
         // Menentukan seed secara acak atau manual
         if (useDynamicSeed || !seedInput || isNaN(seedInput) || seedInput === "-1") {
@@ -516,7 +462,6 @@ async function generateImage() {
                 BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
             const seed = randomValue % (MAX_SEED + BigInt(1));
             currentSeedNum = seed;
-            workflow["105"]["inputs"]["seed"] = Number(seed);
             workflow["171"]["inputs"]["seed"] = Number(seed);
             workflow["222"]["inputs"]["noise_seed"] = Number(seed);
             seedInput.value = Number(seed);
@@ -526,7 +471,6 @@ async function generateImage() {
             if (seedNum < BigInt(0) || seedNum > MAX_SEED) throw new Error(`Seed harus antara 0 dan ${MAX_SEED}!`);
 
             currentSeedNum = seedNum;
-            workflow["105"]["inputs"]["seed"] = Number(seedNum);
             workflow["171"]["inputs"]["seed"] = Number(seedNum);
             workflow["222"]["inputs"]["noise_seed"] = Number(seedNum);
             seedInput.value = Number(seedNum);
@@ -550,14 +494,12 @@ async function generateImage() {
 
         console.log("[DEBUG] Parameter pembuatan gambar:", {
             checkpoint: workflow["4"]["inputs"]["ckpt_name"],
-            sampler: workflow["105"]["inputs"]["sampler_name"],
-            scheduler: workflow["105"]["inputs"]["scheduler"],
-            seed: workflow["105"]["inputs"]["seed"],
+            sampler: workflow["221"]["inputs"]["sampler_name"],
+            seed: workflow["222"]["inputs"]["noise_seed"],
             steps: steps,
             cfg: cfg,
             imageMode: imageMode,
             useDynamicPrompt: useDynamicPrompt,
-            useFaceDetailer: useFaceDetailer,
             useLoRA: useLoRA,
             useClipSkip: useClipSkip,
             useCheckpointCache: useCheckpointCache,
@@ -633,10 +575,8 @@ async function generateImage() {
                     <tr><td>CFG:</td><td>${cfg}</td></tr>
                     <tr><td>Seed:</td><td>${currentSeedNum}</td></tr>
                     <tr><td>Sampler:</td><td>${samplerSelect.value}</td></tr>
-                    <tr><td>Scheduler:</td><td>${schedulerSelect.value}</td></tr>
                     <tr><td>LoRA:</td><td>${useLoRA ? "Aktif" : "Tidak Aktif"}</td></tr>
                     <tr><td>Checkpoint Cache:</td><td>${useCheckpointCache ? "Aktif" : "Tidak Aktif"}</td></tr>
-                    <tr><td>Face Detailer:</td><td>${useFaceDetailer ? "Aktif" : "Tidak Aktif"}</td></tr>
                 </table>
             </details>
         `;
@@ -781,7 +721,6 @@ async function clearImage() {
                 BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
                 BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
             currentSeedNum = randomValue % (MAX_SEED + BigInt(1));
-            workflow["105"]["inputs"]["seed"] = Number(currentSeedNum);
             workflow["171"]["inputs"]["seed"] = Number(currentSeedNum);
             workflow["222"]["inputs"]["noise_seed"] = Number(currentSeedNum);
             seedInput.value = Number(currentSeedNum);
