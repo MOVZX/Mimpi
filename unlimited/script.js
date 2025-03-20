@@ -339,23 +339,68 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const checkpointSelect = document.getElementById("checkpoint");
     const samplerSelect = document.getElementById("sampler");
+    const useLoRASelect = document.getElementById("useLoRA");
+    const useClipSkipSelect = document.getElementById("useClipSkip");
+    const clipSkipSet = document.getElementById("clip-skip");
+    const stepsSelect = document.getElementById("steps");
+    const cfgSelect = document.getElementById("cfg");
 
     if (checkpointSelect) {
         checkpointSelect.addEventListener("change", () => {
             workflow["4"]["inputs"]["ckpt_name"] = checkpointSelect.value;
+
             console.log("Checkpoint disetel ke:", checkpointSelect.value);
 
-            // Set Sampler secara otomatis mengikuti pilihan Checkpoint
+            // Mapping
             const mapping = checkpointNameMapping[checkpointSelect.value] || {};
-            const preferredSampler = mapping.sampler || "dpmpp_2m"; // Default ke "dpmpp_2m"
 
+            // Sampler
             if (samplerSelect) {
+                const preferredSampler = mapping.sampler || "dpmpp_2m"; // Default ke "dpmpp_2m"
                 samplerSelect.value = preferredSampler;
                 workflow["221"]["inputs"]["sampler_name"] = preferredSampler;
 
                 console.log("Sampler secara otomatis disetel ke:", preferredSampler);
             } else {
                 console.error("Dropdown untuk Sampler tidak ditemukan!");
+            }
+
+            // LoRA
+            if (useLoRASelect) {
+                const preferredLoRA = mapping.lora ?? false; // Default ke "false"
+                useLoRASelect.checked = preferredLoRA;
+
+                console.log("Sampler secara otomatis disetel ke:", preferredLoRA);
+            } else {
+                console.error("Checkbox untuk LoRA tidak ditemukan!");
+            }
+
+            // CLIP Skip
+            if (useClipSkipSelect) {
+                const preferredClipSkip = mapping.clip ?? false; // Default ke "false"
+                useClipSkipSelect.checked = preferredClipSkip;
+
+                const useclipSkip = mapping.clipskip ?? -2; // Default ke "-2"
+                clipSkipSet.value = useclipSkip;
+
+                console.log("CLIP Skip secara otomatis disetel ke:", preferredClipSkip);
+                console.log("Nilai CLIP Skip secara otomatis disetel ke:", useclipSkip);
+            } else {
+                console.error("Checkbox untuk CLIP Skip tidak ditemukan!");
+            }
+
+            // Steps
+            if (stepsSelect) {
+                stepsSelect.value = mapping.steps ?? 10; // Default ke 10
+
+                console.log("Steps secara otomatis disetel ke:", stepsSelect.value);
+            }
+
+            // CFG
+            if (cfgSelect) {
+                cfgSelect.value = mapping.cfg ?? 1; // Default ke 1
+
+                console.log("CFG secara otomatis disetel ke:", cfgSelect.value);
             }
         });
 
