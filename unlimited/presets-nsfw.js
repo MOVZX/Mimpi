@@ -384,70 +384,70 @@ const NSFWPresets = {
                 haircolour: randomHairColours(),
                 hairAdjective: randomHairAdjective(),
                 age: randomAge(),
-                attire: "wearing decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
+                attire: "decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
             },
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
                 hairAdjective: randomHairAdjective(),
                 age: randomAge(),
-                attire: "wearing decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
+                attire: "decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
             },
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
                 hairAdjective: randomHairAdjective(),
                 age: randomAge(),
-                attire: "wearing decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
+                attire: "decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
             },
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
                 hairAdjective: randomHairAdjective(),
                 age: randomAge(),
-                attire: "wearing decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
+                attire: "decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
             },
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
                 hairAdjective: randomHairAdjective(),
                 age: randomAge(),
-                attire: "wearing decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
+                attire: "decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
             },
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
                 hairAdjective: randomHairAdjective(),
                 age: randomAge(),
-                attire: "wearing decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
+                attire: "decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
             },
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
                 hairAdjective: randomHairAdjective(),
                 age: randomAge(),
-                attire: "wearing decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
+                attire: "decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
             },
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
                 hairAdjective: randomHairAdjective(),
                 age: randomAge(),
-                attire: "wearing decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
+                attire: "decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
             },
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
                 hairAdjective: randomHairAdjective(),
                 age: randomAge(),
-                attire: "wearing decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
+                attire: "decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
             },
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
                 hairAdjective: randomHairAdjective(),
                 age: randomAge(),
-                attire: "wearing decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
+                attire: "decent dress, kneeling with tongue out, (pov), eyes closed, anticipation, (looking up), (close view from top), (facing camera), cinematic, photorealistic",
             },
         ]),
     },
@@ -1453,8 +1453,7 @@ function generatePrompts(room, profiles) {
     return profiles.reduce((prompts, profile, index) => {
         prompts[
             index + 1
-        ] = `beautiful ${profile.age}-year-old woman, 1girl, solo, ${profile.hairAdjective} ${profile.hairstyle} ${profile.haircolour} hair, ${profile.attire}, dynamic pose, ${room}, intricate details, realistic skin textures, skin pores`;
-
+        ] = `hyperrealistic 8K, ${profile.age}-year-old woman, ${profile.hairAdjective} ${profile.hairstyle} ${profile.haircolour} hair, stunningly beautiful, wearing ${profile.attire}, dynamic pose, ${room}, intricate details, realistic skin textures, skin pores, high resolution, best quality, real human aesthetic, 1girl, solo`;
         return prompts;
     }, {});
 }

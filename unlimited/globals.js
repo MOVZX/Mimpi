@@ -56,7 +56,6 @@ const hairStyles = [
     "bun",
     "top knot",
     "chignon",
-    "messy bun",
     "ballerina bun",
     "french twist",
     "victory roll",

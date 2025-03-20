@@ -238,34 +238,72 @@ function regenerateSelectedPreset() {
     if (!presetSelect || !subcategoryContainer || !subcategorySelect || !promptTextarea) return;
 
     const selectedValue = presetSelect.value;
-    if (selectedValue === "none") return; // Tidak perlu regenerasi jika tidak ada preset yang dipilih
+    console.log("[DEBUG] Selected Value:", selectedValue);
+    if (selectedValue === "none") return;
+
+    const currentSubcategory = subcategorySelect.value || "1";
+    console.log("[DEBUG] Current Subcategory:", currentSubcategory);
 
     const [categoryType, categoryKey] = selectedValue.split(":");
+    console.log("[DEBUG] Category Type:", categoryType, "Category Key:", categoryKey);
+
     const presetObject = mainPresets[categoryType];
+    console.log("[DEBUG] Preset Object:", presetObject);
 
-    // Mendapatkan definisi preset asli dari SFWPresets atau NSFWPresets
-    const originalPreset = categoryType === "sfw" ? SFWPresets[categoryKey] : NSFWPresets[categoryKey];
-    if (!originalPreset) return;
+    let originalPreset = categoryType === "sfw" ? SFWPresets[categoryKey] : NSFWPresets[categoryKey];
+    if (!originalPreset) {
+        const normalizedCategoryKey = categoryKey
+            .split(" ")
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
+        originalPreset = categoryType === "sfw" ? SFWPresets[normalizedCategoryKey] : NSFWPresets[normalizedCategoryKey];
+        console.log("[DEBUG] Trying Normalized Key:", normalizedCategoryKey);
+    }
 
-    // Mendapatkan room dari label preset (misalnya, "bedroom" dari "Missionary Passion")
-    const room = categoryKey.split(" ")[0]; // Asumsi kata pertama adalah room
+    if (!originalPreset) {
+        console.error("[ERROR] Preset not found for key:", categoryKey);
+        promptTextarea.value = "Error: Preset not found for '" + categoryKey + "'. Please check preset configuration.";
+        return;
+    }
 
-    // Membuat profil baru dengan nilai acak
-    const newProfiles = Array.from({ length: 10 }, () => ({
-        hairstyle: randomHairStyles(),
-        haircolour: randomHairColours(),
-        hairAdjective: randomHairAdjective(),
-        age: randomAge(),
-        attire: originalPreset.prompts["1"].split(", ")[4].replace("wearing ", ""), // Mengambil attire dari prompt pertama
-    }));
+    const originalPrompt = originalPreset.prompts["1"];
+    console.log("[DEBUG] Original Prompt:", originalPrompt);
 
-    // Meregenerasi prompts
-    const newPrompts = generatePrompts(room, newProfiles);
+    // Parse the original prompt dynamically
+    const parts = originalPrompt.split(", ");
+    let agePartIndex = parts.findIndex(part => part.includes("year-old woman"));
+    let hairPartIndex = parts.findIndex(part => part.includes("hair"));
 
-    // Memperbarui mainPresets dengan prompts baru
+    if (agePartIndex === -1 || hairPartIndex === -1) {
+        console.error("[ERROR] Could not parse age or hair from prompt:", originalPrompt);
+
+        return;
+    }
+
+    // Extract and replace age and hair dynamically
+    const newProfiles = Array.from({ length: 10 }, () => {
+        const newAge = randomAge();
+        const newHair = `${randomHairAdjective()} ${randomHairStyles()} ${randomHairColours()}`;
+        const newPromptParts = [...parts];
+
+        // Replace age
+        newPromptParts[agePartIndex] = `${newAge}-year-old woman`;
+
+        // Replace hair
+        newPromptParts[hairPartIndex] = `${newHair} hair`;
+
+        return newPromptParts.join(", ");
+    });
+
+    // Store new prompts with numeric keys
+    const newPrompts = newProfiles.reduce((acc, prompt, index) => {
+        acc[index + 1] = prompt;
+
+        return acc;
+    }, {});
+
     presetObject[categoryKey].prompts = newPrompts;
 
-    // Memperbarui dropdown subcategory
     subcategoryContainer.style.display = "block";
     subcategorySelect.innerHTML = "";
 
@@ -276,15 +314,14 @@ function regenerateSelectedPreset() {
             /^\w+\s+\w+\s+(\d+)$/,
             (match, number) => `${presetObject[categoryKey].label} ${number}`
         );
+
         subcategorySelect.appendChild(option);
     });
 
-    // Mengatur prompt textarea ke prompt pertama yang baru
-    if (subcategorySelect.options.length > 0) {
-        subcategorySelect.value = subcategorySelect.options[0].value;
-        promptTextarea.value = newPrompts[subcategorySelect.value];
-    }
-    console.log("[DEBUG] Prompt diperbarui ke:", promptTextarea.value); // Tambahkan log untuk debugging
+    subcategorySelect.value = newPrompts[currentSubcategory] ? currentSubcategory : "1";
+    promptTextarea.value = newPrompts[subcategorySelect.value];
+
+    console.log("[DEBUG] Regenerated - Preset:", selectedValue, "Subcategory:", subcategorySelect.value, "Prompt:", promptTextarea.value);
 }
 
 // Inisialisasi event listener saat DOM dimuat
@@ -297,7 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
         checkpointSelect.addEventListener("change", () => {
             workflow["4"]["inputs"]["ckpt_name"] = checkpointSelect.value;
 
-            console.log("Checkpoint updated to:", checkpointSelect.value);
+            console.log("Checkpoint disetel ke:", checkpointSelect.value);
         });
     }
 
@@ -306,7 +343,7 @@ document.addEventListener("DOMContentLoaded", () => {
         samplerSelect.addEventListener("change", () => {
             workflow["105"]["inputs"]["sampler_name"] = samplerSelect.value;
 
-            console.log("Sampler updated to:", samplerSelect.value);
+            console.log("Sampler disetel ke:", samplerSelect.value);
         });
     }
 
@@ -315,7 +352,7 @@ document.addEventListener("DOMContentLoaded", () => {
         schedulerSelect.addEventListener("change", () => {
             workflow["105"]["inputs"]["scheduler"] = schedulerSelect.value;
 
-            console.log("Scheduler updated to:", schedulerSelect.value);
+            console.log("Scheduler disetel ke:", schedulerSelect.value);
         });
     }
 
@@ -457,9 +494,19 @@ async function generateImage() {
         if (useFaceDetailer) {
             workflow["225"]["inputs"]["boolean"] = true;
             workflow["226"]["inputs"]["boolean"] = true;
+            workflow["218"]["inputs"]["cfg"] = cfg;
+            workflow["220"]["inputs"]["interpolate_to_steps"] = steps;
+            workflow["221"]["inputs"]["sampler_name"] = samplerSelect.value;
+            workflow["223"]["inputs"]["steps"] = steps;
+            workflow["223"]["inputs"]["cfg"] = cfg;
         } else {
             workflow["225"]["inputs"]["boolean"] = false;
             workflow["226"]["inputs"]["boolean"] = false;
+            workflow["218"]["inputs"]["cfg"] = 1;
+            workflow["220"]["inputs"]["interpolate_to_steps"] = 10;
+            workflow["221"]["inputs"]["sampler_name"] = "lcm";
+            workflow["223"]["inputs"]["steps"] = 10;
+            workflow["223"]["inputs"]["cfg"] = 1;
         }
 
         // Menentukan seed secara acak atau manual
@@ -640,7 +687,6 @@ async function deleteImage() {
     const button = document.querySelector(".delete");
     const lightbox = document.getElementById("lightbox");
     const seedInput = document.getElementById("seed");
-    const useDynamicSeed = document.getElementById("useDynamicSeed").checked;
     const alwaysRandomisePrompt = document.getElementById("alwaysRandomisePrompt").checked;
 
     if (!lastImageData || !lastImageData.filename) {
@@ -675,7 +721,6 @@ async function deleteImage() {
 
         console.log("Delete response:", result);
 
-        // Tidak mengacak seed jika useDynamicSeed tidak dicentang
         // Regenerasi prompt hanya jika alwaysRandomisePrompt diaktifkan
         if (alwaysRandomisePrompt) {
             regenerateSelectedPreset();
@@ -742,6 +787,11 @@ async function clearImage() {
             seedInput.value = Number(currentSeedNum);
 
             console.log("[DEBUG] Seed randomized in clearImage:", Number(currentSeedNum));
+        }
+
+        // Regenerasi prompt hanya jika alwaysRandomisePrompt diaktifkan
+        if (alwaysRandomisePrompt) {
+            regenerateSelectedPreset();
         }
 
         outputImage.src = "";

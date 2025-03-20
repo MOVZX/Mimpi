@@ -393,9 +393,9 @@ function randomHairAdjective() {
     return hairAdjectives[Math.floor(Math.random() * hairAdjectives.length)];
 }
 
-// Fungsi untuk menghasilkan usia acak (25-34)
+// Fungsi untuk menghasilkan usia acak (25-38)
 function randomAge() {
-    return (Math.random() * 10) | 25;
+    return (Math.random() * 13) | 25;
 }
 
 // Fungsi untuk menghasilkan prompt berdasarkan ruangan dan profil
@@ -403,7 +403,7 @@ function generatePrompts(room, profiles) {
     return profiles.reduce((prompts, profile, index) => {
         prompts[
             index + 1
-        ] = `hyperrealistic 8K, ${profile.age}-year-old woman, ${profile.hairAdjective} ${profile.hairstyle} ${profile.haircolour} hair, stunningly beautiful, wearing ${profile.attire}, dynamic pose, ${room}, high resolution, best quality, real human aesthetic, sfw`;
+        ] = `hyperrealistic 8K, ${profile.age}-year-old woman, ${profile.hairAdjective} ${profile.hairstyle} ${profile.haircolour} hair, stunningly beautiful, wearing ${profile.attire}, dynamic pose, ${room}, intricate details, realistic skin textures, skin pores, high resolution, best quality, real human aesthetic, 1girl, solo, sfw`;
 
         return prompts;
     }, {});
