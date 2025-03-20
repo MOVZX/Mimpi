@@ -28,6 +28,7 @@ window.onload = function () {
     status.textContent = "";
 };
 
+// Mengisi dropdown untuk opsi checkpoint & sampler
 // Mengisi dropdown untuk opsi checkpoint, sampler
 function populateDropdowns() {
     const container = document.querySelector(".container");
@@ -50,20 +51,49 @@ function populateDropdowns() {
         checkpointSelect.id = "checkpoint";
         checkpointSelect.name = "checkpoint";
 
+        // Define checkpoint groups
+        const groups = {
+            Illustrious: [],
+            Pony: [],
+            SDXL: [],
+            "SDXL Lightning": [],
+        };
+
+        // Populate groups from checkpoint options
+        let currentGroup = null;
         checkpointOptions.forEach((option) => {
-            const optionElement = document.createElement("option");
+            if (option.startsWith("---- ") && option.endsWith(" ----")) {
+                const groupName = option.slice(5, -5).trim();
+                if (groups.hasOwnProperty(groupName)) {
+                    currentGroup = groupName;
+                }
+            } else if (currentGroup) {
+                groups[currentGroup].push(option);
+            }
+        });
 
-            const displayName =
-                checkpointNameMapping[option] ||
-                option
-                    .replace(/^(SDXL\/|SDXL-Lightning\/|SDXL-Turbo\/|Pony\/|Illustrious\/)/, "")
-                    .replace(/\.safetensors$/, "");
-            optionElement.value = option;
-            optionElement.textContent = displayName;
+        // Create optgroups for each category
+        Object.keys(groups).forEach((groupName) => {
+            const optgroup = document.createElement("optgroup");
+            optgroup.label = groupName;
 
-            if (option === "SDXL-Lightning/lustifySDXLNSFW_endgameDMD2.safetensors") optionElement.selected = true;
+            groups[groupName].forEach((option) => {
+                const optionElement = document.createElement("option");
+                const mapping = checkpointNameMapping[option] || {};
+                const displayName =
+                    mapping.displayName ||
+                    option.replace(/^(SDXL\/|SDXL-Lightning\/|Pony\/|Illustrious\/)/, "").replace(/\.safetensors$/, "");
+                optionElement.value = option;
+                optionElement.textContent = displayName;
 
-            checkpointSelect.appendChild(optionElement);
+                if (option === "SDXL-Lightning/juggernautXL_v9Rdphoto2Lightning.safetensors") {
+                    optionElement.selected = true;
+                }
+
+                optgroup.appendChild(optionElement);
+            });
+
+            checkpointSelect.appendChild(optgroup);
         });
 
         checkpointFormGroup.appendChild(checkpointLabel);
@@ -93,7 +123,9 @@ function populateDropdowns() {
             optionElement.value = option;
             optionElement.textContent = option;
 
-            if (option === "lcm") optionElement.selected = true;
+            // Default sampler will be set dynamically by checkpoint selection
+            // Remove the hardcoded default to "lcm"
+            // if (option === "lcm") optionElement.selected = true;
 
             samplerSelect.appendChild(optionElement);
         });
@@ -306,15 +338,30 @@ document.addEventListener("DOMContentLoaded", () => {
     populatePresetDropdowns();
 
     const checkpointSelect = document.getElementById("checkpoint");
+    const samplerSelect = document.getElementById("sampler");
+
     if (checkpointSelect) {
         checkpointSelect.addEventListener("change", () => {
             workflow["4"]["inputs"]["ckpt_name"] = checkpointSelect.value;
-
             console.log("Checkpoint disetel ke:", checkpointSelect.value);
+
+            // Set Sampler secara otomatis mengikuti pilihan Checkpoint
+            const mapping = checkpointNameMapping[checkpointSelect.value] || {};
+            const preferredSampler = mapping.sampler || "dpmpp_2m_sde_gpu"; // Default ke "dpmpp_2m_sde_gpu"
+
+            if (samplerSelect) {
+                samplerSelect.value = preferredSampler;
+                workflow["221"]["inputs"]["sampler_name"] = preferredSampler;
+
+                console.log("Sampler secara otomatis disetel ke:", preferredSampler);
+            } else {
+                console.error("Dropdown untuk Sampler tidak ditemukan!");
+            }
         });
+
+        checkpointSelect.dispatchEvent(new Event("change"));
     }
 
-    const samplerSelect = document.getElementById("sampler");
     if (samplerSelect) {
         samplerSelect.addEventListener("change", () => {
             workflow["221"]["inputs"]["sampler_name"] = samplerSelect.value;
