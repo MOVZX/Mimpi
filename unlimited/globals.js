@@ -51,7 +51,7 @@ const hairStyles = [
     "micro braids",
     "fulani braids",
     "goddess braids",
-    "waterfall braid",
+    "braid",
     // Updos
     "bun",
     "top knot",
