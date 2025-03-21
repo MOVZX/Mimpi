@@ -9,37 +9,48 @@ const mainPresets = {
     nsfw: NSFWPresets,
 };
 
-// Fungsi yang dijalankan saat halaman dimuat
+// Cache DOM elements
+const DOMCache = {};
+
+function cacheDOMElements() {
+    DOMCache.outputImage = document.getElementById("outputImage");
+    DOMCache.imageActions = document.getElementById("imageActions");
+    DOMCache.status = document.getElementById("status");
+    DOMCache.prompt = document.getElementById("prompt");
+    DOMCache.mainPreset = document.getElementById("main-preset");
+    DOMCache.subcategory = document.getElementById("subcategory");
+    DOMCache.error = document.getElementById("error");
+}
+
 window.onload = function () {
-    const outputImage = document.getElementById("outputImage");
-    const imageActions = document.getElementById("imageActions");
-    const status = document.getElementById("status");
     const savedSeed = localStorage.getItem("lastSeed");
 
-    // Mengatur nilai seed terakhir jika ada
     if (savedSeed) document.getElementById("seed").value = savedSeed;
 
-    // Mengosongkan dan menyembunyikan elemen gambar serta aksi
-    outputImage.src = "";
-    outputImage.style.display = "none";
-    imageActions.style.display = "none";
-    status.style.display = "none";
-    status.className = "";
-    status.textContent = "";
+    if (DOMCache.outputImage && DOMCache.imageActions && DOMCache.status) {
+        DOMCache.outputImage.src = "";
+        DOMCache.outputImage.style.display = "none";
+        DOMCache.imageActions.style.display = "none";
+        DOMCache.status.style.display = "none";
+        DOMCache.status.className = "";
+        DOMCache.status.textContent = "";
+    } else {
+        console.error("Missing DOM elements in window.onload");
+    }
 };
 
-// Mengisi dropdown untuk opsi checkpoint & sampler
-// Mengisi dropdown untuk opsi checkpoint, sampler
 function populateDropdowns() {
     const container = document.querySelector(".container");
+
+    if (!container) return console.error("Container not found");
+
     const detailsContent = container.querySelector("details > div");
 
-    let checkpointFormGroup = document.getElementById("checkpointFormGroup");
+    if (!detailsContent) return console.error("Details content not found");
 
-    // Membuat dropdown checkpoint jika belum ada
-    if (!checkpointFormGroup) {
+    if (!document.getElementById("checkpointFormGroup")) {
         const checkpointOptions = fetchCheckpointOptions();
-        checkpointFormGroup = document.createElement("div");
+        const checkpointFormGroup = document.createElement("div");
         checkpointFormGroup.id = "checkpointFormGroup";
         checkpointFormGroup.className = "form-group";
 
@@ -51,28 +62,17 @@ function populateDropdowns() {
         checkpointSelect.id = "checkpoint";
         checkpointSelect.name = "checkpoint";
 
-        // Define checkpoint groups
-        const groups = {
-            Illustrious: [],
-            Pony: [],
-            SDXL: [],
-            "SDXL Lightning": [],
-        };
-
-        // Populate groups from checkpoint options
+        const groups = { Illustrious: [], Pony: [], SDXL: [], "SDXL Lightning": [] };
         let currentGroup = null;
+
         checkpointOptions.forEach((option) => {
             if (option.startsWith("---- ") && option.endsWith(" ----")) {
                 const groupName = option.slice(5, -5).trim();
-                if (groups.hasOwnProperty(groupName)) {
-                    currentGroup = groupName;
-                }
-            } else if (currentGroup) {
-                groups[currentGroup].push(option);
-            }
+
+                if (groups.hasOwnProperty(groupName)) currentGroup = groupName;
+            } else if (currentGroup) groups[currentGroup].push(option);
         });
 
-        // Create optgroups for each category
         Object.keys(groups).forEach((groupName) => {
             const optgroup = document.createElement("optgroup");
             optgroup.label = groupName;
@@ -86,9 +86,7 @@ function populateDropdowns() {
                 optionElement.value = option;
                 optionElement.textContent = displayName;
 
-                if (option === "SDXL/lustifySDXLNSFW_endgame.safetensors") {
-                    optionElement.selected = true;
-                }
+                if (option === "SDXL/lustifySDXLNSFW_endgame.safetensors") optionElement.selected = true;
 
                 optgroup.appendChild(optionElement);
             });
@@ -101,12 +99,9 @@ function populateDropdowns() {
         detailsContent.insertBefore(checkpointFormGroup, detailsContent.firstChild);
     }
 
-    // Membuat dropdown sampler jika belum ada
-    let samplerFormGroup = document.getElementById("samplerFormGroup");
-
-    if (!samplerFormGroup) {
+    if (!document.getElementById("samplerFormGroup")) {
         const samplerOptions = fetchSamplerOptions();
-        samplerFormGroup = document.createElement("div");
+        const samplerFormGroup = document.createElement("div");
         samplerFormGroup.id = "samplerFormGroup";
         samplerFormGroup.className = "form-group";
 
@@ -122,11 +117,6 @@ function populateDropdowns() {
             const optionElement = document.createElement("option");
             optionElement.value = option;
             optionElement.textContent = option;
-
-            // Default sampler will be set dynamically by checkpoint selection
-            // Remove the hardcoded default to "lcm"
-            // if (option === "lcm") optionElement.selected = true;
-
             samplerSelect.appendChild(optionElement);
         });
 
@@ -135,18 +125,15 @@ function populateDropdowns() {
         detailsContent.appendChild(samplerFormGroup);
     }
 
-    // Membuat dropdown upscaler jika belum ada
-    let upscalerFormGroup = document.getElementById("upscalerFormGroup");
-
-    if (!upscalerFormGroup) {
+    if (!document.getElementById("upscalerFormGroup")) {
         const upscalerOptions = upscaleModels;
-        upscalerFormGroup = document.createElement("div");
+        const upscalerFormGroup = document.createElement("div");
         upscalerFormGroup.id = "upscalerFormGroup";
         upscalerFormGroup.className = "form-group";
 
-        const samplerLabel = document.createElement("label");
-        samplerLabel.htmlFor = "upscaler";
-        samplerLabel.textContent = "Upscaler";
+        const upscalerLabel = document.createElement("label");
+        upscalerLabel.htmlFor = "upscaler";
+        upscalerLabel.textContent = "Upscaler";
 
         const upscalerSelect = document.createElement("select");
         upscalerSelect.id = "upscaler";
@@ -162,127 +149,103 @@ function populateDropdowns() {
             upscalerSelect.appendChild(optionElement);
         });
 
-        upscalerFormGroup.appendChild(samplerLabel);
+        upscalerFormGroup.appendChild(upscalerLabel);
         upscalerFormGroup.appendChild(upscalerSelect);
         detailsContent.appendChild(upscalerFormGroup);
     }
 }
 
-// Mengisi dropdown preset utama
 function populatePresetDropdowns() {
-    const presetSelect = document.getElementById("main-preset");
-    const subcategoryContainer = document.getElementById("subcategory-container");
-    const subcategorySelect = document.getElementById("subcategory");
-    const promptTextarea = document.getElementById("prompt");
+    if (!DOMCache.mainPreset || !DOMCache.subcategory || !DOMCache.prompt) return;
 
-    if (presetSelect && subcategoryContainer && subcategorySelect && promptTextarea) {
-        presetSelect.innerHTML = "";
+    DOMCache.mainPreset.innerHTML = "";
+    const noneOption = document.createElement("option");
+    noneOption.value = "none";
+    noneOption.textContent = "Tidak Ada";
+    DOMCache.mainPreset.appendChild(noneOption);
 
-        const noneOption = document.createElement("option");
-        noneOption.value = "none";
-        noneOption.textContent = "Tidak Ada";
-        presetSelect.appendChild(noneOption);
+    // SFW Preset
+    const sfwOptgroup = document.createElement("optgroup");
+    sfwOptgroup.label = "SFW";
 
-        const sfwOptgroup = document.createElement("optgroup");
-        sfwOptgroup.label = "SFW";
+    Object.keys(mainPresets.sfw).forEach((categoryKey) => {
+        if (categoryKey === "none") return;
 
-        Object.keys(mainPresets.sfw).forEach((categoryKey) => {
-            if (categoryKey === "none") return;
+        const option = document.createElement("option");
+        option.value = `sfw:${categoryKey}`;
+        option.textContent = mainPresets.sfw[categoryKey].label;
 
+        sfwOptgroup.appendChild(option);
+    });
+
+    DOMCache.mainPreset.appendChild(sfwOptgroup);
+
+    // NSFW Preset
+    const nsfwOptgroup = document.createElement("optgroup");
+    nsfwOptgroup.label = "NSFW";
+
+    Object.keys(mainPresets.nsfw).forEach((categoryKey) => {
+        if (categoryKey === "none") return;
+
+        const option = document.createElement("option");
+        option.value = `nsfw:${categoryKey}`;
+        option.textContent = mainPresets.nsfw[categoryKey].label;
+        nsfwOptgroup.appendChild(option);
+    });
+
+    DOMCache.mainPreset.appendChild(nsfwOptgroup);
+
+    DOMCache.mainPreset.addEventListener("change", () => {
+        DOMCache.prompt.value = "";
+
+        if (DOMCache.mainPreset.value === "none") {
+            DOMCache.subcategory.parentElement.style.display = "none";
+            DOMCache.subcategory.innerHTML = "";
+            return;
+        }
+
+        DOMCache.subcategory.parentElement.style.display = "block";
+        DOMCache.subcategory.innerHTML = "";
+        const [categoryType, categoryKey] = DOMCache.mainPreset.value.split(":");
+        const presetObject = mainPresets[categoryType];
+        const categoryPrompts = presetObject[categoryKey].prompts;
+
+        Object.keys(categoryPrompts).forEach((promptKey) => {
             const option = document.createElement("option");
-            option.value = `sfw:${categoryKey}`;
-            option.textContent = mainPresets.sfw[categoryKey].label;
+            option.value = promptKey;
+            option.textContent = promptKey.replace(
+                /^\w+\s+\w+\s+(\d+)$/,
+                (_, number) => `${presetObject[categoryKey].label} ${number}`
+            );
 
-            sfwOptgroup.appendChild(option);
+            DOMCache.subcategory.appendChild(option);
         });
 
-        presetSelect.appendChild(sfwOptgroup);
+        if (DOMCache.subcategory.options.length > 0) {
+            DOMCache.subcategory.value = DOMCache.subcategory.options[0].value;
+            DOMCache.prompt.value = categoryPrompts[DOMCache.subcategory.value];
+        }
+    });
 
-        const nsfwOptgroup = document.createElement("optgroup");
-        nsfwOptgroup.label = "NSFW";
-
-        Object.keys(mainPresets.nsfw).forEach((categoryKey) => {
-            if (categoryKey === "none") return;
-
-            const option = document.createElement("option");
-            option.value = `nsfw:${categoryKey}`;
-            option.textContent = mainPresets.nsfw[categoryKey].label;
-
-            nsfwOptgroup.appendChild(option);
-        });
-
-        presetSelect.appendChild(nsfwOptgroup);
-
-        // Event listener untuk perubahan preset utama
-        presetSelect.addEventListener("change", () => {
-            const selectedValue = presetSelect.value;
-            promptTextarea.value = "";
-
-            if (selectedValue === "none") {
-                subcategoryContainer.style.display = "none";
-                subcategorySelect.innerHTML = "";
-
-                return;
-            }
-
-            subcategoryContainer.style.display = "block";
-            subcategorySelect.innerHTML = "";
-
-            const [categoryType, categoryKey] = selectedValue.split(":");
-            const presetObject = mainPresets[categoryType];
-            const categoryPrompts = presetObject[categoryKey].prompts;
-
-            Object.keys(categoryPrompts).forEach((promptKey) => {
-                const option = document.createElement("option");
-                option.value = promptKey;
-                option.textContent = promptKey.replace(
-                    /^\w+\s+\w+\s+(\d+)$/,
-                    (match, number) => `${presetObject[categoryKey].label} ${number}`
-                );
-
-                subcategorySelect.appendChild(option);
-            });
-
-            if (subcategorySelect.options.length > 0) {
-                subcategorySelect.value = subcategorySelect.options[0].value;
-                promptTextarea.value = categoryPrompts[subcategorySelect.value];
-            }
-        });
-
-        // Event listener untuk perubahan subkategori
-        subcategorySelect.addEventListener("change", () => {
-            const selectedValue = presetSelect.value;
-            const [categoryType, categoryKey] = selectedValue.split(":");
-            const selectedSubcategory = subcategorySelect.value;
-            const presetObject = mainPresets[categoryType];
-            promptTextarea.value = presetObject[categoryKey].prompts[selectedSubcategory] || "";
-        });
-    }
+    DOMCache.subcategory.addEventListener("change", () => {
+        const [categoryType, categoryKey] = DOMCache.mainPreset.value.split(":");
+        const presetObject = mainPresets[categoryType];
+        DOMCache.prompt.value = presetObject[categoryKey].prompts[DOMCache.subcategory.value] || "";
+    });
 }
 
-// Fungsi untuk meregenerasi preset yang dipilih
 function regenerateSelectedPreset() {
-    const presetSelect = document.getElementById("main-preset");
-    const subcategoryContainer = document.getElementById("subcategory-container");
-    const subcategorySelect = document.getElementById("subcategory");
-    const promptTextarea = document.getElementById("prompt");
+    if (!DOMCache.mainPreset || !DOMCache.subcategory || !DOMCache.prompt) return;
 
-    if (!presetSelect || !subcategoryContainer || !subcategorySelect || !promptTextarea) return;
+    const selectedValue = DOMCache.mainPreset.value;
 
-    const selectedValue = presetSelect.value;
-    console.log("[DEBUG] Selected Value:", selectedValue);
     if (selectedValue === "none") return;
 
-    const currentSubcategory = subcategorySelect.value || "1";
-    console.log("[DEBUG] Current Subcategory:", currentSubcategory);
-
+    const currentSubcategory = DOMCache.subcategory.value || "1";
     const [categoryType, categoryKey] = selectedValue.split(":");
-    console.log("[DEBUG] Category Type:", categoryType, "Category Key:", categoryKey);
-
     const presetObject = mainPresets[categoryType];
-    console.log("[DEBUG] Preset Object:", presetObject);
-
     let originalPreset = categoryType === "sfw" ? SFWPresets[categoryKey] : NSFWPresets[categoryKey];
+
     if (!originalPreset) {
         const normalizedCategoryKey = categoryKey
             .split(" ")
@@ -290,82 +253,60 @@ function regenerateSelectedPreset() {
             .join(" ");
         originalPreset =
             categoryType === "sfw" ? SFWPresets[normalizedCategoryKey] : NSFWPresets[normalizedCategoryKey];
-        console.log("[DEBUG] Trying Normalized Key:", normalizedCategoryKey);
     }
 
     if (!originalPreset) {
-        console.error("[ERROR] Preset not found for key:", categoryKey);
-        promptTextarea.value = "Error: Preset not found for '" + categoryKey + "'. Please check preset configuration.";
+        DOMCache.prompt.value = "Error: Preset not found for '" + categoryKey + "'.";
+
         return;
     }
 
     const originalPrompt = originalPreset.prompts["1"];
-    console.log("[DEBUG] Original Prompt:", originalPrompt);
-
-    // Parse the original prompt dynamically
     const parts = originalPrompt.split(", ");
-    let agePartIndex = parts.findIndex((part) => part.includes("year-old woman"));
-    let hairPartIndex = parts.findIndex((part) => part.includes("hair"));
+    const agePartIndex = parts.findIndex((part) => part.includes("year-old woman"));
+    const hairPartIndex = parts.findIndex((part) => part.includes("hair"));
 
     if (agePartIndex === -1 || hairPartIndex === -1) {
-        console.error("[ERROR] Could not parse age or hair from prompt:", originalPrompt);
+        DOMCache.prompt.value = "Error: Unable to regenerate prompt due to invalid structure.";
 
         return;
     }
 
-    // Extract and replace age and hair dynamically
-    const newProfiles = Array.from({ length: 10 }, () => {
+    const newPrompts = Array.from({ length: 10 }, () => {
         const newAge = randomAge();
         const newHair = `${randomHairAdjective()} ${randomHairStyles()} ${randomHairColours()}`;
         const newPromptParts = [...parts];
-
-        // Replace age
         newPromptParts[agePartIndex] = `${newAge}-year-old woman`;
-
-        // Replace hair
         newPromptParts[hairPartIndex] = `${newHair} hair`;
 
         return newPromptParts.join(", ");
-    });
-
-    // Store new prompts with numeric keys
-    const newPrompts = newProfiles.reduce((acc, prompt, index) => {
+    }).reduce((acc, prompt, index) => {
         acc[index + 1] = prompt;
 
         return acc;
     }, {});
 
     presetObject[categoryKey].prompts = newPrompts;
-
-    subcategoryContainer.style.display = "block";
-    subcategorySelect.innerHTML = "";
+    DOMCache.subcategory.parentElement.style.display = "block";
+    DOMCache.subcategory.innerHTML = "";
 
     Object.keys(newPrompts).forEach((promptKey) => {
         const option = document.createElement("option");
         option.value = promptKey;
         option.textContent = promptKey.replace(
             /^\w+\s+\w+\s+(\d+)$/,
-            (match, number) => `${presetObject[categoryKey].label} ${number}`
+            (_, number) => `${presetObject[categoryKey].label} ${number}`
         );
 
-        subcategorySelect.appendChild(option);
+        DOMCache.subcategory.appendChild(option);
     });
 
-    subcategorySelect.value = newPrompts[currentSubcategory] ? currentSubcategory : "1";
-    promptTextarea.value = newPrompts[subcategorySelect.value];
-
-    console.log(
-        "[DEBUG] Regenerated - Preset:",
-        selectedValue,
-        "Subcategory:",
-        subcategorySelect.value,
-        "Prompt:",
-        promptTextarea.value
-    );
+    DOMCache.subcategory.value = newPrompts[currentSubcategory] ? currentSubcategory : "1";
+    DOMCache.prompt.value = newPrompts[DOMCache.subcategory.value];
 }
 
-// Inisialisasi event listener saat DOM dimuat
 document.addEventListener("DOMContentLoaded", () => {
+    cacheDOMElements();
     populateDropdowns();
     populatePresetDropdowns();
 
@@ -383,60 +324,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (checkpointSelect) {
         checkpointSelect.addEventListener("change", () => {
             workflow["4"]["inputs"]["ckpt_name"] = checkpointSelect.value;
-
-            console.log("Checkpoint disetel ke:", checkpointSelect.value);
-
-            // Mapping
             const mapping = checkpointNameMapping[checkpointSelect.value] || {};
 
-            // Sampler
-            if (samplerSelect) {
-                const preferredSampler = mapping.sampler || "dpmpp_2m"; // Default ke "dpmpp_2m"
-                samplerSelect.value = preferredSampler;
-                workflow["221"]["inputs"]["sampler_name"] = preferredSampler;
-
-                console.log("Sampler secara otomatis disetel ke:", preferredSampler);
-            } else {
-                console.error("Dropdown untuk Sampler tidak ditemukan!");
-            }
-
-            // LoRA
-            if (useLoRASelect) {
-                const preferredLoRA = mapping.lora ?? false; // Default ke "false"
-                useLoRASelect.checked = preferredLoRA;
-
-                console.log("Sampler secara otomatis disetel ke:", preferredLoRA);
-            } else {
-                console.error("Checkbox untuk LoRA tidak ditemukan!");
-            }
-
-            // CLIP Skip
+            if (samplerSelect) samplerSelect.value = mapping.sampler || "dpmpp_2m";
+            if (useLoRASelect) useLoRASelect.checked = mapping.lora ?? false;
             if (useClipSkipSelect) {
-                const preferredClipSkip = mapping.clip ?? false; // Default ke "false"
-                useClipSkipSelect.checked = preferredClipSkip;
-
-                const useclipSkip = mapping.clipskip ?? -2; // Default ke "-2"
-                clipSkipSet.value = useclipSkip;
-
-                console.log("CLIP Skip secara otomatis disetel ke:", preferredClipSkip);
-                console.log("Nilai CLIP Skip secara otomatis disetel ke:", useclipSkip);
-            } else {
-                console.error("Checkbox untuk CLIP Skip tidak ditemukan!");
+                useClipSkipSelect.checked = mapping.clip ?? false;
+                clipSkipSet.value = mapping.clipskip ?? -2;
             }
-
-            // Steps
-            if (stepsSelect) {
-                stepsSelect.value = mapping.steps ?? 10; // Default ke 10
-
-                console.log("Steps secara otomatis disetel ke:", stepsSelect.value);
-            }
-
-            // CFG
-            if (cfgSelect) {
-                cfgSelect.value = mapping.cfg ?? 1; // Default ke 1
-
-                console.log("CFG secara otomatis disetel ke:", cfgSelect.value);
-            }
+            if (stepsSelect) stepsSelect.value = mapping.steps ?? 10;
+            if (cfgSelect) cfgSelect.value = mapping.cfg ?? 1;
         });
 
         checkpointSelect.dispatchEvent(new Event("change"));
@@ -445,141 +342,100 @@ document.addEventListener("DOMContentLoaded", () => {
     if (samplerSelect) {
         samplerSelect.addEventListener("change", () => {
             workflow["221"]["inputs"]["sampler_name"] = samplerSelect.value;
-
-            console.log("Sampler disetel ke:", samplerSelect.value);
         });
     }
 
-    // Clip SKIP
-    clipSkipFormGroup.classList.toggle("visible", useClipSkipSelect.checked);
-
-    useClipSkipSelect.addEventListener("change", () => {
-        clipSkipFormGroup.classList.toggle("visible", useClipSkipSelect.checked);
+    clipSkipFormGroup?.classList.toggle("visible", useClipSkipSelect?.checked ?? false);
+    useClipSkipSelect?.addEventListener("change", () => {
+        clipSkipFormGroup?.classList.toggle("visible", useClipSkipSelect.checked);
     });
 
-    // Upscale
-    upscalerFormGroup.classList.toggle("visible", useUpscaleCheckbox.checked);
-
-    useUpscaleCheckbox.addEventListener("change", () => {
-        upscalerFormGroup.classList.toggle("visible", useUpscaleCheckbox.checked);
+    upscalerFormGroup?.classList.toggle("visible", useUpscaleCheckbox?.checked ?? false);
+    useUpscaleCheckbox?.addEventListener("change", () => {
+        upscalerFormGroup?.classList.toggle("visible", useUpscaleCheckbox.checked);
     });
 
-    // Event listener untuk lightbox gambar
-    const outputImage = document.getElementById("outputImage");
-    const lightbox = document.getElementById("lightbox");
-    const lightboxImage = document.getElementById("lightboxImage");
-    const closeLightbox = document.getElementById("closeLightbox");
+    DOMCache.outputImage?.addEventListener("click", () => {
+        const lightbox = document.getElementById("lightbox");
+        const lightboxImage = document.getElementById("lightboxImage");
 
-    outputImage.addEventListener("click", () => {
-        if (outputImage.src && outputImage.style.display !== "none") {
-            lightboxImage.src = outputImage.src;
+        if (DOMCache.outputImage.src && DOMCache.outputImage.style.display !== "none" && lightbox && lightboxImage) {
+            lightboxImage.src = DOMCache.outputImage.src;
             lightbox.style.display = "flex";
         }
     });
 
-    closeLightbox.addEventListener("click", () => {
-        lightbox.style.display = "none";
+    document.getElementById("closeLightbox")?.addEventListener("click", () => {
+        document.getElementById("lightbox").style.display = "none";
     });
 
-    lightbox.addEventListener("click", (e) => {
-        if (e.target === lightbox) {
-            lightbox.style.display = "none";
-        }
+    document.getElementById("lightbox")?.addEventListener("click", (e) => {
+        if (e.target === e.currentTarget) e.currentTarget.style.display = "none";
     });
 });
 
-function loadImage(imageUrl) {
-    return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.crossOrigin = "anonymous"; // Tambahkan untuk mengatasi potensi CORS
-        img.src = imageUrl;
-
-        img.onload = () => resolve(img);
-        img.onerror = (e) => reject(new Error(`Gagal memuat gambar di ${imageUrl}: ${e.message}`));
-    });
-}
-
-// Fungsi untuk menghasilkan gambar
 async function generateImage() {
-    const promptInput = document.getElementById("prompt").value;
-    const promptNegativeInput = document.getElementById("prompt-negative").value;
-    const useCheckpointCache = document.getElementById("useCheckpointCache").checked;
-    const clipSkipInput = document.getElementById("clip-skip").value;
-    const useLoRA = document.getElementById("useLoRA").checked;
-    const useClipSkip = document.getElementById("useClipSkip").checked;
-    const useUpscale = document.getElementById("useUpscale").checked;
-    const upscaleModel = document.getElementById("upscaler").value;
-    const stepsInput = document.getElementById("steps").value;
-    const cfgInput = document.getElementById("cfg").value;
-    const imageMode = document.getElementById("imageMode").value;
-    const seedInput = document.getElementById("seed").value;
-    const useDynamicPrompt = document.getElementById("useDynamicPrompt").checked;
-    const alwaysRandomisePrompt = document.getElementById("alwaysRandomisePrompt").checked;
-    const useDynamicSeed = document.getElementById("useDynamicSeed").checked;
-    const status = document.getElementById("status");
-    const error = document.getElementById("error");
-    const button = document.querySelector("button");
-    const outputImage = document.getElementById("outputImage");
-    const imageActions = document.getElementById("imageActions");
+    const inputs = {
+        prompt: DOMCache.prompt?.value,
+        promptNegative: document.getElementById("prompt-negative")?.value,
+        useCheckpointCache: document.getElementById("useCheckpointCache")?.checked,
+        clipSkip: document.getElementById("clip-skip")?.value,
+        useLoRA: document.getElementById("useLoRA")?.checked,
+        useClipSkip: document.getElementById("useClipSkip")?.checked,
+        useUpscale: document.getElementById("useUpscale")?.checked,
+        upscaleModel: document.getElementById("upscaler")?.value,
+        steps: document.getElementById("steps")?.value,
+        cfg: document.getElementById("cfg")?.value,
+        imageMode: document.getElementById("imageMode")?.value,
+        seed: document.getElementById("seed")?.value,
+        useDynamicPrompt: document.getElementById("useDynamicPrompt")?.checked,
+        alwaysRandomisePrompt: document.getElementById("alwaysRandomisePrompt")?.checked,
+        useDynamicSeed: document.getElementById("useDynamicSeed")?.checked,
+    };
 
-    // Validasi input prompt
-    if (!promptInput) {
-        showError(error, "Deskripsi gambar tidak boleh kosong!");
+    if (!inputs.prompt) {
+        showError(DOMCache.error, "Deskripsi gambar tidak boleh kosong!");
 
         return;
     }
 
     if (!document.getElementById("checkpoint")) populateDropdowns();
 
-    showStatus(status, "<h4>Membuat gambar...</h4>");
+    const checkpointSelect = document.getElementById("checkpoint");
+    const samplerSelect = document.getElementById("sampler");
 
-    error.style.display = "none";
-    outputImage.style.display = "none";
-    imageActions.style.display = "none";
-    button.disabled = true;
+    if (!checkpointSelect || !samplerSelect) return showError(DOMCache.error, "Dropdowns tidak ditemukan!");
+
+    showStatus(DOMCache.status, "<h4>Membuat gambar...</h4>");
+
+    DOMCache.error.style.display = "none";
+    DOMCache.outputImage.style.display = "none";
+    DOMCache.imageActions.style.display = "none";
+    document.querySelector("button").disabled = true;
 
     try {
-        const steps = parseInt(stepsInput);
-        const cfg = parseFloat(cfgInput);
-        const clipSkip = parseInt(clipSkipInput);
+        const steps = parseInt(inputs.steps);
+        const cfg = parseFloat(inputs.cfg);
+        const clipSkip = parseInt(inputs.clipSkip);
 
-        // Validasi input numerik
         if (isNaN(steps) || steps < 1 || steps > 100) throw new Error("Steps harus antara 1 dan 100!");
         if (isNaN(cfg) || cfg < 1 || cfg > 30) throw new Error("CFG harus antara 1 dan 30!");
-        if (useClipSkip && (isNaN(clipSkip) || clipSkip < -10 || clipSkip > -1))
-            throw new Error("CLIP Skip harus berupa angka antara -1 dan -10!");
+        if (inputs.useClipSkip && (isNaN(clipSkip) || clipSkip < -10 || clipSkip > -1))
+            throw new Error("CLIP Skip harus antara -1 dan -10!");
 
-        const checkpointSelect = document.getElementById("checkpoint");
-        const samplerSelect = document.getElementById("sampler");
-
-        if (!checkpointSelect || !samplerSelect) {
-            throw new Error("Dropdowns tidak ditemukan!");
-        }
-
-        // Mengatur checkpoint dasar
         workflow["4"]["inputs"]["ckpt_name"] = checkpointSelect.value;
 
-        // Mengatur koneksi model berdasarkan useLoRA dan useCheckpointCache
-        if (useLoRA) {
+        if (inputs.useLoRA) {
             workflow["84"]["inputs"]["model"] = ["4", 0];
-
-            if (useCheckpointCache) {
-                workflow["106"]["inputs"]["model"] = ["84", 0];
-                workflow["193"]["inputs"]["model"] = ["106", 0];
-            } else {
-                workflow["193"]["inputs"]["model"] = ["84", 0];
-            }
+            workflow[inputs.useCheckpointCache ? "106" : "193"]["inputs"]["model"] = [
+                inputs.useCheckpointCache ? "84" : "106",
+                0,
+            ];
         } else {
-            if (useCheckpointCache) {
-                workflow["106"]["inputs"]["model"] = ["4", 0];
-                workflow["193"]["inputs"]["model"] = ["106", 0];
-            } else {
-                workflow["193"]["inputs"]["model"] = ["4", 0];
-            }
+            workflow[inputs.useCheckpointCache ? "106" : "193"]["inputs"]["model"] = ["4", 0];
         }
 
-        // Mengatur koneksi CLIP berdasarkan useClipSkip dan useLoRA
-        if (useClipSkip) {
+        if (inputs.useClipSkip) {
             workflow["76"]["inputs"]["stop_at_clip_layer"] = clipSkip;
             workflow["76"]["inputs"]["clip"] = ["4", 1];
             workflow["84"]["inputs"]["clip"] = ["76", 0];
@@ -591,145 +447,83 @@ async function generateImage() {
             workflow["259"]["inputs"]["clip"] = ["84", 1];
         }
 
-        // Mengatur prompt dan parameter lainnya dengan nilai terbaru
-        workflow["260"]["inputs"]["text"] = promptInput;
-        workflow["171"]["inputs"]["custom_subject"] = promptInput;
-        workflow["103"]["inputs"]["text"] = `embedding:Stable_Yogis_PDXL_Negatives-neg, ${promptNegativeInput}`;
+        workflow["260"]["inputs"]["text"] = inputs.prompt;
+        workflow["171"]["inputs"]["custom_subject"] = inputs.prompt;
+        workflow["103"]["inputs"]["text"] = `embedding:Stable_Yogis_PDXL_Negatives-neg, ${inputs.promptNegative || ""}`;
         workflow["218"]["inputs"]["cfg"] = cfg;
         workflow["252"]["inputs"]["steps"] = steps;
         workflow["221"]["inputs"]["sampler_name"] = samplerSelect.value;
-        workflow["178:1"]["inputs"]["boolean"] = useDynamicPrompt;
+        workflow["178:1"]["inputs"]["boolean"] = inputs.useDynamicPrompt;
 
-        // Menentukan seed secara acak atau manual
-        let seed;
+        let seed =
+            inputs.useDynamicSeed || !inputs.seed || isNaN(inputs.seed) || inputs.seed === "-1"
+                ? (BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
+                      BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER))) %
+                  (MAX_SEED + BigInt(1))
+                : BigInt(inputs.seed);
+        if (seed < BigInt(0) || seed > MAX_SEED) throw new Error(`Seed harus antara 0 dan ${MAX_SEED}!`);
+        currentSeedNum = seed;
+        workflow["171"]["inputs"]["seed"] = Number(seed);
+        workflow["222"]["inputs"]["noise_seed"] = Number(seed);
+        document.getElementById("seed").value = Number(seed);
+        workflow["152"]["inputs"]["resolution"] =
+            inputs.imageMode === "portrait"
+                ? "896x1152 (0.78)"
+                : inputs.imageMode === "landscape"
+                ? "1152x896 (1.29)"
+                : "1024x1024 (1.0)";
 
-        if (useDynamicSeed || !seedInput || isNaN(seedInput) || seedInput === "-1") {
-            const randomValue =
-                BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
-                BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
-            seed = randomValue % (MAX_SEED + BigInt(1));
-            currentSeedNum = seed;
-            workflow["171"]["inputs"]["seed"] = Number(seed);
-            workflow["222"]["inputs"]["noise_seed"] = Number(seed);
-            seedInput.value = Number(seed);
-        } else {
-            const seedNum = BigInt(seedInput);
-
-            if (seedNum < BigInt(0) || seedNum > MAX_SEED) throw new Error(`Seed harus antara 0 dan ${MAX_SEED}!`);
-
-            currentSeedNum = seedNum;
-            workflow["171"]["inputs"]["seed"] = Number(seedNum);
-            workflow["222"]["inputs"]["noise_seed"] = Number(seedNum);
-            seedInput.value = Number(seedNum);
-            seed = seedNum;
-        }
-
-        // Mengatur resolusi berdasarkan mode gambar
-        if (imageMode === "portrait") workflow["152"]["inputs"]["resolution"] = "896x1152 (0.78)";
-        else if (imageMode === "landscape") workflow["152"]["inputs"]["resolution"] = "1152x896 (1.29)";
-        else if (imageMode === "square") workflow["152"]["inputs"]["resolution"] = "1024x1024 (1.0)";
-
-        // Mengatur prefix nama file berdasarkan tanggal dan seed
         const currentDate = new Date();
         const formattedDate = currentDate.toISOString().split("T")[0];
-        const hours = String(currentDate.getHours()).padStart(2, "0");
-        const minutes = String(currentDate.getMinutes()).padStart(2, "0");
-        const seconds = String(currentDate.getSeconds()).padStart(2, "0");
-        const formattedTime = `${hours}-${minutes}-${seconds}`;
+        const formattedTime = `${String(currentDate.getHours()).padStart(2, "0")}-${String(
+            currentDate.getMinutes()
+        ).padStart(2, "0")}-${String(currentDate.getSeconds()).padStart(2, "0")}`;
         workflow["267"]["inputs"][
             "filename_prefix"
         ] = `webui-rated-r/${formattedDate}/${formattedTime}_${currentSeedNum}`;
 
-        // Jika upscale diaktifkan, tambahkan node upscaling ke workflow
-        if (useUpscale) {
-            // Tambahkan node upscaling
+        if (inputs.useUpscale) {
             Object.assign(workflow, upscaleNodes);
 
-            // Update parameter upscaling
             workflow["273"]["inputs"]["seed"] = Number(seed);
-            workflow["272"]["inputs"]["model_name"] = upscaleModel;
-
-            // Update koneksi CLIP untuk node upscaling
-            if (useClipSkip) {
-                workflow["270"]["inputs"]["clip"] = ["76", 0];
-                workflow["271"]["inputs"]["clip"] = ["76", 0];
-            } else {
-                workflow["270"]["inputs"]["clip"] = ["4", 1];
-                workflow["271"]["inputs"]["clip"] = ["4", 1];
-            }
-
-            // Hubungkan SaveImage ke Switch image
+            workflow["272"]["inputs"]["model_name"] = inputs.upscaleModel;
+            workflow[inputs.useClipSkip ? "270" : "271"]["inputs"]["clip"] = [
+                inputs.useClipSkip ? "76" : "4",
+                inputs.useClipSkip ? 0 : 1,
+            ];
             workflow["267"]["inputs"]["images"] = ["276", 0];
         } else {
-            // Pastikan node upscaling tidak ada dalam workflow
-            delete workflow["270"];
-            delete workflow["271"];
-            delete workflow["272"];
-            delete workflow["273"];
-            delete workflow["276"];
-
-            // Hubungkan SaveImage langsung ke VAEDecode
+            ["270", "271", "272", "273", "276"].forEach((node) => delete workflow[node]);
             workflow["267"]["inputs"]["images"] = ["47", 0];
         }
 
-        console.log("[DEBUG] Parameter pembuatan gambar:", {
-            checkpoint: workflow["4"]["inputs"]["ckpt_name"],
-            sampler: workflow["221"]["inputs"]["sampler_name"],
-            seed: workflow["222"]["inputs"]["noise_seed"],
-            steps: steps,
-            cfg: cfg,
-            imageMode: imageMode,
-            useDynamicPrompt: useDynamicPrompt,
-            useLoRA: useLoRA,
-            useClipSkip: useClipSkip,
-            useCheckpointCache: useCheckpointCache,
-            useUpscale: useUpscale,
-            prompt: promptInput,
-            filename_prefix: workflow["267"]["inputs"]["filename_prefix"],
-        });
-
-        // Mengirim permintaan ke server
         const response = await fetch(`${COMFYUI_URL}/prompt`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ prompt: workflow, client_id: "webapp" }),
+        }).catch((err) => {
+            throw new Error(`Network error: ${err.message}`);
         });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-
-            throw new Error(`Gagal terhubung ke server: ${response.status} - ${errorText}`);
-        }
+        if (!response.ok) throw new Error(`Server error: ${response.status} - ${await response.text()}`);
 
         const { prompt_id } = await response.json();
 
-        console.log("[DEBUG] Prompt ID:", prompt_id);
-
-        // Menunggu dan mengambil URL gambar yang dihasilkan
-        let imageUrl = null;
-        let attempts = 0;
-        const maxAttempts = 60;
+        let imageUrl = null,
+            attempts = 0,
+            delay = 1000,
+            maxAttempts = 60;
 
         while (!imageUrl && attempts < maxAttempts) {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            const historyResponse = await fetch(`${COMFYUI_URL}/history/${prompt_id}`);
-            const history = await historyResponse.json();
+            await new Promise((resolve) => setTimeout(resolve, delay));
 
-            console.log("[DEBUG] History response:", history);
+            delay = Math.min(delay * 1.5, 5000);
+            const history = await (await fetch(`${COMFYUI_URL}/history/${prompt_id}`)).json();
 
-            if (history[prompt_id] && history[prompt_id].outputs["267"]) {
-                const images = history[prompt_id].outputs["267"].images;
-
-                if (images && images.length > 0) {
-                    const imageData = images[0];
-
-                    if (imageData && imageData.filename && imageData.subfolder !== undefined && imageData.type) {
-                        imageUrl = `${COMFYUI_URL}/view?filename=${imageData.filename}&subfolder=${imageData.subfolder}&type=${imageData.type}`;
-                        lastImageData = imageData;
-
-                        console.log("[DEBUG] Gambar ditemukan:", imageUrl);
-                    }
-                }
+            if (history[prompt_id]?.outputs["267"]?.images?.[0]) {
+                const imageData = history[prompt_id].outputs["267"].images[0];
+                imageUrl = `${COMFYUI_URL}/view?filename=${imageData.filename}&subfolder=${imageData.subfolder}&type=${imageData.type}`;
+                lastImageData = imageData;
             }
 
             attempts++;
@@ -737,205 +531,146 @@ async function generateImage() {
 
         if (!imageUrl) throw new Error("Gagal mengambil gambar setelah 60 detik.");
 
-        // Menampilkan gambar yang dihasilkan
-        outputImage.src = imageUrl;
-        outputImage.style.display = "block";
-        imageActions.style.display = "flex";
+        DOMCache.outputImage.src = imageUrl;
+        DOMCache.outputImage.style.display = "block";
+        DOMCache.imageActions.style.display = "flex";
 
         const successMessage = `
             <details aria-expanded="false">
                 <summary style="color: #8effb0;">Data Pembuatan Gambar</summary>
                 <table class="success-table">
-                    <tr><td>Positive Prompt:</td><td>${promptInput}</td></tr>
-                    <tr><td>Negative Prompt:</td><td>${promptNegativeInput}</td></tr>
-                    <tr><td>CLIP Skip:</td><td>${useClipSkip ? clipSkip : "Tidak Digunakan"}</td></tr>
+                    <tr><td>Positive Prompt:</td><td>${inputs.prompt}</td></tr>
+                    <tr><td>Negative Prompt:</td><td>${inputs.promptNegative || "N/A"}</td></tr>
+                    <tr><td>CLIP Skip:</td><td>${inputs.useClipSkip ? inputs.clipSkip : "Tidak Digunakan"}</td></tr>
                     <tr><td>Checkpoint:</td><td>${checkpointSelect.value}</td></tr>
-                    <tr><td>Mode:</td><td>${imageMode.charAt(0).toUpperCase() + imageMode.slice(1)} - ${
+                    <tr><td>Mode:</td><td>${inputs.imageMode.charAt(0).toUpperCase() + inputs.imageMode.slice(1)} - ${
             workflow["152"]["inputs"]["resolution"]
         }</td></tr>
                     <tr><td>Steps:</td><td>${steps}</td></tr>
                     <tr><td>CFG:</td><td>${cfg}</td></tr>
                     <tr><td>Seed:</td><td>${currentSeedNum}</td></tr>
                     <tr><td>Sampler:</td><td>${samplerSelect.value}</td></tr>
-                    <tr><td>LoRA:</td><td>${useLoRA ? "Aktif" : "Tidak Aktif"}</td></tr>
-                    <tr><td>Checkpoint Cache:</td><td>${useCheckpointCache ? "Aktif" : "Tidak Aktif"}</td></tr>
-                    <tr><td>Upscale:</td><td>${useUpscale ? "Aktif" : "Tidak Aktif"}</td></tr>
+                    <tr><td>LoRA:</td><td>${inputs.useLoRA ? "Aktif" : "Tidak Aktif"}</td></tr>
+                    <tr><td>Checkpoint Cache:</td><td>${inputs.useCheckpointCache ? "Aktif" : "Tidak Aktif"}</td></tr>
+                    <tr><td>Upscale:</td><td>${inputs.useUpscale ? "Aktif" : "Tidak Aktif"}</td></tr>
                 </table>
             </details>
         `;
 
-        showStatus(status, successMessage, "success");
+        showStatus(DOMCache.status, successMessage, "success");
 
         localStorage.setItem("lastGeneratedImage", imageUrl);
-        localStorage.setItem("lastSeed", currentSeedNum);
+        localStorage.setItem("lastSeed", currentSeedNum.toString());
 
-        // Meregenerasi preset hanya jika alwaysRandomisePrompt diaktifkan
-        if (alwaysRandomisePrompt) regenerateSelectedPreset();
+        if (inputs.alwaysRandomisePrompt) regenerateSelectedPreset();
 
-        // Scroll ke bawah halaman setelah gambar berhasil dibuat & ditampilkan
         (async () => {
             try {
-                const img = await loadImage(imageUrl);
-
-                window.scrollTo({
-                    top: document.documentElement.scrollHeight,
-                    behavior: "smooth",
-                });
-                console.log("Gambar berhasil dimuat:", img);
+                await loadImage(imageUrl);
+                window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" });
             } catch (error) {
-                console.error("Kesalahan saat memuat gambar:", error.message);
-                showError(error, `Gagal memuat gambar: ${error.message}`);
+                showError(DOMCache.error, `Gagal memuat gambar: ${error.message}`);
             }
         })();
     } catch (err) {
-        let errorMessage = err.message;
-
-        if (errorMessage.includes("fetch")) errorMessage = "Tidak dapat terhubung ke server!";
-        else if (errorMessage.includes("Seed")) errorMessage = `Seed harus antara 0 dan ${MAX_SEED}!`;
-
-        showError(error, errorMessage);
-
-        console.error("[DEBUG] Kesalahan saat membuat gambar:", err);
+        showError(DOMCache.error, err.message.includes("fetch") ? "Tidak dapat terhubung ke server!" : err.message);
     } finally {
-        button.disabled = false;
+        document.querySelector("button").disabled = false;
     }
 }
 
-// Fungsi untuk menghapus gambar dari server
 async function deleteImage() {
-    const status = document.getElementById("status");
-    const error = document.getElementById("error");
-    const outputImage = document.getElementById("outputImage");
-    const imageActions = document.getElementById("imageActions");
     const button = document.querySelector(".delete");
-    const lightbox = document.getElementById("lightbox");
-    const seedInput = document.getElementById("seed");
-    const alwaysRandomisePrompt = document.getElementById("alwaysRandomisePrompt").checked;
 
     if (!lastImageData || !lastImageData.filename) {
-        showError(error, "Tidak ada gambar yang dapat dihapus!");
+        showError(DOMCache.error, "Tidak ada gambar yang dapat dihapus!");
 
         return;
     }
 
-    showStatus(status, "<h4>Menghapus gambar...</h4>");
+    showStatus(DOMCache.status, "<h4>Menghapus gambar...</h4>");
 
     button.disabled = true;
 
     try {
         const url = new URL(`${COMFYUI_URL}/comfyapi/v1/output-images/${encodeURIComponent(lastImageData.filename)}`);
+
         url.searchParams.append("temp", "false");
         url.searchParams.append("subfolder", lastImageData.subfolder);
 
-        console.log("URL permintaan DELETE:", url.toString());
+        const response = await fetch(url, { method: "DELETE", headers: { "Content-Type": "application/json" } });
 
-        const response = await fetch(url, {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
-        });
+        if (!response.ok) throw new Error(`Gagal menghapus gambar: ${response.status} - ${await response.text()}`);
+        if (document.getElementById("alwaysRandomisePrompt")?.checked) regenerateSelectedPreset();
 
-        if (!response.ok) {
-            const errorText = await response.text();
-
-            throw new Error(`Gagal menghapus gambar: ${response.status} - ${errorText}`);
-        }
-
-        const result = await response.json();
-
-        console.log("Delete response:", result);
-
-        // Regenerasi prompt hanya jika alwaysRandomisePrompt diaktifkan
-        if (alwaysRandomisePrompt) {
-            regenerateSelectedPreset();
-        }
-
-        // Simpan seed terakhir sebelum menghapus data gambar
-        if (seedInput.value) {
-            currentSeedNum = BigInt(seedInput.value);
-        }
-
-        outputImage.src = "";
-        outputImage.style.display = "none";
-        imageActions.style.display = "none";
-        lightbox.style.display = "none";
+        currentSeedNum = BigInt(document.getElementById("seed").value || "0");
+        DOMCache.outputImage.src = "";
+        DOMCache.outputImage.style.display = "none";
+        DOMCache.imageActions.style.display = "none";
+        document.getElementById("lightbox").style.display = "none";
         lastImageData = null;
 
-        showStatus(status, "<h4>Gambar berhasil dihapus!</h4>", "success");
+        showStatus(DOMCache.status, "<h4>Gambar berhasil dihapus!</h4>", "success");
     } catch (err) {
-        console.error("Kesalahan penghapusan:", err);
-        showError(error, `Gagal menghapus gambar: ${err.message}`);
+        showError(DOMCache.error, `Gagal menghapus gambar: ${err.message}`);
     } finally {
         button.disabled = false;
     }
 }
 
-// Fungsi untuk mereset tampilan gambar tanpa menghapus dari server
 async function clearImage() {
-    const status = document.getElementById("status");
-    const outputImage = document.getElementById("outputImage");
-    const imageActions = document.getElementById("imageActions");
-    const lightbox = document.getElementById("lightbox");
-    const seedInput = document.getElementById("seed");
-    const useDynamicSeed = document.getElementById("useDynamicSeed").checked;
     const button = document.querySelector(".clear");
-    const useUpscale = document.getElementById("useUpscale").checked;
+    const seedInput = document.getElementById("seed");
+    const useDynamicSeed = document.getElementById("useDynamicSeed")?.checked;
 
-    if (!status || !outputImage || !imageActions || !lightbox || !seedInput || !button) {
-        console.error("[DEBUG] Elemen DOM hilang di clearImage:", {
-            status: !!status,
-            outputImage: !!outputImage,
-            imageActions: !!imageActions,
-            lightbox: !!lightbox,
-            seedInput: !!seedInput,
-            button: !!button,
-        });
-
-        showError(document.getElementById("error"), "Kesalahan internal: Elemen UI tidak ditemukan!");
-
-        return;
-    }
-
-    showStatus(status, "<h4>Membersihkan gambar...</h4>");
+    showStatus(DOMCache.status, "<h4>Membersihkan gambar...</h4>");
 
     button.disabled = true;
 
     try {
         if (useDynamicSeed) {
-            const randomValue =
-                BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
-                BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
-            currentSeedNum = randomValue % (MAX_SEED + BigInt(1));
+            currentSeedNum =
+                (BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
+                    BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER))) %
+                (MAX_SEED + BigInt(1));
             workflow["171"]["inputs"]["seed"] = Number(currentSeedNum);
             workflow["222"]["inputs"]["noise_seed"] = Number(currentSeedNum);
 
-            if (useUpscale) workflow["273"]["inputs"]["seed"] = Number(currentSeedNum);
+            if (document.getElementById("useUpscale")?.checked)
+                workflow["273"]["inputs"]["seed"] = Number(currentSeedNum);
 
             seedInput.value = Number(currentSeedNum);
-
-            console.log("[DEBUG] Seed randomized in clearImage:", Number(currentSeedNum));
         }
 
-        // Regenerasi prompt hanya jika alwaysRandomisePrompt diaktifkan
-        if (alwaysRandomisePrompt) {
-            regenerateSelectedPreset();
-        }
+        if (document.getElementById("alwaysRandomisePrompt")?.checked) regenerateSelectedPreset();
 
-        outputImage.src = "";
-        outputImage.style.display = "none";
-        imageActions.style.display = "none";
-        lightbox.style.display = "none";
+        DOMCache.outputImage.src = "";
+        DOMCache.outputImage.style.display = "none";
+        DOMCache.imageActions.style.display = "none";
 
-        showStatus(status, `<h4>Seed baru: ${currentSeedNum}</h4>`, "success");
+        document.getElementById("lightbox").style.display = "none";
+
+        showStatus(DOMCache.status, `<h4>Seed baru: ${currentSeedNum}</h4>`, "success");
     } catch (err) {
-        console.error("[DEBUG] Kesalahan di clearImage:", err);
-        showError(document.getElementById("error"), "Gagal membersihkan gambar!");
+        showError(DOMCache.error, "Gagal membersihkan gambar!");
     } finally {
         button.disabled = false;
     }
 }
 
-// Menampilkan status dengan pesan tertentu
+function loadImage(imageUrl) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = imageUrl;
+        img.onload = () => resolve(img);
+        img.onerror = (e) => reject(new Error(`Gagal memuat gambar: ${e.message}`));
+    });
+}
+
 function showStatus(statusElement, message, type = "") {
+    if (!statusElement) return;
+
     statusElement.innerHTML = message;
     statusElement.style.display = "block";
     statusElement.className = type;
@@ -946,8 +681,9 @@ function showStatus(statusElement, message, type = "") {
         }, 5000);
 }
 
-// Menampilkan pesan error
 function showError(errorElement, message) {
+    if (!errorElement) return;
+
     errorElement.textContent = message;
     errorElement.style.display = "block";
 
