@@ -19,33 +19,13 @@ const upscaleModels = [
 ];
 
 const upscaleNodes = {
-    270: {
-        _meta: {
-            title: "CLIP Text Encode (Prompt)",
-        },
-        class_type: "CLIPTextEncode",
-        inputs: {
-            clip: ["76", 0],
-            text: "intricate details, best quality, 8k resolution",
-        },
-    },
-    271: {
-        _meta: {
-            title: "CLIP Text Encode (Prompt)",
-        },
-        class_type: "CLIPTextEncode",
-        inputs: {
-            clip: ["76", 0],
-            text: "blurry, medium quality, low quality",
-        },
-    },
     272: {
         _meta: {
             title: "Load Upscale Model",
         },
         class_type: "UpscaleModelLoader",
         inputs: {
-            model_name: "4x-UltraSharp.pth",
+            model_name: "4x-ClearRealityV1.pth",
         },
     },
     273: {
@@ -54,24 +34,24 @@ const upscaleNodes = {
         },
         class_type: "UltimateSDUpscale",
         inputs: {
-            cfg: 3.5,
-            denoise: 0.25,
+            cfg: 1,
+            denoise: 0.2,
             force_uniform_tiles: true,
             image: ["47", 0],
             mask_blur: 8,
             mode_type: "Linear",
-            model: ["4", 0],
-            negative: ["271", 0],
-            positive: ["270", 0],
-            sampler_name: "dpmpp_2m",
-            scheduler: "karras",
+            model: ["193", 0],
+            negative: ["103", 0],
+            positive: ["259", 0],
+            sampler_name: "lcm",
+            scheduler: "normal",
             seam_fix_denoise: 1,
             seam_fix_mask_blur: 8,
             seam_fix_mode: "None",
             seam_fix_padding: 16,
             seam_fix_width: 64,
             seed: 0,
-            steps: 35,
+            steps: 1,
             tile_height: 1024,
             tile_padding: 32,
             tile_width: 1024,
@@ -81,15 +61,14 @@ const upscaleNodes = {
             vae: ["4", 2],
         },
     },
-    276: {
+    274: {
         _meta: {
-            title: "🪛 Switch image",
+            title: "Switch",
         },
-        class_type: "Switch image [Crystools]",
+        class_type: "Any Switch (rgthree)",
         inputs: {
-            boolean: true,
-            on_false: ["47", 0],
-            on_true: ["273", 0],
+            any_01: ["273", 0],
+            any_02: ["47", 0],
         },
     },
 };

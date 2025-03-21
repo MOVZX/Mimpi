@@ -5,7 +5,7 @@ const workflow = {
         },
         class_type: "CheckpointLoaderSimple",
         inputs: {
-            ckpt_name: "SDXL/juggernautXL_juggXIByRundiffusion.safetensors",
+            ckpt_name: "SDXL-Lightning/lustifySDXLNSFW_v40DMD2.safetensors",
         },
     },
     47: {
@@ -42,6 +42,11 @@ const workflow = {
                 strength: 1,
             },
             lora_2: {
+                lora: "SDXL/Breast Slider - Pony_alpha1.0_rank4_noxattn_last.safetensors",
+                on: true,
+                strength: 0.85,
+            },
+            lora_3: {
                 lora: "SDXL/Beautify-Supermodel-SDXL.safetensors",
                 on: true,
                 strength: 0.8,
@@ -59,7 +64,7 @@ const workflow = {
         class_type: "CLIPTextEncode",
         inputs: {
             clip: ["84", 1],
-            text: "embedding:Stable_Yogis_PDXL_Negatives-neg",
+            text: "",
         },
     },
     106: {
@@ -146,7 +151,7 @@ const workflow = {
         },
         class_type: "CFGGuider",
         inputs: {
-            cfg: 5,
+            cfg: 1,
             model: ["193", 0],
             negative: ["103", 0],
             positive: ["259", 0],
@@ -171,7 +176,7 @@ const workflow = {
         },
         class_type: "KSamplerSelect",
         inputs: {
-            sampler_name: "dpmpp_2s_ancestral",
+            sampler_name: "lcm",
         },
     },
     222: {
@@ -210,7 +215,7 @@ const workflow = {
         },
         class_type: "Text Multiline",
         inputs: {
-            text: "hyperrealistic 8K, stunningly beautiful 32-year-old woman, sleek half-up ponytail blonde hair, wearing silk blouse and high-waisted trousers, bedroom, 8k resolution, best quality, aesthetic, sfw",
+            text: "1girl, solo, 30-year-old stunningly beautiful woman, feathered strawberry blonde hair, nun, blowjob, cum on face, cum dripping from her mouth, tongue out, living room, intricate details, realistic skin textures, skin pores, high resolution, best quality, real human aesthetic, bright lighting",
         },
     },
     267: {
@@ -219,8 +224,8 @@ const workflow = {
         },
         class_type: "SaveImage",
         inputs: {
-            filename_prefix: "ComfyUI",
-            images: ["47", 0], // Connect directly to VAEDecode output
+            filename_prefix: "",
+            images: ["274", 0],
         },
     },
 };

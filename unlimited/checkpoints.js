@@ -235,6 +235,15 @@ const checkpointNameMapping = {
         steps: 11,
         cfg: 4,
     },
+    "SDXL/beyondimaginationxl_v0005Fix.safetensors": {
+        displayName: "BeyondImaginationXL | v0_005_Fix",
+        sampler: "dpmpp_2s_ancestral",
+        lora: true,
+        clip: true,
+        clipskip: -2,
+        steps: 11,
+        cfg: 4,
+    },
     "SDXL/bigasp_v20.safetensors": {
         displayName: "bigASP 🐍 | v2.0",
         sampler: "dpmpp_2s_ancestral",
@@ -613,7 +622,7 @@ const checkpointNameMapping = {
         clip: true,
         clipskip: -2,
         clipskip: -2,
-        steps: 10,
+        steps: 11,
         cfg: 1,
     },
     "SDXL-Lightning/babesByStableYogi_v4XLLightning.safetensors": {
@@ -622,7 +631,7 @@ const checkpointNameMapping = {
         lora: true,
         clip: true,
         clipskip: -2,
-        steps: 10,
+        steps: 11,
         cfg: 1,
     },
     "SDXL-Lightning/copaxTimeless_photorealismSDXL8Step.safetensors": {
@@ -631,7 +640,7 @@ const checkpointNameMapping = {
         lora: true,
         clip: true,
         clipskip: -2,
-        steps: 10,
+        steps: 11,
         cfg: 1,
     },
     "SDXL-Lightning/c_lightningDPMSDE.safetensors": {
@@ -640,7 +649,7 @@ const checkpointNameMapping = {
         lora: true,
         clip: true,
         clipskip: -2,
-        steps: 10,
+        steps: 11,
         cfg: 1,
     },
     "SDXL-Lightning/Epicrealismxl_Hades.safetensors": {
@@ -649,7 +658,7 @@ const checkpointNameMapping = {
         lora: true,
         clip: true,
         clipskip: -2,
-        steps: 10,
+        steps: 11,
         cfg: 1,
     },
     "SDXL-Lightning/epicrealismXL_vxviLastfameDMD2.safetensors": {
@@ -658,7 +667,7 @@ const checkpointNameMapping = {
         lora: true,
         clip: true,
         clipskip: -2,
-        steps: 10,
+        steps: 11,
         cfg: 1,
     },
     "SDXL-Lightning/jibMixRealisticXL_v10Lightning46Step.safetensors": {
@@ -667,7 +676,7 @@ const checkpointNameMapping = {
         lora: true,
         clip: true,
         clipskip: -2,
-        steps: 10,
+        steps: 11,
         cfg: 1,
     },
     "SDXL-Lightning/juggernautXL_v9Rdphoto2Lightning.safetensors": {
@@ -676,7 +685,7 @@ const checkpointNameMapping = {
         lora: true,
         clip: true,
         clipskip: -2,
-        steps: 10,
+        steps: 11,
         cfg: 1,
     },
     "SDXL-Lightning/leosamsHelloworldXL_hw50EulerALightning.safetensors": {
@@ -685,7 +694,7 @@ const checkpointNameMapping = {
         lora: true,
         clip: true,
         clipskip: -2,
-        steps: 10,
+        steps: 11,
         cfg: 1,
     },
     "SDXL-Lightning/lustifySDXLNSFW_endgameDMD2.safetensors": {
@@ -694,7 +703,7 @@ const checkpointNameMapping = {
         lora: true,
         clip: true,
         clipskip: -2,
-        steps: 10,
+        steps: 11,
         cfg: 1,
     },
     "SDXL-Lightning/lustifySDXLNSFW_v40DMD2.safetensors": {
@@ -703,7 +712,7 @@ const checkpointNameMapping = {
         lora: true,
         clip: true,
         clipskip: -2,
-        steps: 10,
+        steps: 11,
         cfg: 1,
     },
     "SDXL-Lightning/mklanRealistic_mklan220reallight4s.safetensors": {
@@ -757,7 +766,7 @@ const checkpointNameMapping = {
         lora: true,
         clip: true,
         clipskip: -2,
-        steps: 10,
+        steps: 11,
         cfg: 1,
     },
 };
@@ -796,6 +805,7 @@ function fetchCheckpointOptions() {
         "SDXL/annolustxl_v2.safetensors",
         "SDXL/babesByStableYogi_v4XLFP16.safetensors",
         "SDXL/bestPornMergeBPM_v10.safetensors",
+        "SDXL/beyondimaginationxl_v0005Fix.safetensors",
         "SDXL/bigasp_v20.safetensors",
         "SDXL/biglovexl2.wBWt.safetensors",
         "SDXL/biglust16.kst6.safetensors",

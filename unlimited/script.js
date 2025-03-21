@@ -86,7 +86,7 @@ function populateDropdowns() {
                 optionElement.value = option;
                 optionElement.textContent = displayName;
 
-                if (option === "SDXL/lustifySDXLNSFW_endgame.safetensors") optionElement.selected = true;
+                if (option === "SDXL-Lightning/lustifySDXLNSFW_v40DMD2.safetensors") optionElement.selected = true;
 
                 optgroup.appendChild(optionElement);
             });
@@ -449,7 +449,9 @@ async function generateImage() {
 
         workflow["260"]["inputs"]["text"] = inputs.prompt;
         workflow["171"]["inputs"]["custom_subject"] = inputs.prompt;
-        workflow["103"]["inputs"]["text"] = `embedding:Stable_Yogis_PDXL_Negatives-neg, ${inputs.promptNegative || ""}`;
+        workflow["103"]["inputs"]["text"] = `embedding:Stable_Yogis_PDXL_Negatives-neg, embedding:negativeXL_D, ${
+            inputs.promptNegative || ""
+        }`;
         workflow["218"]["inputs"]["cfg"] = cfg;
         workflow["252"]["inputs"]["steps"] = steps;
         workflow["221"]["inputs"]["sampler_name"] = samplerSelect.value;
@@ -487,13 +489,12 @@ async function generateImage() {
 
             workflow["273"]["inputs"]["seed"] = Number(seed);
             workflow["272"]["inputs"]["model_name"] = inputs.upscaleModel;
-            workflow[inputs.useClipSkip ? "270" : "271"]["inputs"]["clip"] = [
-                inputs.useClipSkip ? "76" : "4",
-                inputs.useClipSkip ? 0 : 1,
-            ];
-            workflow["267"]["inputs"]["images"] = ["276", 0];
+            workflow["274"]["inputs"]["any_01"] = ["273", 0];
+            workflow["274"]["inputs"]["any_02"] = ["47", 0];
+            workflow["267"]["inputs"]["images"] = ["274", 0];
         } else {
-            ["270", "271", "272", "273", "276"].forEach((node) => delete workflow[node]);
+            ["272", "273", "274"].forEach((node) => delete workflow[node]);
+
             workflow["267"]["inputs"]["images"] = ["47", 0];
         }
 
@@ -514,7 +515,7 @@ async function generateImage() {
             delay = 1000,
             maxAttempts = 60;
 
-        while (!imageUrl && attempts < maxAttempts) {
+            while (!imageUrl && attempts < maxAttempts) {
             await new Promise((resolve) => setTimeout(resolve, delay));
 
             delay = Math.min(delay * 1.5, 5000);
