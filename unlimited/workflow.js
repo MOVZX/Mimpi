@@ -1,40 +1,47 @@
 const workflow = {
     4: {
+        _meta: {
+            title: "Load Checkpoint",
+        },
         class_type: "CheckpointLoaderSimple",
         inputs: {
-            ckpt_name: "SDXL/perfectionRealisticILXL_v10.safetensors",
+            ckpt_name: "SDXL/juggernautXL_juggXIByRundiffusion.safetensors",
         },
     },
     47: {
+        _meta: {
+            title: "VAE Decode",
+        },
         class_type: "VAEDecode",
         inputs: {
-            samples: ["220", 0],
-            vae: ["253", 0],
+            samples: ["160", 0],
+            vae: ["4", 2],
         },
     },
     76: {
+        _meta: {
+            title: "CLIP Set Last Layer",
+        },
         class_type: "CLIPSetLastLayer",
         inputs: {
-            clip: ["84", 1],
+            clip: ["4", 1],
             stop_at_clip_layer: -2,
         },
     },
     84: {
+        _meta: {
+            title: "Power Lora Loader (rgthree)",
+        },
         class_type: "Power Lora Loader (rgthree)",
         inputs: {
             "➕ Add Lora": "",
-            clip: ["4", 1],
+            clip: ["76", 0],
             lora_1: {
                 lora: "SDXL/add-detail-xl.safetensors",
                 on: true,
                 strength: 1,
             },
             lora_2: {
-                lora: "SDXL/Breast Slider - Pony_alpha1.0_rank4_noxattn_last.safetensors",
-                on: true,
-                strength: 0.95,
-            },
-            lora_3: {
                 lora: "SDXL/Beautify-Supermodel-SDXL.safetensors",
                 on: true,
                 strength: 0.8,
@@ -46,13 +53,19 @@ const workflow = {
         },
     },
     103: {
+        _meta: {
+            title: "Negative Prompt",
+        },
         class_type: "CLIPTextEncode",
         inputs: {
-            clip: ["76", 0],
-            text: "",
+            clip: ["84", 1],
+            text: "embedding:Stable_Yogis_PDXL_Negatives-neg",
         },
     },
     106: {
+        _meta: {
+            title: "Apply First Block Cache",
+        },
         class_type: "ApplyFBCacheOnModel",
         inputs: {
             end: 1,
@@ -64,6 +77,9 @@ const workflow = {
         },
     },
     152: {
+        _meta: {
+            title: "🔧 SDXL Empty Latent Size Picker",
+        },
         class_type: "SDXLEmptyLatentSizePicker+",
         inputs: {
             batch_size: 1,
@@ -72,43 +88,49 @@ const workflow = {
             width_override: 0,
         },
     },
+    160: {
+        _meta: {
+            title: "Free Memory (Latent)",
+        },
+        class_type: "FreeMemoryLatent",
+        inputs: {
+            aggressive: true,
+            latent: ["220", 0],
+        },
+    },
     171: {
+        _meta: {
+            title: "IsulionMegaPromptV3",
+        },
         class_type: "IsulionMegaPromptV3",
         inputs: {
             complexity: "complex",
             custom_location: "",
-            custom_subject: ["178:0", 0],
+            custom_subject: ["260", 0],
             debug_mode: "off",
-            include_effects: "no",
+            include_effects: "yes",
             include_environment: "yes",
-            include_style: "no",
+            include_style: "yes",
             randomize: "enable",
             seed: 0,
             theme: "🎲 Dynamic Random",
         },
     },
-    "178:0": {
-        class_type: "Text Multiline",
-        inputs: {
-            text: "",
-        },
-    },
     "178:1": {
+        _meta: {
+            title: "Switch: Prompts",
+        },
         class_type: "Switch any [Crystools]",
         inputs: {
             boolean: false,
-            on_false: ["178:0", 0],
+            on_false: ["260", 0],
             on_true: ["171", 0],
         },
     },
-    "178:2": {
-        class_type: "CLIPTextEncode",
-        inputs: {
-            clip: ["76", 0],
-            text: ["178:1", 0],
-        },
-    },
     193: {
+        _meta: {
+            title: "Compile Model",
+        },
         class_type: "CompileModel",
         inputs: {
             backend: "inductor",
@@ -118,55 +140,87 @@ const workflow = {
             model: ["106", 0],
         },
     },
-    217: {
-        class_type: "SaveImage",
-        inputs: {
-            filename_prefix: "",
-            images: ["47", 0],
-        },
-    },
     218: {
+        _meta: {
+            title: "CFGGuider",
+        },
         class_type: "CFGGuider",
         inputs: {
             cfg: 5,
             model: ["193", 0],
             negative: ["103", 0],
-            positive: ["178:2", 0],
-        },
-    },
-    219: {
-        class_type: "CustomSigmas",
-        inputs: {
-            interpolate_to_steps: 10,
-            sigmas_string: "14.615, 6.315, 3.771, 2.181, 1.342, 0.862, 0.555, 0.380, 0.234, 0.113, 0.029",
+            positive: ["259", 0],
         },
     },
     220: {
+        _meta: {
+            title: "SamplerCustomAdvanced",
+        },
         class_type: "SamplerCustomAdvanced",
         inputs: {
             guider: ["218", 0],
             latent_image: ["152", 0],
             noise: ["222", 0],
             sampler: ["221", 0],
-            sigmas: ["219", 0],
+            sigmas: ["252", 0],
         },
     },
     221: {
+        _meta: {
+            title: "KSamplerSelect",
+        },
         class_type: "KSamplerSelect",
         inputs: {
-            sampler_name: "dpmpp_2m",
+            sampler_name: "dpmpp_2s_ancestral",
         },
     },
     222: {
+        _meta: {
+            title: "RandomNoise",
+        },
         class_type: "RandomNoise",
         inputs: {
             noise_seed: 0,
         },
     },
-    253: {
-        class_type: "VAELoader",
+    252: {
+        _meta: {
+            title: "AlignYourStepsScheduler",
+        },
+        class_type: "AlignYourStepsScheduler",
         inputs: {
-            vae_name: "taesdxl",
+            denoise: 1,
+            model_type: "SDXL",
+            steps: 11,
+        },
+    },
+    259: {
+        _meta: {
+            title: "CLIP Text Encode (Prompt)",
+        },
+        class_type: "CLIPTextEncode",
+        inputs: {
+            clip: ["84", 1],
+            text: ["178:1", 0],
+        },
+    },
+    260: {
+        _meta: {
+            title: "Positive Prompt",
+        },
+        class_type: "Text Multiline",
+        inputs: {
+            text: "hyperrealistic 8K, stunningly beautiful 32-year-old woman, sleek half-up ponytail blonde hair, wearing silk blouse and high-waisted trousers, bedroom, 8k resolution, best quality, aesthetic, sfw",
+        },
+    },
+    267: {
+        _meta: {
+            title: "Save Image",
+        },
+        class_type: "SaveImage",
+        inputs: {
+            filename_prefix: "ComfyUI",
+            images: ["47", 0], // Connect directly to VAEDecode output
         },
     },
 };

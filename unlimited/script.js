@@ -86,7 +86,7 @@ function populateDropdowns() {
                 optionElement.value = option;
                 optionElement.textContent = displayName;
 
-                if (option === "SDXL-Lightning/lustifySDXLNSFW_v40DMD2.safetensors") {
+                if (option === "SDXL/lustifySDXLNSFW_endgame.safetensors") {
                     optionElement.selected = true;
                 }
 
@@ -133,6 +133,38 @@ function populateDropdowns() {
         samplerFormGroup.appendChild(samplerLabel);
         samplerFormGroup.appendChild(samplerSelect);
         detailsContent.appendChild(samplerFormGroup);
+    }
+
+    // Membuat dropdown upscaler jika belum ada
+    let upscalerFormGroup = document.getElementById("upscalerFormGroup");
+
+    if (!upscalerFormGroup) {
+        const upscalerOptions = upscaleModels;
+        upscalerFormGroup = document.createElement("div");
+        upscalerFormGroup.id = "upscalerFormGroup";
+        upscalerFormGroup.className = "form-group";
+
+        const samplerLabel = document.createElement("label");
+        samplerLabel.htmlFor = "upscaler";
+        samplerLabel.textContent = "Upscaler";
+
+        const upscalerSelect = document.createElement("select");
+        upscalerSelect.id = "upscaler";
+        upscalerSelect.name = "upscaler";
+
+        upscalerOptions.forEach((option) => {
+            const optionElement = document.createElement("option");
+            optionElement.value = option;
+            optionElement.textContent = option;
+
+            if (option === "4x-UltraSharp.pth") optionElement.selected = true;
+
+            upscalerSelect.appendChild(optionElement);
+        });
+
+        upscalerFormGroup.appendChild(samplerLabel);
+        upscalerFormGroup.appendChild(upscalerSelect);
+        detailsContent.appendChild(upscalerFormGroup);
     }
 }
 
@@ -344,6 +376,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const clipSkipSet = document.getElementById("clip-skip");
     const stepsSelect = document.getElementById("steps");
     const cfgSelect = document.getElementById("cfg");
+    const useUpscaleCheckbox = document.getElementById("useUpscale");
+    const upscalerFormGroup = document.getElementById("upscalerFormGroup");
+    const clipSkipFormGroup = document.getElementById("clipSkipFormGroup");
 
     if (checkpointSelect) {
         checkpointSelect.addEventListener("change", () => {
@@ -415,6 +450,20 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Clip SKIP
+    clipSkipFormGroup.classList.toggle("visible", useClipSkipSelect.checked);
+
+    useClipSkipSelect.addEventListener("change", () => {
+        clipSkipFormGroup.classList.toggle("visible", useClipSkipSelect.checked);
+    });
+
+    // Upscale
+    upscalerFormGroup.classList.toggle("visible", useUpscaleCheckbox.checked);
+
+    useUpscaleCheckbox.addEventListener("change", () => {
+        upscalerFormGroup.classList.toggle("visible", useUpscaleCheckbox.checked);
+    });
+
     // Event listener untuk lightbox gambar
     const outputImage = document.getElementById("outputImage");
     const lightbox = document.getElementById("lightbox");
@@ -458,6 +507,8 @@ async function generateImage() {
     const clipSkipInput = document.getElementById("clip-skip").value;
     const useLoRA = document.getElementById("useLoRA").checked;
     const useClipSkip = document.getElementById("useClipSkip").checked;
+    const useUpscale = document.getElementById("useUpscale").checked;
+    const upscaleModel = document.getElementById("upscaler").value;
     const stepsInput = document.getElementById("steps").value;
     const cfgInput = document.getElementById("cfg").value;
     const imageMode = document.getElementById("imageMode").value;
@@ -530,29 +581,33 @@ async function generateImage() {
         // Mengatur koneksi CLIP berdasarkan useClipSkip dan useLoRA
         if (useClipSkip) {
             workflow["76"]["inputs"]["stop_at_clip_layer"] = clipSkip;
-            workflow["76"]["inputs"]["clip"] = useLoRA ? ["84", 1] : ["4", 1];
-            workflow["103"]["inputs"]["clip"] = ["76", 0];
-            workflow["178:2"]["inputs"]["clip"] = ["76", 0];
+            workflow["76"]["inputs"]["clip"] = ["4", 1];
+            workflow["84"]["inputs"]["clip"] = ["76", 0];
+            workflow["103"]["inputs"]["clip"] = ["84", 1];
+            workflow["259"]["inputs"]["clip"] = ["84", 1];
         } else {
-            workflow["103"]["inputs"]["clip"] = useLoRA ? ["84", 1] : ["4", 1];
-            workflow["178:2"]["inputs"]["clip"] = useLoRA ? ["84", 1] : ["4", 1];
+            workflow["84"]["inputs"]["clip"] = ["4", 1];
+            workflow["103"]["inputs"]["clip"] = ["84", 1];
+            workflow["259"]["inputs"]["clip"] = ["84", 1];
         }
 
         // Mengatur prompt dan parameter lainnya dengan nilai terbaru
-        workflow["178:0"]["inputs"]["text"] = promptInput;
+        workflow["260"]["inputs"]["text"] = promptInput;
         workflow["171"]["inputs"]["custom_subject"] = promptInput;
-        workflow["103"]["inputs"]["text"] = promptNegativeInput;
+        workflow["103"]["inputs"]["text"] = `embedding:Stable_Yogis_PDXL_Negatives-neg, ${promptNegativeInput}`;
         workflow["218"]["inputs"]["cfg"] = cfg;
-        workflow["219"]["inputs"]["interpolate_to_steps"] = steps;
+        workflow["252"]["inputs"]["steps"] = steps;
         workflow["221"]["inputs"]["sampler_name"] = samplerSelect.value;
         workflow["178:1"]["inputs"]["boolean"] = useDynamicPrompt;
 
         // Menentukan seed secara acak atau manual
+        let seed;
+
         if (useDynamicSeed || !seedInput || isNaN(seedInput) || seedInput === "-1") {
             const randomValue =
                 BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
                 BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER));
-            const seed = randomValue % (MAX_SEED + BigInt(1));
+            seed = randomValue % (MAX_SEED + BigInt(1));
             currentSeedNum = seed;
             workflow["171"]["inputs"]["seed"] = Number(seed);
             workflow["222"]["inputs"]["noise_seed"] = Number(seed);
@@ -566,6 +621,7 @@ async function generateImage() {
             workflow["171"]["inputs"]["seed"] = Number(seedNum);
             workflow["222"]["inputs"]["noise_seed"] = Number(seedNum);
             seedInput.value = Number(seedNum);
+            seed = seedNum;
         }
 
         // Mengatur resolusi berdasarkan mode gambar
@@ -580,9 +636,41 @@ async function generateImage() {
         const minutes = String(currentDate.getMinutes()).padStart(2, "0");
         const seconds = String(currentDate.getSeconds()).padStart(2, "0");
         const formattedTime = `${hours}-${minutes}-${seconds}`;
-        workflow["217"]["inputs"][
+        workflow["267"]["inputs"][
             "filename_prefix"
         ] = `webui-rated-r/${formattedDate}/${formattedTime}_${currentSeedNum}`;
+
+        // Jika upscale diaktifkan, tambahkan node upscaling ke workflow
+        if (useUpscale) {
+            // Tambahkan node upscaling
+            Object.assign(workflow, upscaleNodes);
+
+            // Update parameter upscaling
+            workflow["273"]["inputs"]["seed"] = Number(seed);
+            workflow["272"]["inputs"]["model_name"] = upscaleModel;
+
+            // Update koneksi CLIP untuk node upscaling
+            if (useClipSkip) {
+                workflow["270"]["inputs"]["clip"] = ["76", 0];
+                workflow["271"]["inputs"]["clip"] = ["76", 0];
+            } else {
+                workflow["270"]["inputs"]["clip"] = ["4", 1];
+                workflow["271"]["inputs"]["clip"] = ["4", 1];
+            }
+
+            // Hubungkan SaveImage ke Switch image
+            workflow["267"]["inputs"]["images"] = ["276", 0];
+        } else {
+            // Pastikan node upscaling tidak ada dalam workflow
+            delete workflow["270"];
+            delete workflow["271"];
+            delete workflow["272"];
+            delete workflow["273"];
+            delete workflow["276"];
+
+            // Hubungkan SaveImage langsung ke VAEDecode
+            workflow["267"]["inputs"]["images"] = ["47", 0];
+        }
 
         console.log("[DEBUG] Parameter pembuatan gambar:", {
             checkpoint: workflow["4"]["inputs"]["ckpt_name"],
@@ -595,8 +683,9 @@ async function generateImage() {
             useLoRA: useLoRA,
             useClipSkip: useClipSkip,
             useCheckpointCache: useCheckpointCache,
+            useUpscale: useUpscale,
             prompt: promptInput,
-            filename_prefix: workflow["217"]["inputs"]["filename_prefix"],
+            filename_prefix: workflow["267"]["inputs"]["filename_prefix"],
         });
 
         // Mengirim permintaan ke server
@@ -625,10 +714,11 @@ async function generateImage() {
             await new Promise((resolve) => setTimeout(resolve, 1000));
             const historyResponse = await fetch(`${COMFYUI_URL}/history/${prompt_id}`);
             const history = await historyResponse.json();
+
             console.log("[DEBUG] History response:", history);
 
-            if (history[prompt_id] && history[prompt_id].outputs["217"]) {
-                const images = history[prompt_id].outputs["217"].images;
+            if (history[prompt_id] && history[prompt_id].outputs["267"]) {
+                const images = history[prompt_id].outputs["267"].images;
 
                 if (images && images.length > 0) {
                     const imageData = images[0];
@@ -669,6 +759,7 @@ async function generateImage() {
                     <tr><td>Sampler:</td><td>${samplerSelect.value}</td></tr>
                     <tr><td>LoRA:</td><td>${useLoRA ? "Aktif" : "Tidak Aktif"}</td></tr>
                     <tr><td>Checkpoint Cache:</td><td>${useCheckpointCache ? "Aktif" : "Tidak Aktif"}</td></tr>
+                    <tr><td>Upscale:</td><td>${useUpscale ? "Aktif" : "Tidak Aktif"}</td></tr>
                 </table>
             </details>
         `;
@@ -787,6 +878,7 @@ async function clearImage() {
     const seedInput = document.getElementById("seed");
     const useDynamicSeed = document.getElementById("useDynamicSeed").checked;
     const button = document.querySelector(".clear");
+    const useUpscale = document.getElementById("useUpscale").checked;
 
     if (!status || !outputImage || !imageActions || !lightbox || !seedInput || !button) {
         console.error("[DEBUG] Elemen DOM hilang di clearImage:", {
@@ -815,6 +907,9 @@ async function clearImage() {
             currentSeedNum = randomValue % (MAX_SEED + BigInt(1));
             workflow["171"]["inputs"]["seed"] = Number(currentSeedNum);
             workflow["222"]["inputs"]["noise_seed"] = Number(currentSeedNum);
+
+            if (useUpscale) workflow["273"]["inputs"]["seed"] = Number(currentSeedNum);
+
             seedInput.value = Number(currentSeedNum);
 
             console.log("[DEBUG] Seed randomized in clearImage:", Number(currentSeedNum));

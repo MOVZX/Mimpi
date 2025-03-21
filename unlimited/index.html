@@ -31,10 +31,10 @@
                     rows="5"
                     style="background: linear-gradient(45deg, rgba(255, 206, 206, 0.15), rgba(255, 209, 209, 0.15))"
                 >
-(penis:1.6), (male:1.6), (man:1.6), (men:1.6), gore, horror, ugly, text, label, logo, watermark, low quality, medium quality, blurry, distorted anatomy, extra limbs, missing limbs, bad hands, bad fingers, extra fingers, missing fingers, fused fingers, bad eyes, bad teeth, unrealistic proportions, unnatural poses, anal, children, anime, cartoon, 2d, sketch, painting, monochrome, grayscale, oversaturated, undersaturated, deformed, mutated, render, 3d, illustration</textarea
+(penis:1.6), (male:1.6), (man:1.6), (men:1.6), (anal:1.6), gore, horror, ugly, text, label, logo, watermark, low quality, medium quality, blurry, distorted anatomy, extra limbs, missing limbs, bad hands, bad fingers, extra fingers, missing fingers, fused fingers, bad eyes, bad teeth, unrealistic proportions, unnatural poses, children, anime, cartoon, 2d, sketch, painting, monochrome, grayscale, oversaturated, undersaturated, deformed, mutated, render, 3d, illustration</textarea
                 >
             </div>
-            <div class="checkbox-group" style="justify-content: center;">
+            <div class="checkbox-group" style="justify-content: center">
                 <div class="checkbox-wrapper"><input type="checkbox" id="useDynamicPrompt" /></div>
                 <label for="useDynamicPrompt">Prompt Generator</label>
                 <div class="checkbox-wrapper"><input type="checkbox" id="alwaysRandomisePrompt" /></div>
@@ -56,7 +56,7 @@
                 <summary>Opsi Tingkat Lanjut</summary>
                 <div>
                     <div class="checkbox-group">
-                        <div class="checkbox-wrapper"><input type="checkbox" id="useCheckpointCache" checked /></div>
+                        <div class="checkbox-wrapper"><input type="checkbox" id="useCheckpointCache" /></div>
                         <label for="useCheckpointCache">Gunakan Checkpoint Cache?</label>
                     </div>
                     <div class="checkbox-group">
@@ -67,7 +67,15 @@
                         <div class="checkbox-wrapper"><input type="checkbox" id="useClipSkip" checked /></div>
                         <label for="useClipSkip">Gunakan CLIP Skip?</label>
                     </div>
-                    <div class="form-group">
+                    <div class="checkbox-group">
+                        <div class="checkbox-wrapper"><input type="checkbox" id="useUpscale" /></div>
+                        <label for="useUpscale">Gunakan Upscale?</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-wrapper"><input type="checkbox" id="useDynamicSeed" checked /></div>
+                        <label for="useDynamicSeed">Acak Nomor Seed?</label>
+                    </div>
+                    <div class="form-group visible" id="clipSkipFormGroup">
                         <label for="steps"
                             >CLIP Skip <span style="color: #aaa; font-weight: normal">(1-10)</span></label
                         >
@@ -88,10 +96,6 @@
                     <div class="form-group">
                         <label for="cfg"> CFG <span style="color: #aaa; font-weight: normal">(1-30)</span></label>
                         <input type="number" id="cfg" min="1" max="30" step="0.5" value="1" required />
-                    </div>
-                    <div class="checkbox-group">
-                        <div class="checkbox-wrapper"><input type="checkbox" id="useDynamicSeed" checked /></div>
-                        <label for="useDynamicSeed">Acak Nomor Seed?</label>
                     </div>
                     <div class="form-group">
                         <label for="seed">Seed <span style="color: #aaa; font-weight: normal">(angka)</span></label>
@@ -118,6 +122,7 @@
         <script type="text/javascript" src="presets-nsfw.js"></script>
         <script type="text/javascript" src="checkpoints.js"></script>
         <script type="text/javascript" src="workflow.js"></script>
+        <script type="text/javascript" src="upscale.js"></script>
         <script type="text/javascript" src="script.js"></script>
     </body>
 </html>

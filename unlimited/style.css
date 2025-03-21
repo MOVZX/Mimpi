@@ -320,3 +320,13 @@ details[open] .success-table {
     border-radius: 4px;
     color: #fff;
 }
+
+#upscalerFormGroup,
+#clipSkipFormGroup {
+    display: none; /* Hidden by default */
+}
+
+#upscalerFormGroup.visible,
+#clipSkipFormGroup.visible {
+    display: flex;
+}

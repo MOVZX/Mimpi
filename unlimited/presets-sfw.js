@@ -853,7 +853,7 @@ function generatePrompts(room, profiles) {
     return profiles.reduce((prompts, profile, index) => {
         prompts[
             index + 1
-        ] = `1girl, solo, ${profile.age}-year-old woman, ${profile.hairAdjective} ${profile.hairstyle} ${profile.haircolour} hair, stunningly beautiful, wearing ${profile.attire}, dynamic pose, ${room}, intricate details, realistic skin textures, skin pores, high resolution, best quality, real human aesthetic, hyperrealistic 8K, sfw`;
+        ] = `1girl, solo, stunningly beautiful ${profile.age}-year-old woman, ${profile.hairAdjective} ${profile.hairstyle} ${profile.haircolour} hair, stunningly beautiful, wearing ${profile.attire}, dynamic pose, ${room}, intricate details, realistic skin textures, skin pores, high resolution, best quality, real human aesthetic, hyperrealistic 8K, sfw`;
 
         return prompts;
     }, {});

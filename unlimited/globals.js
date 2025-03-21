@@ -85,15 +85,4 @@ const hairStyles = [
     "pineapple updo",
 ];
 
-const hairAdjectives = [
-    "long",
-    "messy",
-    "wet",
-    "glossy",
-    "sleek",
-    "voluminous",
-    "tousled",
-    "shiny",
-    "flowing",
-    "textured",
-];
+const hairAdjectives = ["long", "messy", "wet", "sleek", "voluminous", "tousled", "flowing", "textured"];
