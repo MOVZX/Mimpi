@@ -14,7 +14,7 @@ const workflow = {
         },
         class_type: "VAEDecode",
         inputs: {
-            samples: ["160", 0],
+            samples: ["220", 0],
             vae: ["4", 2],
         },
     },
@@ -91,16 +91,6 @@ const workflow = {
             height_override: 0,
             resolution: "896x1152 (0.78)",
             width_override: 0,
-        },
-    },
-    160: {
-        _meta: {
-            title: "Free Memory (Latent)",
-        },
-        class_type: "FreeMemoryLatent",
-        inputs: {
-            aggressive: true,
-            latent: ["220", 0],
         },
     },
     171: {

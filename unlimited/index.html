@@ -21,18 +21,16 @@
                 <textarea
                     id="prompt"
                     required
-                    rows="8"
+                    rows="5"
                     style="background: linear-gradient(45deg, rgba(221, 255, 226, 0.15), rgba(203, 255, 212, 0.15))"
                 ></textarea>
                 <label for="prompt-negative">Hindari (Negatif)</label>
                 <textarea
                     id="prompt-negative"
                     required
-                    rows="5"
+                    rows="3"
                     style="background: linear-gradient(45deg, rgba(255, 206, 206, 0.15), rgba(255, 209, 209, 0.15))"
-                >
-(penis:1.6), (male:1.6), (man:1.6), (men:1.6), (anal:1.6), gore, horror, ugly, text, label, logo, watermark, low quality, medium quality, blurry, distorted anatomy, extra limbs, missing limbs, bad hands, bad fingers, extra fingers, missing fingers, fused fingers, bad eyes, bad teeth, unrealistic proportions, unnatural poses, children, anime, cartoon, 2d, sketch, painting, monochrome, grayscale, oversaturated, undersaturated, deformed, mutated, render, 3d, illustration</textarea
-                >
+                ></textarea>
             </div>
             <div class="checkbox-group" style="justify-content: center">
                 <div class="checkbox-wrapper"><input type="checkbox" id="useDynamicPrompt" /></div>
@@ -56,7 +54,7 @@
                 <summary>Opsi Tingkat Lanjut</summary>
                 <div>
                     <div class="checkbox-group">
-                        <div class="checkbox-wrapper"><input type="checkbox" id="useCheckpointCache" /></div>
+                        <div class="checkbox-wrapper"><input type="checkbox" id="useCheckpointCache" checked /></div>
                         <label for="useCheckpointCache">Gunakan Checkpoint Cache?</label>
                     </div>
                     <div class="checkbox-group">

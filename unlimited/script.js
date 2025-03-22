@@ -515,7 +515,7 @@ async function generateImage() {
             delay = 1000,
             maxAttempts = 60;
 
-            while (!imageUrl && attempts < maxAttempts) {
+        while (!imageUrl && attempts < maxAttempts) {
             await new Promise((resolve) => setTimeout(resolve, delay));
 
             delay = Math.min(delay * 1.5, 5000);

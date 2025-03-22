@@ -12,7 +12,6 @@ const upscaleModels = [
     "4xNomos8k_atd_jpg.pth",
     "BSRGANx2.pth",
     "ESRGAN_4x.pth",
-    "put_esrgan_and_other_upscale_models_here",
     "RealESRGAN_x2.pth",
     "RealESRGAN_x4.pth",
     "RealESRGAN_x4plus.pth",
