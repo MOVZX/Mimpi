@@ -62,7 +62,7 @@ function populateDropdowns() {
         checkpointSelect.id = "checkpoint";
         checkpointSelect.name = "checkpoint";
 
-        const groups = { Illustrious: [], Pony: [], SDXL: [], "SDXL Lightning": [] };
+        const groups = { Illustrious: [], Pony: [], SDXL: [], "SDXL Lightning": [], DMD2: [] };
         let currentGroup = null;
 
         checkpointOptions.forEach((option) => {
@@ -86,7 +86,7 @@ function populateDropdowns() {
                 optionElement.value = option;
                 optionElement.textContent = displayName;
 
-                if (option === "SDXL-Lightning/lustifySDXLNSFW_v40DMD2.safetensors") optionElement.selected = true;
+                if (option === "DMD2/lustifySDXLNSFW_v40DMD2.safetensors") optionElement.selected = true;
 
                 optgroup.appendChild(optionElement);
             });
@@ -144,7 +144,7 @@ function populateDropdowns() {
             optionElement.value = option;
             optionElement.textContent = option;
 
-            if (option === "4x-UltraSharp.pth") optionElement.selected = true;
+            if (option === "4x-ClearRealityV1.pth") optionElement.selected = true;
 
             upscalerSelect.appendChild(optionElement);
         });
@@ -320,13 +320,34 @@ document.addEventListener("DOMContentLoaded", () => {
     const useUpscaleCheckbox = document.getElementById("useUpscale");
     const upscalerFormGroup = document.getElementById("upscalerFormGroup");
     const clipSkipFormGroup = document.getElementById("clipSkipFormGroup");
+    const useDynamicSeedCheckbox = document.getElementById("useDynamicSeed");
+    const useIncrementalSeedCheckbox = document.getElementById("useIncrementalSeed");
+
+    function toggleSeedCheckboxes(sourceCheckbox, targetCheckbox) {
+        if (sourceCheckbox.checked) {
+            targetCheckbox.checked = false;
+            targetCheckbox.disabled = true;
+        } else {
+            targetCheckbox.disabled = false;
+        }
+    }
+
+    toggleSeedCheckboxes(useDynamicSeedCheckbox, useIncrementalSeedCheckbox);
+
+    useDynamicSeedCheckbox.addEventListener("change", () => {
+        toggleSeedCheckboxes(useDynamicSeedCheckbox, useIncrementalSeedCheckbox);
+    });
+
+    useIncrementalSeedCheckbox.addEventListener("change", () => {
+        toggleSeedCheckboxes(useIncrementalSeedCheckbox, useDynamicSeedCheckbox);
+    });
 
     if (checkpointSelect) {
         checkpointSelect.addEventListener("change", () => {
             workflow["4"]["inputs"]["ckpt_name"] = checkpointSelect.value;
             const mapping = checkpointNameMapping[checkpointSelect.value] || {};
 
-            if (samplerSelect) samplerSelect.value = mapping.sampler || "dpmpp_2m";
+            if (samplerSelect) samplerSelect.value = mapping.sampler || "lcm";
             if (useLoRASelect) useLoRASelect.checked = mapping.lora ?? false;
             if (useClipSkipSelect) {
                 useClipSkipSelect.checked = mapping.clip ?? false;
@@ -379,7 +400,6 @@ async function generateImage() {
         prompt: DOMCache.prompt?.value,
         promptNegative: document.getElementById("prompt-negative")?.value,
         useCheckpointCache: document.getElementById("useCheckpointCache")?.checked,
-        useCustomVAE: document.getElementById("useCustomVAE")?.checked,
         clipSkip: document.getElementById("clip-skip")?.value,
         useLoRA: document.getElementById("useLoRA")?.checked,
         useClipSkip: document.getElementById("useClipSkip")?.checked,
@@ -392,6 +412,7 @@ async function generateImage() {
         useDynamicPrompt: document.getElementById("useDynamicPrompt")?.checked,
         alwaysRandomisePrompt: document.getElementById("alwaysRandomisePrompt")?.checked,
         useDynamicSeed: document.getElementById("useDynamicSeed")?.checked,
+        useIncrementalSeed: document.getElementById("useIncrementalSeed")?.checked,
     };
 
     if (!inputs.prompt) {
@@ -426,20 +447,6 @@ async function generateImage() {
 
         workflow["4"]["inputs"]["ckpt_name"] = checkpointSelect.value;
 
-        if (inputs.useCustomVAE) {
-            workflow["47"]["inputs"]["vae"] = ["278", 0];
-
-            if (inputs.useUpscale) {
-                workflow["273"]["inputs"]["vae"] = ["278", 0];
-            }
-        } else {
-            workflow["47"]["inputs"]["vae"] = ["4", 2];
-
-            if (inputs.useUpscale) {
-                workflow["273"]["inputs"]["vae"] = ["4", 2];
-            }
-        }
-
         if (inputs.useLoRA) {
             workflow["84"]["inputs"]["model"] = ["4", 0];
             workflow[inputs.useCheckpointCache ? "106" : "193"]["inputs"]["model"] = [
@@ -472,17 +479,30 @@ async function generateImage() {
         workflow["221"]["inputs"]["sampler_name"] = samplerSelect.value;
         workflow["178:1"]["inputs"]["boolean"] = inputs.useDynamicPrompt;
 
-        let seed =
-            inputs.useDynamicSeed || !inputs.seed || isNaN(inputs.seed) || inputs.seed === "-1"
-                ? (BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
-                      BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER))) %
-                  (MAX_SEED + BigInt(1))
-                : BigInt(inputs.seed);
+        let seed;
+
+        if (inputs.useIncrementalSeed) {
+            seed = BigInt(currentSeedNum) + BigInt(1);
+            if (seed > MAX_SEED) seed = BigInt(0);
+        } else if (inputs.useDynamicSeed || !inputs.seed || isNaN(inputs.seed) || inputs.seed === "-1") {
+            seed =
+                (BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
+                    BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER))) %
+                (MAX_SEED + BigInt(1));
+        } else {
+            seed = BigInt(inputs.seed);
+        }
+
         if (seed < BigInt(0) || seed > MAX_SEED) throw new Error(`Seed harus antara 0 dan ${MAX_SEED}!`);
+
         currentSeedNum = seed;
         workflow["171"]["inputs"]["seed"] = Number(seed);
         workflow["222"]["inputs"]["noise_seed"] = Number(seed);
+
+        if (inputs.useUpscale) workflow["273"]["inputs"]["seed"] = Number(seed);
+
         document.getElementById("seed").value = Number(seed);
+
         workflow["152"]["inputs"]["resolution"] =
             inputs.imageMode === "portrait"
                 ? "896x1152 (0.78)"
@@ -553,7 +573,7 @@ async function generateImage() {
 
         const successMessage = `
             <details aria-expanded="false">
-                <summary style="color: #8effb0;">Data Pembuatan Gambar</summary>
+                <summary style="color: #8effb0;">Informasi Gambar</summary>
                 <table class="success-table">
                     <tr><td>Positive Prompt:</td><td>${inputs.prompt}</td></tr>
                     <tr><td>Negative Prompt:</td><td>${inputs.promptNegative || "N/A"}</td></tr>
@@ -636,28 +656,12 @@ async function deleteImage() {
 
 async function clearImage() {
     const button = document.querySelector(".clear");
-    const seedInput = document.getElementById("seed");
-    const useDynamicSeed = document.getElementById("useDynamicSeed")?.checked;
 
     showStatus(DOMCache.status, "<h4>Membersihkan gambar...</h4>");
 
     button.disabled = true;
 
     try {
-        if (useDynamicSeed) {
-            currentSeedNum =
-                (BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)) *
-                    BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER))) %
-                (MAX_SEED + BigInt(1));
-            workflow["171"]["inputs"]["seed"] = Number(currentSeedNum);
-            workflow["222"]["inputs"]["noise_seed"] = Number(currentSeedNum);
-
-            if (document.getElementById("useUpscale")?.checked)
-                workflow["273"]["inputs"]["seed"] = Number(currentSeedNum);
-
-            seedInput.value = Number(currentSeedNum);
-        }
-
         if (document.getElementById("alwaysRandomisePrompt")?.checked) regenerateSelectedPreset();
 
         DOMCache.outputImage.src = "";

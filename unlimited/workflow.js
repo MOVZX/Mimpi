@@ -15,7 +15,7 @@ const workflow = {
         class_type: "VAEDecode",
         inputs: {
             samples: ["220", 0],
-            vae: ["278", 0],
+            vae: ["4", 2],
         },
     },
     76: {
@@ -221,15 +221,6 @@ const workflow = {
         inputs: {
             filename_prefix: "",
             images: ["274", 0],
-        },
-    },
-    278: {
-        inputs: {
-            vae_name: "SDXL/sdxlNaturalSkintone_fp32.safetensors",
-        },
-        class_type: "VAELoader",
-        _meta: {
-            title: "Load VAE",
         },
     },
 };

@@ -61,15 +61,6 @@ const checkpointNameMapping = {
     },
 
     // Pony
-    "Pony/3xthreat2kModelThatUsesPONY_v10.safetensors": {
-        displayName: "3xThreat -- 2k Model that uses PONY, SDXL and illustrious LORA -- | v1.0",
-        sampler: "dpmpp_2s_ancestral",
-        lora: true,
-        clip: true,
-        clipskip: -2,
-        steps: 11,
-        cfg: 4,
-    },
     "Pony/babesByStableYogi_ponyV4VAEFix.safetensors": {
         displayName: "Babes_By_Stable_Yogi | Pony v4",
         sampler: "dpmpp_2s_ancestral",
@@ -661,7 +652,7 @@ const checkpointNameMapping = {
         steps: 11,
         cfg: 1,
     },
-    "SDXL-Lightning/epicrealismXL_vxviLastfameDMD2.safetensors": {
+    "DMD2/epicrealismXL_vxviLastfameDMD2.safetensors": {
         displayName: "epiCRealism XL | VXVI - LastFAME DMD2 (Realism)",
         sampler: "lcm",
         lora: true,
@@ -697,7 +688,7 @@ const checkpointNameMapping = {
         steps: 11,
         cfg: 1,
     },
-    "SDXL-Lightning/lustifySDXLNSFW_endgameDMD2.safetensors": {
+    "DMD2/lustifySDXLNSFW_endgameDMD2.safetensors": {
         displayName: "LUSTIFY! [SDXL NSFW checkpoint] | ENDGAME ⚡DMD2⚡",
         sampler: "lcm",
         lora: true,
@@ -706,7 +697,7 @@ const checkpointNameMapping = {
         steps: 11,
         cfg: 1,
     },
-    "SDXL-Lightning/lustifySDXLNSFW_v40DMD2.safetensors": {
+    "DMD2/lustifySDXLNSFW_v40DMD2.safetensors": {
         displayName: "LUSTIFY! [SDXL NSFW checkpoint] | v4.0 ⚡DMD2⚡",
         sampler: "lcm",
         lora: true,
@@ -785,7 +776,6 @@ function fetchCheckpointOptions() {
         "Illustrious/redcraftCADSUpdatedMar11_illust3relustion.safetensors",
         "Illustrious/rillusmRealistic_v20.safetensors",
         "---- Pony ----",
-        "Pony/3xthreat2kModelThatUsesPONY_v10.safetensors",
         "Pony/babesByStableYogi_ponyV4VAEFix.safetensors",
         "Pony/cyberrealisticPony_v85.safetensors",
         "Pony/fasercore_v30PonyFP16.safetensors",
@@ -853,12 +843,12 @@ function fetchCheckpointOptions() {
         "SDXL-Lightning/copaxTimeless_photorealismSDXL8Step.safetensors",
         "SDXL-Lightning/dreamshaperXL_lightningDPMSDE.safetensors",
         "SDXL-Lightning/Epicrealismxl_Hades.safetensors",
-        "SDXL-Lightning/epicrealismXL_vxviLastfameDMD2.safetensors",
+        "DMD2/epicrealismXL_vxviLastfameDMD2.safetensors",
         "SDXL-Lightning/jibMixRealisticXL_v10Lightning46Step.safetensors",
         "SDXL-Lightning/juggernautXL_v9Rdphoto2Lightning.safetensors",
         "SDXL-Lightning/leosamsHelloworldXL_hw50EulerALightning.safetensors",
-        "SDXL-Lightning/lustifySDXLNSFW_endgameDMD2.safetensors",
-        "SDXL-Lightning/lustifySDXLNSFW_v40DMD2.safetensors",
+        "DMD2/lustifySDXLNSFW_endgameDMD2.safetensors",
+        "DMD2/lustifySDXLNSFW_v40DMD2.safetensors",
         "SDXL-Lightning/mklanRealistic_mklan220reallight4s.safetensors",
         "SDXL-Lightning/realismByStableYogi_v5XLLightning.safetensors",
         "SDXL-Lightning/RealitiesEdgeXLLIGHTNING_LIGHTNING34Step.safetensors",

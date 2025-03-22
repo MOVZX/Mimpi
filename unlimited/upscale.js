@@ -57,7 +57,7 @@ const upscaleNodes = {
             tiled_decode: false,
             upscale_by: 1.5,
             upscale_model: ["272", 0],
-            vae: ["278", 0],
+            vae: ["4", 2],
         },
     },
     274: {
