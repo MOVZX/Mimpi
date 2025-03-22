@@ -379,6 +379,7 @@ async function generateImage() {
         prompt: DOMCache.prompt?.value,
         promptNegative: document.getElementById("prompt-negative")?.value,
         useCheckpointCache: document.getElementById("useCheckpointCache")?.checked,
+        useCustomVAE: document.getElementById("useCustomVAE")?.checked,
         clipSkip: document.getElementById("clip-skip")?.value,
         useLoRA: document.getElementById("useLoRA")?.checked,
         useClipSkip: document.getElementById("useClipSkip")?.checked,
@@ -424,6 +425,20 @@ async function generateImage() {
             throw new Error("CLIP Skip harus antara -1 dan -10!");
 
         workflow["4"]["inputs"]["ckpt_name"] = checkpointSelect.value;
+
+        if (inputs.useCustomVAE) {
+            workflow["47"]["inputs"]["vae"] = ["278", 0];
+
+            if (inputs.useUpscale) {
+                workflow["273"]["inputs"]["vae"] = ["278", 0];
+            }
+        } else {
+            workflow["47"]["inputs"]["vae"] = ["4", 2];
+
+            if (inputs.useUpscale) {
+                workflow["273"]["inputs"]["vae"] = ["4", 2];
+            }
+        }
 
         if (inputs.useLoRA) {
             workflow["84"]["inputs"]["model"] = ["4", 0];

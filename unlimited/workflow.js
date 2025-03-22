@@ -15,7 +15,7 @@ const workflow = {
         class_type: "VAEDecode",
         inputs: {
             samples: ["220", 0],
-            vae: ["4", 2],
+            vae: ["278", 0],
         },
     },
     76: {
@@ -123,16 +123,21 @@ const workflow = {
         },
     },
     193: {
-        _meta: {
-            title: "Compile Model",
-        },
-        class_type: "CompileModel",
         inputs: {
-            backend: "inductor",
-            dynamic: false,
+            is_patcher: true,
+            object_to_patch: "diffusion_model",
+            compiler: "torch.compile",
             fullgraph: false,
-            mode: "default",
+            dynamic: false,
+            mode: "",
+            options: "",
+            disable: false,
+            backend: "inductor",
             model: ["106", 0],
+        },
+        class_type: "EnhancedCompileModel",
+        _meta: {
+            title: "Compile Model+",
         },
     },
     218: {
@@ -216,6 +221,15 @@ const workflow = {
         inputs: {
             filename_prefix: "",
             images: ["274", 0],
+        },
+    },
+    278: {
+        inputs: {
+            vae_name: "SDXL/sdxlNaturalSkintone_fp32.safetensors",
+        },
+        class_type: "VAELoader",
+        _meta: {
+            title: "Load VAE",
         },
     },
 };
