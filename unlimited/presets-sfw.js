@@ -828,27 +828,54 @@ const SFWPresets = {
     },
 };
 
-// Fungsi untuk memilih warna rambut secara acak
+/**
+ * Fungsi untuk memilih warna rambut secara acak.
+ *
+ * @description Fungsi ini mengembalikan warna rambut secara acak dari daftar warna rambut.
+ * @returns {string} Warna rambut yang dipilih secara acak.
+ */
 function randomHairColours() {
     return hairColours[Math.floor(Math.random() * hairColours.length)];
 }
 
-// Fungsi untuk memilih gaya rambut secara acak
+/**
+ * Fungsi untuk memilih gaya rambut secara acak.
+ *
+ * @description Fungsi ini mengembalikan gaya rambut secara acak dari daftar gaya rambut.
+ * @returns {string} Gaya rambut yang dipilih secara acak.
+ */
 function randomHairStyles() {
     return hairStyles[Math.floor(Math.random() * hairStyles.length)];
 }
 
-// Fungsi untuk memilih kata sifat rambut secara acak
+/**
+ * Fungsi untuk memilih kata sifat rambut secara acak.
+ *
+ * @description Fungsi ini mengembalikan kata sifat rambut secara acak dari daftar kata sifat rambut.
+ * @returns {string} Kata sifat rambut yang dipilih secara acak.
+ */
 function randomHairAdjective() {
     return hairAdjectives[Math.floor(Math.random() * hairAdjectives.length)];
 }
 
-// Fungsi untuk menghasilkan usia acak (25-38)
+/**
+ * Fungsi untuk menghasilkan usia acak (25-38).
+ *
+ * @description Fungsi ini mengembalikan usia acak antara 25 dan 38.
+ * @returns {number} Usia yang dihasilkan secara acak.
+ */
 function randomAge() {
     return (Math.random() * 13) | 25;
 }
 
-// Fungsi untuk menghasilkan prompt berdasarkan ruangan dan profil
+/**
+ * Fungsi untuk menghasilkan prompt berdasarkan ruangan dan profil.
+ *
+ * @description Fungsi ini mengembalikan prompt yang dihasilkan berdasarkan ruangan dan profil.
+ * @param {string} room Ruangan yang digunakan sebagai latar belakang.
+ * @param {object[]} profiles Daftar profil yang digunakan untuk menghasilkan prompt.
+ * @returns {object} Prompt yang dihasilkan berdasarkan ruangan dan profil.
+ */
 function generatePrompts(room, profiles) {
     return profiles.reduce((prompts, profile, index) => {
         prompts[

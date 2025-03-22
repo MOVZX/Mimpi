@@ -772,6 +772,12 @@ const checkpointNameMapping = {
     },
 };
 
+/**
+ * Fungsi yang mengambil daftar checkpoint.
+ *
+ * @description Fungsi ini mengambil daftar checkpoint dari cache atau mengembalikan nilai default jika cache belum diisi.
+ * @returns {string[]} Daftar checkpoint.
+ */
 // Checkpoints
 function fetchCheckpointOptions() {
     if (checkpointCache.checkpoints) return checkpointCache.checkpoints;
@@ -873,7 +879,12 @@ function fetchCheckpointOptions() {
     return checkpointCache.checkpoints;
 }
 
-// Samplers
+/**
+ * Fungsi yang mengambil daftar sampler.
+ *
+ * @description Fungsi ini mengembalikan daftar sampler yang tersedia.
+ * @returns {string[]} Daftar sampler.
+ */
 function fetchSamplerOptions() {
     return [
         "euler",
@@ -911,7 +922,12 @@ function fetchSamplerOptions() {
     ];
 }
 
-// Schedulers
+/**
+ * Fungsi yang mengambil daftar scheduler.
+ *
+ * @description Fungsi ini mengembalikan daftar scheduler yang tersedia.
+ * @returns {string[]} Daftar scheduler.
+ */
 function fetchSchedulerOptions() {
     return [
         "normal",

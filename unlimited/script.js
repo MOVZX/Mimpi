@@ -12,6 +12,14 @@ const mainPresets = {
 // Cache DOM elements
 const DOMCache = {};
 
+/**
+ * Fungsi untuk menyimpan referensi ke elemen-elemen DOM dalam objek DOMCache.
+ *
+ * Fungsi ini akan mencari elemen-elemen DOM dengan id yang sesuai dan
+ * menyimpan referensi ke elemen-elemen tersebut dalam objek DOMCache.
+ *
+ * @returns {void}
+ */
 function cacheDOMElements() {
     DOMCache.outputImage = document.getElementById("outputImage");
     DOMCache.imageActions = document.getElementById("imageActions");
@@ -22,6 +30,14 @@ function cacheDOMElements() {
     DOMCache.error = document.getElementById("error");
 }
 
+/**
+ * Fungsi yang dijalankan ketika halaman web selesai dimuat.
+ *
+ * Fungsi ini akan memulihkan nilai seed yang tersimpan di localStorage
+ * dan mengatur elemen-elemen DOM untuk menampilkan hasil output.
+ *
+ * @returns {void}
+ */
 window.onload = function () {
     const savedSeed = localStorage.getItem("lastSeed");
 
@@ -39,6 +55,15 @@ window.onload = function () {
     }
 };
 
+/**
+ * Mengisi dropdown menu dengan opsi-opsi yang diperlukan.
+ *
+ * Fungsi ini akan menciptakan elemen-elemen dropdown untuk checkpoint model,
+ * sampler, dan upscaler jika belum ada. Kemudian, akan mengisi dropdown
+ * dengan opsi-opsi yang diperlukan.
+ *
+ * @returns {void}
+ */
 function populateDropdowns() {
     const container = document.querySelector(".container");
 
@@ -157,6 +182,11 @@ function populateDropdowns() {
     }
 }
 
+/**
+ * Fungsi yang mengisi dropdown preset dengan data.
+ *
+ * @description Fungsi ini mengisi dropdown preset dengan data dari objek mainPresets.
+ */
 function populatePresetDropdowns() {
     if (!DOMCache.mainPreset || !DOMCache.subcategory || !DOMCache.prompt) return;
 
@@ -236,6 +266,11 @@ function populatePresetDropdowns() {
     });
 }
 
+/**
+ * Fungsi yang meregenerasi preset yang dipilih.
+ *
+ * @description Fungsi ini meregenerasi preset yang dipilih berdasarkan nilai dropdown main preset dan subcategory.
+ */
 function regenerateSelectedPreset() {
     if (!DOMCache.mainPreset || !DOMCache.subcategory || !DOMCache.prompt) return;
 
@@ -307,6 +342,11 @@ function regenerateSelectedPreset() {
     DOMCache.prompt.value = newPrompts[DOMCache.subcategory.value];
 }
 
+/**
+ * Fungsi yang dijalankan ketika dokumen telah selesai dimuat.
+ *
+ * @description Fungsi ini memuat elemen-elemen DOM, mengisi dropdown, dan menambahkan event listener untuk berbagai elemen.
+ */
 document.addEventListener("DOMContentLoaded", () => {
     cacheDOMElements();
     populateDropdowns();
@@ -397,6 +437,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+/**
+ * Menghasilkan gambar berdasarkan input pengguna dan pengaturan.
+ *
+ * @async
+ * @fungsi generateImage
+ * @returns {Promise<void>}
+ *
+ * @deskripsi Fungsi ini menghasilkan gambar berdasarkan input pengguna seperti prompt, prompt negatif, checkpoint, sampler, dan pengaturan lainnya.
+ * Fungsi ini mengirimkan permintaan ke server untuk menghasilkan gambar dan kemudian menampilkan gambar yang dihasilkan di halaman.
+ *
+ * @throws {Error} Jika input pengguna tidak valid (misalnya prompt kosong, checkpoint tidak valid, dll.).
+ * @throws {Error} Jika terjadi kesalahan jaringan saat mengirimkan permintaan ke server.
+ *
+ * @global {Object} workflow - Objek yang mewakili alur kerja proses penghasilan gambar.
+ * @global {string} COMFYUI_URL - URL server yang menghasilkan gambar.
+ * @global {Object} DOMCache - Objek yang menyimpan elemen DOM untuk akses yang mudah.
+ */
 async function generateImage() {
     const inputs = {
         prompt: DOMCache.prompt?.value,
@@ -617,6 +674,18 @@ async function generateImage() {
     }
 }
 
+/**
+ * Fungsi untuk menghapus gambar secara permanen dari server.
+ *
+ * Fungsi ini akan mengatur status, menonaktifkan tombol delete,
+ * mengirimkan permintaan DELETE ke API untuk menghapus gambar,
+ * dan menampilkan status sukses jika proses menghapus gambar
+ * berhasil. Jika proses menghapus gambar gagal, maka akan
+ * menampilkan error.
+ *
+ * @async
+ * @returns {void}
+ */
 async function deleteImage() {
     const button = document.querySelector(".delete");
 
@@ -656,6 +725,17 @@ async function deleteImage() {
     }
 }
 
+/**
+ * Fungsi untuk membersihkan gambar yang sedang ditampilkan.
+ *
+ * Fungsi ini akan mengatur status, menonaktifkan tombol clear,
+ * membersihkan gambar, dan menampilkan status sukses jika proses
+ * membersihkan gambar berhasil. Jika proses membersihkan gambar
+ * gagal, maka akan menampilkan error.
+ *
+ * @async
+ * @returns {void}
+ */
 async function clearImage() {
     const button = document.querySelector(".clear");
 
@@ -680,6 +760,14 @@ async function clearImage() {
     }
 }
 
+/**
+ * Fungsi untuk memuat gambar dari URL yang ditentukan.
+ *
+ * Fungsi ini akan mengembalikan promise yang akan diselesaikan dengan objek gambar jika gambar berhasil dimuat, atau ditolak dengan error jika gambar gagal dimuat.
+ *
+ * @param {string} imageUrl URL gambar yang akan dimuat.
+ * @returns {Promise<Image>} Promise yang akan diselesaikan dengan objek gambar.
+ */
 function loadImage(imageUrl) {
     return new Promise((resolve, reject) => {
         const img = new Image();
@@ -690,6 +778,18 @@ function loadImage(imageUrl) {
     });
 }
 
+/**
+ * Fungsi untuk menampilkan status pada elemen yang ditentukan.
+ *
+ * Fungsi ini akan menampilkan status pada elemen yang ditentukan
+ * dengan tipe yang ditentukan. Jika tipe tidak ditentukan, maka
+ * status akan ditampilkan selama 5 detik.
+ *
+ * @param {HTMLElement} statusElement Elemen yang akan menampilkan status.
+ * @param {string} message Pesan status yang akan ditampilkan.
+ * @param {string} [type=""] Tipe status yang akan ditampilkan.
+ * @returns {void}
+ */
 function showStatus(statusElement, message, type = "") {
     if (!statusElement) return;
 
@@ -703,6 +803,16 @@ function showStatus(statusElement, message, type = "") {
         }, 5000);
 }
 
+/**
+ * Fungsi untuk menampilkan pesan error pada elemen yang ditentukan.
+ *
+ * Fungsi ini akan menampilkan pesan error pada elemen yang ditentukan
+ * selama 5 detik, kemudian akan menyembunyikan elemen tersebut.
+ *
+ * @param {HTMLElement} errorElement Elemen yang akan menampilkan pesan error.
+ * @param {string} message Pesan error yang akan ditampilkan.
+ * @returns {void}
+ */
 function showError(errorElement, message) {
     if (!errorElement) return;
 

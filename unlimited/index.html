@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+    <!-- Bagian header dokumen HTML -->
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Mimpi (Unlimited)</title>
         <link rel="stylesheet" href="style.css" />
     </head>
+
+    <!-- Bagian body dokumen HTML -->
     <body>
+        <!-- Kontainer utama aplikasi -->
         <div class="container">
+            <!-- Logo -->
             <p style="text-align: center">
                 <img
                     src="pepe.png"
@@ -15,8 +20,13 @@
                     style="width: 300px; margin-top: 0px; border-radius: 8px; box-shadow: none"
                 />
             </p>
+
+            <!-- Judul -->
             <h1>Mimpi (Unlimited)</h1>
+
+            <!-- Bagian form untuk memasukkan prompt dan tema -->
             <div class="form-group">
+                <!-- Positive Prompt -->
                 <label for="prompt">Deskripsi Gambar (Positif)</label>
                 <textarea
                     id="prompt"
@@ -24,6 +34,7 @@
                     rows="5"
                     style="background: linear-gradient(45deg, rgba(221, 255, 226, 0.15), rgba(203, 255, 212, 0.15))"
                 ></textarea>
+                <!-- Negative Prompt -->
                 <label for="prompt-negative">Hindari (Negatif)</label>
                 <textarea
                     id="prompt-negative"
@@ -32,12 +43,19 @@
                     style="background: linear-gradient(45deg, rgba(255, 206, 206, 0.15), rgba(255, 209, 209, 0.15))"
                 ></textarea>
             </div>
+
+            <!-- Bagian checkbox untuk memilih opsi -->
             <div class="checkbox-group" style="justify-content: center">
+                <!-- Prompt Generator -->
                 <div class="checkbox-wrapper"><input type="checkbox" id="useDynamicPrompt" /></div>
                 <label for="useDynamicPrompt">Prompt Generator</label>
+                <!-- Acak Prompt -->
                 <div class="checkbox-wrapper"><input type="checkbox" id="alwaysRandomisePrompt" /></div>
                 <label for="alwaysRandomisePrompt">Acak Prompt</label>
             </div>
+
+            <!-- Bagian select untuk memilih tema & preset -->
+            <!-- Tema -->
             <div class="form-group">
                 <label for="main-preset">Tema</label>
                 <select id="main-preset">
@@ -46,43 +64,54 @@
                     <optgroup label="NSFW"></optgroup>
                 </select>
             </div>
+            <!-- Preset -->
             <div id="subcategory-container" class="form-group" style="display: none">
                 <label for="subcategory">Preset</label>
                 <select id="subcategory"></select>
             </div>
+
+            <!-- Bagian untuk opsi tingkat langjut -->
             <details aria-expanded="false">
                 <summary>Opsi Tingkat Lanjut</summary>
                 <div>
+                    <!-- Checkpoint -->
                     <div class="checkbox-group">
                         <div class="checkbox-wrapper"><input type="checkbox" id="useCheckpointCache" checked /></div>
                         <label for="useCheckpointCache">Gunakan Checkpoint Cache?</label>
                     </div>
+                    <!-- LoRA -->
                     <div class="checkbox-group">
                         <div class="checkbox-wrapper"><input type="checkbox" id="useLoRA" checked /></div>
                         <label for="useLoRA">Gunakan LoRA?</label>
                     </div>
+                    <!-- CLIP -->
                     <div class="checkbox-group">
                         <div class="checkbox-wrapper"><input type="checkbox" id="useClipSkip" checked /></div>
                         <label for="useClipSkip">Gunakan CLIP Skip?</label>
                     </div>
+                    <!-- Upscaling -->
                     <div class="checkbox-group">
                         <div class="checkbox-wrapper"><input type="checkbox" id="useUpscale" /></div>
                         <label for="useUpscale">Gunakan Upscale?</label>
                     </div>
+                    <!-- Peningkatan Nomor Seed -->
                     <div class="checkbox-group">
                         <div class="checkbox-wrapper"><input type="checkbox" id="useIncrementalSeed" /></div>
                         <label for="useIncrementalSeed">Gunakan Incremental Seed?</label>
                     </div>
+                    <!-- Acak Nomor Seed -->
                     <div class="checkbox-group">
                         <div class="checkbox-wrapper"><input type="checkbox" id="useDynamicSeed" checked /></div>
                         <label for="useDynamicSeed">Acak Nomor Seed?</label>
                     </div>
+                    <!-- CLIP Skip -->
                     <div class="form-group visible" id="clipSkipFormGroup">
                         <label for="steps"
                             >CLIP Skip <span style="color: #aaa; font-weight: normal">(1-10)</span></label
                         >
                         <input type="number" id="clip-skip" min="-10" max="-1" value="-2" required />
                     </div>
+                    <!-- Mode Gambar -->
                     <div class="form-group">
                         <label for="imageMode">Mode Gambar</label>
                         <select id="imageMode">
@@ -91,26 +120,33 @@
                             <option value="square">Square (1024x1024)</option>
                         </select>
                     </div>
+                    <!-- Steps -->
                     <div class="form-group">
                         <label for="steps">Steps <span style="color: #aaa; font-weight: normal">(1-100)</span></label>
                         <input type="number" id="steps" min="1" max="100" value="11" required />
                     </div>
+                    <!-- CFG -->
                     <div class="form-group">
                         <label for="cfg"> CFG <span style="color: #aaa; font-weight: normal">(1-30)</span></label>
                         <input type="number" id="cfg" min="1" max="30" step="0.5" value="1" required />
                     </div>
+                    <!-- Seed -->
                     <div class="form-group">
                         <label for="seed">Seed <span style="color: #aaa; font-weight: normal">(angka)</span></label>
                         <input type="number" id="seed" min="-1" max="9007199254740991" placeholder="" value="-1" />
                     </div>
                 </div>
             </details>
+
+            <!-- Bagian untuk tombol kontrol -->
             <button onclick="generateImage()">Buat Gambar</button>
             <img id="outputImage" src="" alt="" style="display: none" />
             <div class="image-actions" id="imageActions">
                 <button class="clear" onclick="clearImage()">Reset</button>
                 <button class="delete" onclick="deleteImage()">Hapus</button>
             </div>
+
+            <!-- Bagian untuk menampilkan pesan status -->
             <p id="status"></p>
             <p id="error"></p>
             <div class="lightbox" id="lightbox">
@@ -119,6 +155,7 @@
             </div>
         </div>
 
+        <!-- Bagian script untuk memuat file JavaScript -->
         <script type="text/javascript" src="globals.js"></script>
         <script type="text/javascript" src="presets-sfw.js"></script>
         <script type="text/javascript" src="presets-nsfw.js"></script>
