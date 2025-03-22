@@ -82,7 +82,9 @@ function populateDropdowns() {
                 const mapping = checkpointNameMapping[option] || {};
                 const displayName =
                     mapping.displayName ||
-                    option.replace(/^(SDXL\/|SDXL-Lightning\/|Pony\/|Illustrious\/)/, "").replace(/\.safetensors$/, "");
+                    option
+                        .replace(/^(SDXL\/|SDXL-Lightning\/|Pony\/|Illustrious\/|DMD2\/)/, "")
+                        .replace(/\.safetensors$/, "");
                 optionElement.value = option;
                 optionElement.textContent = displayName;
 

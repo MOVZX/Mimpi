@@ -3,6 +3,43 @@ const checkpointCache = {};
 
 // Checkpoints Maps
 const checkpointNameMapping = {
+    // DMD2
+    "DMD2/centerfold_versionXIDmd2.safetensors": {
+        displayName: "Centerfold | version XI dmd2",
+        sampler: "lcm",
+        lora: true,
+        clip: true,
+        clipskip: -2,
+        steps: 11,
+        cfg: 1,
+    },
+    "DMD2/epicrealismXL_vxviLastfameDMD2.safetensors": {
+        displayName: "epiCRealism XL | VXVI - LastFAME DMD2 (Realism)",
+        sampler: "lcm",
+        lora: true,
+        clip: true,
+        clipskip: -2,
+        steps: 11,
+        cfg: 1,
+    },
+    "DMD2/lustifySDXLNSFW_endgameDMD2.safetensors": {
+        displayName: "LUSTIFY! [SDXL NSFW checkpoint] | ENDGAME ⚡DMD2⚡",
+        sampler: "lcm",
+        lora: true,
+        clip: true,
+        clipskip: -2,
+        steps: 11,
+        cfg: 1,
+    },
+    "DMD2/lustifySDXLNSFW_v40DMD2.safetensors": {
+        displayName: "LUSTIFY! [SDXL NSFW checkpoint] | v4.0 ⚡DMD2⚡",
+        sampler: "lcm",
+        lora: true,
+        clip: true,
+        clipskip: -2,
+        steps: 11,
+        cfg: 1,
+    },
     // Illustrious
     "Illustrious/cyberillustrious_v30.safetensors": {
         displayName: "CyberIllustrious | v3.0",
@@ -652,15 +689,6 @@ const checkpointNameMapping = {
         steps: 11,
         cfg: 1,
     },
-    "DMD2/epicrealismXL_vxviLastfameDMD2.safetensors": {
-        displayName: "epiCRealism XL | VXVI - LastFAME DMD2 (Realism)",
-        sampler: "lcm",
-        lora: true,
-        clip: true,
-        clipskip: -2,
-        steps: 11,
-        cfg: 1,
-    },
     "SDXL-Lightning/jibMixRealisticXL_v10Lightning46Step.safetensors": {
         displayName: "Jib Mix Realistic XL | v10 Lightning 4-6 Step",
         sampler: "lcm",
@@ -681,24 +709,6 @@ const checkpointNameMapping = {
     },
     "SDXL-Lightning/leosamsHelloworldXL_hw50EulerALightning.safetensors": {
         displayName: "LEOSAM's HelloWorld XL | HW5.0_Euler_a_Lightning",
-        sampler: "lcm",
-        lora: true,
-        clip: true,
-        clipskip: -2,
-        steps: 11,
-        cfg: 1,
-    },
-    "DMD2/lustifySDXLNSFW_endgameDMD2.safetensors": {
-        displayName: "LUSTIFY! [SDXL NSFW checkpoint] | ENDGAME ⚡DMD2⚡",
-        sampler: "lcm",
-        lora: true,
-        clip: true,
-        clipskip: -2,
-        steps: 11,
-        cfg: 1,
-    },
-    "DMD2/lustifySDXLNSFW_v40DMD2.safetensors": {
-        displayName: "LUSTIFY! [SDXL NSFW checkpoint] | v4.0 ⚡DMD2⚡",
         sampler: "lcm",
         lora: true,
         clip: true,
@@ -768,6 +778,11 @@ function fetchCheckpointOptions() {
 
     // Daftar checkpoint dasar
     const baseCheckpoints = [
+        "---- DMD2 ----",
+        "DMD2/centerfold_versionXIDmd2.safetensors",
+        "DMD2/epicrealismXL_vxviLastfameDMD2.safetensors",
+        "DMD2/lustifySDXLNSFW_endgameDMD2.safetensors",
+        "DMD2/lustifySDXLNSFW_v40DMD2.safetensors",
         "---- Illustrious ----",
         "Illustrious/cyberillustrious_v30.safetensors",
         "Illustrious/novaRealityXL_illustriousV20.safetensors",
@@ -843,12 +858,9 @@ function fetchCheckpointOptions() {
         "SDXL-Lightning/copaxTimeless_photorealismSDXL8Step.safetensors",
         "SDXL-Lightning/dreamshaperXL_lightningDPMSDE.safetensors",
         "SDXL-Lightning/Epicrealismxl_Hades.safetensors",
-        "DMD2/epicrealismXL_vxviLastfameDMD2.safetensors",
         "SDXL-Lightning/jibMixRealisticXL_v10Lightning46Step.safetensors",
         "SDXL-Lightning/juggernautXL_v9Rdphoto2Lightning.safetensors",
         "SDXL-Lightning/leosamsHelloworldXL_hw50EulerALightning.safetensors",
-        "DMD2/lustifySDXLNSFW_endgameDMD2.safetensors",
-        "DMD2/lustifySDXLNSFW_v40DMD2.safetensors",
         "SDXL-Lightning/mklanRealistic_mklan220reallight4s.safetensors",
         "SDXL-Lightning/realismByStableYogi_v5XLLightning.safetensors",
         "SDXL-Lightning/RealitiesEdgeXLLIGHTNING_LIGHTNING34Step.safetensors",
