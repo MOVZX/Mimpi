@@ -1,3 +1,4 @@
+// Main Workflow
 const workflow = {
     4: {
         _meta: {
@@ -37,21 +38,26 @@ const workflow = {
             "➕ Add Lora": "",
             clip: ["76", 0],
             lora_1: {
-                lora: "SDXL/add-detail-xl.safetensors",
-                on: true,
+                on: false,
+                lora: "DMD2/dmd2_sdxl_4step_lora_fp16.safetensors",
                 strength: 1,
             },
             lora_2: {
-                lora: "SDXL/Breast Slider - Pony_alpha1.0_rank4_noxattn_last.safetensors",
                 on: true,
-                strength: 0.85,
+                lora: "SDXL/add-detail-xl.safetensors",
+                strength: 0.95,
             },
             lora_3: {
-                lora: "SDXL/Beautify-Supermodel-SDXL.safetensors",
                 on: true,
+                lora: "SDXL/Breast Slider - Pony_alpha1.0_rank4_noxattn_last.safetensors",
+                strength: 0.85,
+            },
+            lora_4: {
+                on: true,
+                lora: "SDXL/Beautify-Supermodel-SDXL.safetensors",
                 strength: 0.8,
             },
-            model: ["4", 0],
+            model: ["269", 0],
             PowerLoraLoaderHeaderWidget: {
                 type: "PowerLoraLoaderHeaderWidget",
             },
@@ -221,6 +227,18 @@ const workflow = {
         inputs: {
             filename_prefix: "",
             images: ["274", 0],
+        },
+    },
+    268: {
+        inputs: {
+            clip_name1: "Long-ViT-L-14-REG-TE-only-HF-format.safetensors",
+            clip_name2: "clip_g.safetensors",
+            type: "sdxl",
+            device: "default",
+        },
+        class_type: "DualCLIPLoader",
+        _meta: {
+            title: "DualCLIPLoader",
         },
     },
 };

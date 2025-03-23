@@ -33,7 +33,9 @@
                     required
                     rows="5"
                     style="background: linear-gradient(45deg, rgba(221, 255, 226, 0.15), rgba(203, 255, 212, 0.15))"
-                ></textarea>
+                >
+1girl, solo, 30-year-old woman, feathered bronde hair, wearing nun uniform, blowjob, cum on face, cum dripping from mouth, bedroom, intricate details</textarea
+                >
                 <!-- Negative Prompt -->
                 <label for="prompt-negative">Hindari (Negatif)</label>
                 <textarea
@@ -74,10 +76,15 @@
             <details aria-expanded="false">
                 <summary>Opsi Tingkat Lanjut</summary>
                 <div>
-                    <!-- Checkpoint -->
+                    <!-- Checkpoint Cache -->
                     <div class="checkbox-group">
                         <div class="checkbox-wrapper"><input type="checkbox" id="useCheckpointCache" checked /></div>
                         <label for="useCheckpointCache">Gunakan Checkpoint Cache?</label>
+                    </div>
+                    <!-- Distribution Matching Distillation 2 (DMD2) -->
+                    <div class="checkbox-group">
+                        <div class="checkbox-wrapper"><input type="checkbox" id="useDMD2" /></div>
+                        <label for="useDMD2">Gunakan DMD2?</label>
                     </div>
                     <!-- LoRA -->
                     <div class="checkbox-group">
@@ -85,6 +92,10 @@
                         <label for="useLoRA">Gunakan LoRA?</label>
                     </div>
                     <!-- CLIP -->
+                    <div class="checkbox-group">
+                        <div class="checkbox-wrapper"><input type="checkbox" id="useCustomClip" /></div>
+                        <label for="useCustomClip">Gunakan Custom CLIP?</label>
+                    </div>
                     <div class="checkbox-group">
                         <div class="checkbox-wrapper"><input type="checkbox" id="useClipSkip" checked /></div>
                         <label for="useClipSkip">Gunakan CLIP Skip?</label>
@@ -149,10 +160,12 @@
             <!-- Bagian untuk menampilkan pesan status -->
             <p id="status"></p>
             <p id="error"></p>
-            <div class="lightbox" id="lightbox">
-                <span class="close" id="closeLightbox">&times;</span>
-                <img id="lightboxImage" src="" alt="Gambar" />
-            </div>
+        </div>
+
+        <!-- Lightbox  -->
+        <div class="lightbox" id="lightbox">
+            <span class="close" id="closeLightbox">&times;</span>
+            <img id="lightboxImage" src="" alt="Gambar" />
         </div>
 
         <!-- Bagian script untuk memuat file JavaScript -->

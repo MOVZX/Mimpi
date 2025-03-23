@@ -1,3 +1,4 @@
+// Global variables
 const COMFYUI_URL = "http://gambar.ai:8188";
 const MAX_SEED = BigInt("9007199254740991");
 let currentSeedNum = 0;
@@ -9,7 +10,7 @@ const mainPresets = {
     nsfw: NSFWPresets,
 };
 
-// Cache DOM elements
+// Cache DOM Elements
 const DOMCache = {};
 
 /**
@@ -73,6 +74,7 @@ function populateDropdowns() {
 
     if (!detailsContent) return console.error("Details content not found");
 
+    // Checkpoint Dropdowns
     if (!document.getElementById("checkpointFormGroup")) {
         const checkpointOptions = fetchCheckpointOptions();
         const checkpointFormGroup = document.createElement("div");
@@ -87,7 +89,7 @@ function populateDropdowns() {
         checkpointSelect.id = "checkpoint";
         checkpointSelect.name = "checkpoint";
 
-        const groups = { Illustrious: [], Pony: [], SDXL: [], "SDXL Lightning": [], DMD2: [] };
+        const groups = { DMD2: [], Illustrious: [], Pony: [], SDXL: [], "SDXL Lightning": [] };
         let currentGroup = null;
 
         checkpointOptions.forEach((option) => {
@@ -126,6 +128,7 @@ function populateDropdowns() {
         detailsContent.insertBefore(checkpointFormGroup, detailsContent.firstChild);
     }
 
+    // Sampler Dropdowns
     if (!document.getElementById("samplerFormGroup")) {
         const samplerOptions = fetchSamplerOptions();
         const samplerFormGroup = document.createElement("div");
@@ -152,6 +155,7 @@ function populateDropdowns() {
         detailsContent.appendChild(samplerFormGroup);
     }
 
+    // Upscaler Dropdowns
     if (!document.getElementById("upscalerFormGroup")) {
         const upscalerOptions = upscaleModels;
         const upscalerFormGroup = document.createElement("div");
@@ -355,6 +359,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const checkpointSelect = document.getElementById("checkpoint");
     const samplerSelect = document.getElementById("sampler");
     const useLoRASelect = document.getElementById("useLoRA");
+    const useDMD2Select = document.getElementById("useDMD2");
     const useClipSkipSelect = document.getElementById("useClipSkip");
     const clipSkipSet = document.getElementById("clip-skip");
     const stepsSelect = document.getElementById("steps");
@@ -365,6 +370,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const useDynamicSeedCheckbox = document.getElementById("useDynamicSeed");
     const useIncrementalSeedCheckbox = document.getElementById("useIncrementalSeed");
 
+    // Seed
     function toggleSeedCheckboxes(sourceCheckbox, targetCheckbox) {
         if (sourceCheckbox.checked) {
             targetCheckbox.checked = false;
@@ -374,7 +380,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // toggleSeedCheckboxes(useLoRASelect, useDMD2Select);
     toggleSeedCheckboxes(useDynamicSeedCheckbox, useIncrementalSeedCheckbox);
+
+    useLoRASelect.addEventListener("change", () => {
+        if (!useLoRASelect.checked) {
+            useDMD2Select.checked = false;
+            useDMD2Select.disabled = true;
+        } else {
+            useDMD2Select.checked = false;
+            useDMD2Select.disabled = false;
+        }
+    });
 
     useDynamicSeedCheckbox.addEventListener("change", () => {
         toggleSeedCheckboxes(useDynamicSeedCheckbox, useIncrementalSeedCheckbox);
@@ -384,6 +401,7 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleSeedCheckboxes(useIncrementalSeedCheckbox, useDynamicSeedCheckbox);
     });
 
+    // Checkpoint
     if (checkpointSelect) {
         checkpointSelect.addEventListener("change", () => {
             workflow["4"]["inputs"]["ckpt_name"] = checkpointSelect.value;
@@ -391,6 +409,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (samplerSelect) samplerSelect.value = mapping.sampler || "lcm";
             if (useLoRASelect) useLoRASelect.checked = mapping.lora ?? false;
+            if (useDMD2Select) useDMD2Select.checked = mapping.dmd2 ?? false;
             if (useClipSkipSelect) {
                 useClipSkipSelect.checked = mapping.clip ?? false;
                 clipSkipSet.value = mapping.clipskip ?? -2;
@@ -402,22 +421,26 @@ document.addEventListener("DOMContentLoaded", () => {
         checkpointSelect.dispatchEvent(new Event("change"));
     }
 
+    // Sampler
     if (samplerSelect) {
         samplerSelect.addEventListener("change", () => {
             workflow["221"]["inputs"]["sampler_name"] = samplerSelect.value;
         });
     }
 
+    // CLIP Skip
     clipSkipFormGroup?.classList.toggle("visible", useClipSkipSelect?.checked ?? false);
     useClipSkipSelect?.addEventListener("change", () => {
         clipSkipFormGroup?.classList.toggle("visible", useClipSkipSelect.checked);
     });
 
+    // Upscaling
     upscalerFormGroup?.classList.toggle("visible", useUpscaleCheckbox?.checked ?? false);
     useUpscaleCheckbox?.addEventListener("change", () => {
         upscalerFormGroup?.classList.toggle("visible", useUpscaleCheckbox.checked);
     });
 
+    // Lightbox
     DOMCache.outputImage?.addEventListener("click", () => {
         const lightbox = document.getElementById("lightbox");
         const lightboxImage = document.getElementById("lightboxImage");
@@ -425,6 +448,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (DOMCache.outputImage.src && DOMCache.outputImage.style.display !== "none" && lightbox && lightboxImage) {
             lightboxImage.src = DOMCache.outputImage.src;
             lightbox.style.display = "flex";
+            lightbox.scrollIntoView({ behavior: "smooth" });
         }
     });
 
@@ -459,8 +483,10 @@ async function generateImage() {
         prompt: DOMCache.prompt?.value,
         promptNegative: document.getElementById("prompt-negative")?.value,
         useCheckpointCache: document.getElementById("useCheckpointCache")?.checked,
+        useDMD2: document.getElementById("useDMD2")?.checked,
         clipSkip: document.getElementById("clip-skip")?.value,
         useLoRA: document.getElementById("useLoRA")?.checked,
+        useCustomClip: document.getElementById("useCustomClip")?.checked,
         useClipSkip: document.getElementById("useClipSkip")?.checked,
         useUpscale: document.getElementById("useUpscale")?.checked,
         upscaleModel: document.getElementById("upscaler")?.value,
@@ -480,12 +506,15 @@ async function generateImage() {
         return;
     }
 
+    // Daftar Checkpoint
     if (!document.getElementById("checkpoint")) populateDropdowns();
 
+    // Dropdown Checkpoint/Sampler
     const checkpointSelect = document.getElementById("checkpoint");
     const samplerSelect = document.getElementById("sampler");
 
-    if (!checkpointSelect || !samplerSelect) return showError(DOMCache.error, "Dropdowns tidak ditemukan!");
+    if (!checkpointSelect || !samplerSelect)
+        return showError(DOMCache.error, "Dropdown Checkpoint/Sampler tidak ditemukan!");
 
     showStatus(DOMCache.status, "<h4>Membuat gambar...</h4>");
 
@@ -504,40 +533,64 @@ async function generateImage() {
         if (inputs.useClipSkip && (isNaN(clipSkip) || clipSkip < -10 || clipSkip > -1))
             throw new Error("CLIP Skip harus antara -1 dan -10!");
 
+        // Checkpoints
         workflow["4"]["inputs"]["ckpt_name"] = checkpointSelect.value;
 
+        // LoRA
         if (inputs.useLoRA) {
             workflow["84"]["inputs"]["model"] = ["4", 0];
             workflow[inputs.useCheckpointCache ? "106" : "193"]["inputs"]["model"] = [
                 inputs.useCheckpointCache ? "84" : "106",
                 0,
             ];
+
+            if (inputs.useDMD2) workflow["84"]["inputs"]["lora_1"]["on"] = true;
+            else workflow["84"]["inputs"]["lora_1"]["on"] = false;
         } else {
             workflow[inputs.useCheckpointCache ? "106" : "193"]["inputs"]["model"] = ["4", 0];
         }
 
+        // CLIP Skip
         if (inputs.useClipSkip) {
+            // Custom CLIP
+            if (inputs.useCustomClip) workflow["76"]["inputs"]["clip"] = ["268", 0];
+            else workflow["76"]["inputs"]["clip"] = ["4", 1];
+
             workflow["76"]["inputs"]["stop_at_clip_layer"] = clipSkip;
-            workflow["76"]["inputs"]["clip"] = ["4", 1];
             workflow["84"]["inputs"]["clip"] = ["76", 0];
             workflow["103"]["inputs"]["clip"] = ["84", 1];
             workflow["259"]["inputs"]["clip"] = ["84", 1];
         } else {
-            workflow["84"]["inputs"]["clip"] = ["4", 1];
+            // Custom CLIP
+            if (inputs.useCustomClip) workflow["84"]["inputs"]["clip"] = ["268", 0];
+            else workflow["84"]["inputs"]["clip"] = ["4", 1];
+
             workflow["103"]["inputs"]["clip"] = ["84", 1];
             workflow["259"]["inputs"]["clip"] = ["84", 1];
         }
 
-        workflow["260"]["inputs"]["text"] = inputs.prompt;
-        workflow["171"]["inputs"]["custom_subject"] = inputs.prompt;
-        workflow["103"]["inputs"]["text"] = `embedding:Stable_Yogis_PDXL_Negatives-neg, embedding:negativeXL_D, ${
-            inputs.promptNegative || ""
-        }`;
-        workflow["218"]["inputs"]["cfg"] = cfg;
-        workflow["252"]["inputs"]["steps"] = steps;
-        workflow["221"]["inputs"]["sampler_name"] = samplerSelect.value;
+        // Prompt Generator
         workflow["178:1"]["inputs"]["boolean"] = inputs.useDynamicPrompt;
 
+        // Positive Prompt
+        workflow["260"]["inputs"]["text"] = inputs.prompt;
+        workflow["171"]["inputs"]["custom_subject"] = inputs.prompt;
+
+        // Negative Prompt
+        workflow["103"]["inputs"]["text"] = `${
+            inputs.promptNegative || ""
+        }, embedding:Stable_Yogis_PDXL_Negatives-neg, embedding:negativeXL_D`;
+
+        // CFG
+        workflow["218"]["inputs"]["cfg"] = cfg;
+
+        // Steps
+        workflow["252"]["inputs"]["steps"] = steps;
+
+        // Sampler
+        workflow["221"]["inputs"]["sampler_name"] = samplerSelect.value;
+
+        // Seeds
         let seed;
 
         if (inputs.useIncrementalSeed) {
@@ -557,11 +610,9 @@ async function generateImage() {
         currentSeedNum = seed;
         workflow["171"]["inputs"]["seed"] = Number(seed);
         workflow["222"]["inputs"]["noise_seed"] = Number(seed);
-
-        if (inputs.useUpscale) workflow["273"]["inputs"]["seed"] = Number(seed);
-
         document.getElementById("seed").value = Number(seed);
 
+        // Image Mode
         workflow["152"]["inputs"]["resolution"] =
             inputs.imageMode === "portrait"
                 ? "896x1152 (0.78)"
@@ -569,6 +620,7 @@ async function generateImage() {
                 ? "1152x896 (1.29)"
                 : "1024x1024 (1.0)";
 
+        // Filename
         const currentDate = new Date();
         const formattedDate = currentDate.toISOString().split("T")[0];
         const formattedTime = `${String(currentDate.getHours()).padStart(2, "0")}-${String(
@@ -578,6 +630,7 @@ async function generateImage() {
             "filename_prefix"
         ] = `webui-rated-r/${formattedDate}/${formattedTime}_${currentSeedNum}`;
 
+        // Upscaling
         if (inputs.useUpscale) {
             Object.assign(workflow, upscaleNodes);
 
@@ -607,7 +660,7 @@ async function generateImage() {
         let imageUrl = null,
             attempts = 0,
             delay = 1000,
-            maxAttempts = 60;
+            maxAttempts = 60; // masa tunggu 60 detik (1 menit)
 
         while (!imageUrl && attempts < maxAttempts) {
             await new Promise((resolve) => setTimeout(resolve, delay));
@@ -630,14 +683,19 @@ async function generateImage() {
         DOMCache.outputImage.style.display = "block";
         DOMCache.imageActions.style.display = "flex";
 
+        // Tampilkan informasi gambar
         const successMessage = `
             <details aria-expanded="false">
                 <summary style="color: #8effb0;">Informasi Gambar</summary>
                 <table class="success-table">
                     <tr><td>Positive Prompt:</td><td>${inputs.prompt}</td></tr>
                     <tr><td>Negative Prompt:</td><td>${inputs.promptNegative || "N/A"}</td></tr>
-                    <tr><td>CLIP Skip:</td><td>${inputs.useClipSkip ? inputs.clipSkip : "Tidak Digunakan"}</td></tr>
                     <tr><td>Checkpoint:</td><td>${checkpointSelect.value}</td></tr>
+                    <tr><td>Checkpoint Cache:</td><td>${inputs.useCheckpointCache ? "Aktif" : "Tidak Aktif"}</td></tr>
+                    <tr><td>Custom CLIP:</td><td>${inputs.useCustomClip ? "Aktif" : "Tidak Aktif"}</td></tr>
+                    <tr><td>CLIP Skip:</td><td>${inputs.useClipSkip ? inputs.clipSkip : "Tidak Digunakan"}</td></tr>
+                    <tr><td>LoRA:</td><td>${inputs.useLoRA ? "Aktif" : "Tidak Aktif"}</td></tr>
+                    <tr><td>DMD2:</td><td>${inputs.useDMD2 ? "Aktif" : "Tidak Aktif"}</td></tr>
                     <tr><td>Mode:</td><td>${inputs.imageMode.charAt(0).toUpperCase() + inputs.imageMode.slice(1)} - ${
             workflow["152"]["inputs"]["resolution"]
         }</td></tr>
@@ -645,8 +703,6 @@ async function generateImage() {
                     <tr><td>CFG:</td><td>${cfg}</td></tr>
                     <tr><td>Seed:</td><td>${currentSeedNum}</td></tr>
                     <tr><td>Sampler:</td><td>${samplerSelect.value}</td></tr>
-                    <tr><td>LoRA:</td><td>${inputs.useLoRA ? "Aktif" : "Tidak Aktif"}</td></tr>
-                    <tr><td>Checkpoint Cache:</td><td>${inputs.useCheckpointCache ? "Aktif" : "Tidak Aktif"}</td></tr>
                     <tr><td>Upscale:</td><td>${inputs.useUpscale ? "Aktif" : "Tidak Aktif"}</td></tr>
                 </table>
             </details>
@@ -654,15 +710,17 @@ async function generateImage() {
 
         showStatus(DOMCache.status, successMessage, "success");
 
+        // Simpan gambar dan seed ke localStorage
         localStorage.setItem("lastGeneratedImage", imageUrl);
         localStorage.setItem("lastSeed", currentSeedNum.toString());
 
+        // Acak Prompt
         if (inputs.alwaysRandomisePrompt) regenerateSelectedPreset();
 
         (async () => {
             try {
                 await loadImage(imageUrl);
-                window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" });
+                window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
             } catch (error) {
                 showError(DOMCache.error, `Gagal memuat gambar: ${error.message}`);
             }
@@ -699,6 +757,7 @@ async function deleteImage() {
 
     button.disabled = true;
 
+    // Menghapus Gambar
     try {
         const url = new URL(`${COMFYUI_URL}/comfyapi/v1/output-images/${encodeURIComponent(lastImageData.filename)}`);
 
@@ -743,6 +802,7 @@ async function clearImage() {
 
     button.disabled = true;
 
+    // Membersihkan Gambar
     try {
         if (document.getElementById("alwaysRandomisePrompt")?.checked) regenerateSelectedPreset();
 

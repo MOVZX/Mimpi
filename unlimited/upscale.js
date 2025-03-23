@@ -1,3 +1,4 @@
+// Upscalers
 const upscaleModels = [
     "4x-ClearRealityV1.pth",
     "4x-ESRGAN.pth",
@@ -6,6 +7,7 @@ const upscaleModels = [
     "4x_NMKD-Siax_200k.pth",
     "4x_NMKD-Superscale-SP_178000_G.pth",
     "4xFaceUpDAT.pth",
+    "4xFaceUpSharpLDAT.pth",
     "4xFFHQDAT.pth",
     "4xNMKDSuperscale_4xNMKDSuperscale.pt",
     "4xNomos2_otf_esrgan.pth",
@@ -17,6 +19,7 @@ const upscaleModels = [
     "RealESRGAN_x4plus.pth",
 ];
 
+// Upscaling Workflow
 const upscaleNodes = {
     272: {
         _meta: {
