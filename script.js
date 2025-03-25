@@ -1,4 +1,5 @@
 const COMFYUI_URL = "https://comfyui.blackmarch.net";
+const TOKEN = "$2b$12$DjTDRWrTlVeXtWEULcZVpefMfMcn2GplL8qikphsp1GRm5FqtOWkq";
 let currentSeedNum = 0;
 
 window.onload = function () {
@@ -264,7 +265,7 @@ async function generateImage() {
             useDynamicPrompt: useDynamicPrompt,
         });
 
-        const response = await fetch(`${COMFYUI_URL}/prompt`, {
+        const response = await fetch(`${COMFYUI_URL}/prompt?token=${TOKEN}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ prompt: workflow, client_id: "webapp" }),
@@ -281,7 +282,7 @@ async function generateImage() {
         while (!imageUrl && attempts < maxAttempts) {
             await new Promise((resolve) => setTimeout(resolve, 1000));
 
-            const historyResponse = await fetch(`${COMFYUI_URL}/history/${prompt_id}`);
+            const historyResponse = await fetch(`${COMFYUI_URL}/history/${prompt_id}?token=${TOKEN}`);
             const history = await historyResponse.json();
 
             console.log("History response:", history);
@@ -299,7 +300,7 @@ async function generateImage() {
                         imageData.subfolder !== undefined &&
                         imageData.type
                     ) {
-                        imageUrl = `${COMFYUI_URL}/view?filename=${imageData.filename}&subfolder=${imageData.subfolder}&type=${imageData.type}`;
+                        imageUrl = `${COMFYUI_URL}/view?filename=${imageData.filename}&subfolder=${imageData.subfolder}&type=${imageData.type}&token=${TOKEN}`;
                     } else {
                         console.log("Image data is missing required properties:", imageData);
                     }

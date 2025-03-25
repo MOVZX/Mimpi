@@ -1,5 +1,6 @@
 // Global variables
-const COMFYUI_URL = "http://gambar.ai:8188";
+const COMFYUI_URL = "https://comfyui.blackmarch.net";
+const TOKEN = "$2b$12$DjTDRWrTlVeXtWEULcZVpefMfMcn2GplL8qikphsp1GRm5FqtOWkq";
 const MAX_SEED = BigInt("9007199254740991");
 let currentSeedNum = 0;
 let lastImageData = null;
@@ -645,7 +646,7 @@ async function generateImage() {
             workflow["267"]["inputs"]["images"] = ["47", 0];
         }
 
-        const response = await fetch(`${COMFYUI_URL}/prompt`, {
+        const response = await fetch(`${COMFYUI_URL}/prompt?token=${TOKEN}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ prompt: workflow, client_id: "webapp" }),
@@ -666,11 +667,11 @@ async function generateImage() {
             await new Promise((resolve) => setTimeout(resolve, delay));
 
             delay = Math.min(delay * 1.5, 5000);
-            const history = await (await fetch(`${COMFYUI_URL}/history/${prompt_id}`)).json();
+            const history = await (await fetch(`${COMFYUI_URL}/history/${prompt_id}?token=${TOKEN}`)).json();
 
             if (history[prompt_id]?.outputs["267"]?.images?.[0]) {
                 const imageData = history[prompt_id].outputs["267"].images[0];
-                imageUrl = `${COMFYUI_URL}/view?filename=${imageData.filename}&subfolder=${imageData.subfolder}&type=${imageData.type}`;
+                imageUrl = `${COMFYUI_URL}/view?filename=${imageData.filename}&subfolder=${imageData.subfolder}&type=${imageData.type}&token=${TOKEN}`;
                 lastImageData = imageData;
             }
 
@@ -759,7 +760,7 @@ async function deleteImage() {
 
     // Menghapus Gambar
     try {
-        const url = new URL(`${COMFYUI_URL}/comfyapi/v1/output-images/${encodeURIComponent(lastImageData.filename)}`);
+        const url = new URL(`${COMFYUI_URL}/comfyapi/v1/output-images/${encodeURIComponent(lastImageData.filename)}?token=${TOKEN}`);
 
         url.searchParams.append("temp", "false");
         url.searchParams.append("subfolder", lastImageData.subfolder);

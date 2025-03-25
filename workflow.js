@@ -171,6 +171,7 @@ const workflow = {
             censor_method: "pixelate",
             min_score: 0.1,
             blocks: 3,
+            block_count_scaling: "fixed",
             overlay_strength: 1,
             nudenet_model: ["71", 0],
             image: ["19", 0],
@@ -180,7 +181,7 @@ const workflow = {
     },
     75: {
         inputs: {
-            filename_prefix: "",
+            filename_prefix: "ComfyUI",
             images: ["73", 0],
         },
         class_type: "SaveImage",
