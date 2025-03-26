@@ -26,7 +26,7 @@ const mainPresets = {
 
 if (isUnlocked) {
     document.getElementById("prompt").value =
-        "1girl, solo, 30-year-old woman, feathered blonde hair, wearing decent hijab dress, bedroom, intricate details, instagram, looking at viewer, portrait, full upper body close view, high-resolution, best quality";
+        "1girl, solo, 30-year-old woman, feathered blonde hair, wearing decent hijab dress, bedroom, intricate details, instagram, dynamic pose, looking at viewer, portrait, full upper body close view, high-resolution, best quality";
 } else {
     document.getElementById("prompt").value =
         "A highly detailed, real-life photograph of a cat. The image features accurate anatomy, realistic textures of fur, feathers, or skin, lifelike eyes, and natural lighting. No mythical or fantasy creatures, only existing animals, depicted in a sharp, vibrant, 8k resolution with highest quality.";
@@ -871,12 +871,12 @@ async function deleteImage() {
 }
 
 /**
- * Fungsi untuk membersihkan gambar yang sedang ditampilkan.
+ * Fungsi untuk mengunduh gambar yang dihasilkan.
  *
- * Fungsi ini akan mengatur status, menonaktifkan tombol clear,
- * membersihkan gambar, dan menampilkan status sukses jika proses
- * membersihkan gambar berhasil. Jika proses membersihkan gambar
- * gagal, maka akan menampilkan error.
+ * Fungsi ini akan mengunduh gambar yang dihasilkan
+ * dengan menggunakan nama file `generated-image-<nomor-seed>.png`.
+ * Jika proses mengunduh gambar gagal, maka akan
+ * menampilkan error.
  *
  * @async
  * @returns {void}

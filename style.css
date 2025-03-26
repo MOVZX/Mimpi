@@ -245,7 +245,6 @@ details > div {
 .success-table {
     border-collapse: collapse;
     width: 100%;
-    max-width: 600px;
     background-color: rgba(255, 255, 255, 0.05);
     border: 2px solid #4caf50;
     border-radius: 8px;
