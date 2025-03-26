@@ -1,107 +1,107 @@
+// Main Workflow
 const workflow = {
     4: {
-        inputs: {
-            ckpt_name: "SDXL-Lightning/realvisxlV50_v50LightningBakedvae.safetensors",
-        },
         class_type: "CheckpointLoaderSimple",
-    },
-    10: {
         inputs: {
+            ckpt_name: "SDXL-Lightning/lustifySDXLNSFW_v40DMD2.safetensors",
+        },
+    },
+    47: {
+        class_type: "VAEDecode",
+        inputs: {
+            samples: ["220", 0],
+            vae: ["4", 2],
+        },
+    },
+    76: {
+        class_type: "CLIPSetLastLayer",
+        inputs: {
+            clip: ["4", 1],
+            stop_at_clip_layer: -2,
+        },
+    },
+    84: {
+        class_type: "Power Lora Loader (rgthree)",
+        inputs: {
+            "➕ Add Lora": "",
+            clip: ["76", 0],
+            lora_1: {
+                on: false,
+                lora: "DMD2/dmd2_sdxl_4step_lora_fp16.safetensors",
+                strength: 1,
+            },
+            lora_2: {
+                on: true,
+                lora: "SDXL/add-detail-xl.safetensors",
+                strength: 0.95,
+            },
+            lora_3: {
+                on: true,
+                lora: "SDXL/Breast Slider - Pony_alpha1.0_rank4_noxattn_last.safetensors",
+                strength: 0.85,
+            },
+            lora_4: {
+                on: true,
+                lora: "SDXL/Beautify-Supermodel-SDXL.safetensors",
+                strength: 0.8,
+            },
+            model: ["4", 0],
             PowerLoraLoaderHeaderWidget: {
                 type: "PowerLoraLoaderHeaderWidget",
             },
-            lora_1: {
-                on: true,
-                lora: "SDXL/detailer_v5.safetensors",
-                strength: 1,
-            },
-            "➕ Add Lora": "",
-            model: ["4", 0],
-            clip: ["21", 0],
         },
-        class_type: "Power Lora Loader (rgthree)",
     },
-    11: {
+    103: {
+        class_type: "CLIPTextEncode",
         inputs: {
-            object_to_patch: "diffusion_model",
-            residual_diff_threshold: 0.20000000000000004,
-            start: 0,
+            clip: ["84", 1],
+            text: "",
+        },
+    },
+    106: {
+        class_type: "ApplyFBCacheOnModel",
+        inputs: {
             end: 1,
             max_consecutive_cache_hits: -1,
-            model: ["10", 0],
+            model: ["84", 0],
+            object_to_patch: "diffusion_model",
+            residual_diff_threshold: 0.2,
+            start: 0,
         },
-        class_type: "ApplyFBCacheOnModel",
     },
-    15: {
-        inputs: {
-            text: "(nsfw:1.6), (porn:1.6), (nude:1.6), (nudity:1.6), (sexy:1.6), (sensual:1.6), (breast:1.6), (tits:1.6), (skimpy:1.6), (bikini:1.6), (cleavage:1.6), gore, horror, simple background, embedding:negativeXL_D",
-            clip: ["16", 0],
-        },
-        class_type: "CLIPTextEncode",
-    },
-    16: {
-        inputs: {
-            stop_at_clip_layer: -2,
-            clip: ["10", 1],
-        },
-        class_type: "CLIPSetLastLayer",
-    },
-    17: {
-        inputs: {
-            seed: 0,
-            steps: 8,
-            cfg: 1,
-            sampler_name: "euler_ancestral",
-            scheduler: "normal",
-            denoise: 1,
-            model: ["38", 0],
-            positive: ["70:2", 0],
-            negative: ["15", 0],
-            latent_image: ["18", 0],
-        },
-        class_type: "KSampler",
-    },
-    18: {
-        inputs: {
-            resolution: "896x1152 (0.78)",
-            batch_size: 1,
-            width_override: 0,
-            height_override: 0,
-        },
+    152: {
         class_type: "SDXLEmptyLatentSizePicker+",
-    },
-    19: {
         inputs: {
-            samples: ["17", 0],
-            vae: ["4", 2],
+            batch_size: 1,
+            height_override: 0,
+            resolution: "896x1152 (0.78)",
+            width_override: 0,
         },
-        class_type: "VAEDecode",
     },
-    21: {
+    171: {
+        class_type: "IsulionMegaPromptV3",
         inputs: {
-            clip_name1: "ViT-L-14-REG-TE-only-balanced-HF-format-ckpt12.safetensors",
-            clip_name2: "clip_g.safetensors",
-            type: "sdxl",
-            device: "default",
-        },
-        class_type: "DualCLIPLoader",
-    },
-    22: {
-        inputs: {
-            theme: "🎲 Dynamic Random",
             complexity: "complex",
-            randomize: "enable",
-            debug_mode: "off",
-            seed: 0,
-            custom_subject: "",
             custom_location: "",
+            custom_subject: ["260", 0],
+            debug_mode: "off",
+            include_effects: "yes",
             include_environment: "yes",
             include_style: "yes",
-            include_effects: "no",
+            randomize: "enable",
+            seed: 0,
+            theme: "🎲 Dynamic Random",
         },
-        class_type: "IsulionMegaPromptV3",
     },
-    38: {
+    "178:1": {
+        class_type: "Switch any [Crystools]",
+        inputs: {
+            boolean: false,
+            on_false: ["260", 0],
+            on_true: ["171", 0],
+        },
+    },
+    193: {
         inputs: {
             is_patcher: true,
             object_to_patch: "diffusion_model",
@@ -112,99 +112,76 @@ const workflow = {
             options: "",
             disable: false,
             backend: "inductor",
-            model: ["11", 0],
+            model: ["106", 0],
         },
         class_type: "EnhancedCompileModel",
     },
-    56: {
+    218: {
+        class_type: "CFGGuider",
         inputs: {
-            text: "",
+            cfg: 1,
+            model: ["193", 0],
+            negative: ["103", 0],
+            positive: ["259", 0],
         },
-        class_type: "Text Multiline",
     },
-    57: {
+    220: {
+        class_type: "SamplerCustomAdvanced",
         inputs: {
-            text: "detailerlora, best quality, highly detailed, hyper realistic, 8K resolution, ultra detail, raytracing",
+            guider: ["218", 0],
+            latent_image: ["152", 0],
+            noise: ["222", 0],
+            sampler: ["221", 0],
+            sigmas: ["252", 0],
         },
-        class_type: "Text Multiline",
     },
-    59: {
+    221: {
+        class_type: "KSamplerSelect",
         inputs: {
-            delimiter: ", ",
-            clean_whitespace: "true",
-            text_a: ["56", 0],
-            text_b: ["57", 0],
+            sampler_name: "lcm",
         },
-        class_type: "Text Concatenate",
     },
-    71: {
+    222: {
+        class_type: "RandomNoise",
         inputs: {
-            model: "nudenet.onnx",
+            noise_seed: 0,
         },
-        class_type: "NudenetModelLoader",
     },
-    72: {
+    252: {
+        class_type: "AlignYourStepsScheduler",
         inputs: {
-            FEMALE_GENITALIA_COVERED: true,
-            FACE_FEMALE: false,
-            BUTTOCKS_EXPOSED: true,
-            FEMALE_BREAST_EXPOSED: true,
-            FEMALE_GENITALIA_EXPOSED: true,
-            MALE_BREAST_EXPOSED: true,
-            ANUS_EXPOSED: true,
-            FEET_EXPOSED: false,
-            BELLY_COVERED: false,
-            FEET_COVERED: false,
-            ARMPITS_COVERED: false,
-            ARMPITS_EXPOSED: false,
-            FACE_MALE: false,
-            BELLY_EXPOSED: true,
-            MALE_GENITALIA_EXPOSED: true,
-            ANUS_COVERED: true,
-            FEMALE_BREAST_COVERED: false,
-            BUTTOCKS_COVERED: true,
+            denoise: 1,
+            model_type: "SDXL",
+            steps: 11,
         },
-        class_type: "FilterdLabel",
     },
-    73: {
-        inputs: {
-            censor_method: "pixelate",
-            min_score: 0.1,
-            blocks: 3,
-            block_count_scaling: "fixed",
-            overlay_strength: 1,
-            nudenet_model: ["71", 0],
-            image: ["19", 0],
-            filtered_labels: ["72", 0],
-        },
-        class_type: "ApplyNudenet",
-    },
-    75: {
-        inputs: {
-            filename_prefix: "ComfyUI",
-            images: ["73", 0],
-        },
-        class_type: "SaveImage",
-    },
-    "70:0": {
-        inputs: {
-            text: ["59", 0],
-        },
-        class_type: "Text Multiline",
-    },
-    "70:1": {
-        inputs: {
-            boolean: false,
-            on_true: ["22", 0],
-            on_false: ["70:0", 0],
-        },
-        class_type: "Switch any [Crystools]",
-    },
-    "70:2": {
-        inputs: {
-            text: ["70:1", 0],
-            clip: ["16", 0],
-        },
+    259: {
         class_type: "CLIPTextEncode",
+        inputs: {
+            clip: ["84", 1],
+            text: ["178:1", 0],
+        },
+    },
+    260: {
+        class_type: "Text Multiline",
+        inputs: {
+            text: "1girl, solo, 30-year-old stunningly beautiful woman, feathered strawberry blonde hair, nun, blowjob, cum on face, cum dripping from her mouth, tongue out, living room, intricate details, realistic skin textures, skin pores, high resolution, best quality, real human aesthetic, bright lighting",
+        },
+    },
+    267: {
+        class_type: "SaveImage",
+        inputs: {
+            filename_prefix: "",
+            images: ["274", 0],
+        },
+    },
+    268: {
+        inputs: {
+            clip_name1: "Long-ViT-L-14-REG-TE-only-HF-format.safetensors",
+            clip_name2: "clip_g.safetensors",
+            type: "sdxl",
+            device: "default",
+        },
+        class_type: "DualCLIPLoader",
     },
 };

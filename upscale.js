@@ -22,18 +22,12 @@ const upscaleModels = [
 // Upscaling Workflow
 const upscaleNodes = {
     272: {
-        _meta: {
-            title: "Load Upscale Model",
-        },
         class_type: "UpscaleModelLoader",
         inputs: {
             model_name: "4x-ClearRealityV1.pth",
         },
     },
     273: {
-        _meta: {
-            title: "Ultimate SD Upscale",
-        },
         class_type: "UltimateSDUpscale",
         inputs: {
             cfg: 1,
@@ -64,9 +58,6 @@ const upscaleNodes = {
         },
     },
     274: {
-        _meta: {
-            title: "Switch",
-        },
         class_type: "Any Switch (rgthree)",
         inputs: {
             any_01: ["273", 0],

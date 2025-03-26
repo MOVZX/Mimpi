@@ -8,7 +8,7 @@ body {
 }
 
 .container {
-    max-width: 600px;
+    max-width: 720px;
     margin: 0 auto;
     background: rgba(255, 255, 255, 0.05);
     padding: 30px;
@@ -17,18 +17,16 @@ body {
     backdrop-filter: blur(10px);
 }
 
-h1 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     text-align: center;
     color: #00d4ff;
     text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
-    margin-bottom: 30px;
-}
-
-h2 {
-    text-align: center;
-    color: #00d4ff;
-    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
-    margin-bottom: 30px;
+    /*     margin-bottom: 30px; */
 }
 
 .form-group {
@@ -138,14 +136,7 @@ img {
     margin-top: 20px;
     border-radius: 8px;
     box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
-}
-
-#status {
-    margin-top: 20px;
-    text-align: center;
-    padding: 10px;
-    border-radius: 8px;
-    display: none;
+    cursor: pointer;
 }
 
 #error {
@@ -156,11 +147,6 @@ img {
     display: none;
     background: rgba(255, 0, 0, 0.1);
     color: #ff4444;
-}
-
-.success {
-    background: rgba(0, 255, 0, 0.1);
-    color: #00ff00;
 }
 
 .image-actions {
@@ -174,15 +160,19 @@ img {
     width: 100%;
     padding: 8px;
     font-size: 16px;
-    background: linear-gradient(45deg, #00d4ff, #00ff00);
+    background: linear-gradient(45deg, #bb4f4f, #af1919);
     margin-top: 0;
 }
 
-.image-actions button.preview {
-    background: linear-gradient(45deg, #ff00ff, #00d4ff);
+.image-actions button.clear {
+    background: linear-gradient(45deg, #3a9aad, #2ea77e);
 }
 
-/* Custom styles for the expandable section */
+.image-actions button.clear:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+}
+
 details {
     margin-bottom: 20px;
 }
@@ -214,7 +204,6 @@ details > div {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Lightbox Styles */
 .lightbox {
     display: none;
     position: fixed;
@@ -227,6 +216,7 @@ details > div {
     justify-content: center;
     align-items: center;
     overflow: auto;
+    margin: 0;
 }
 
 .lightbox img {
@@ -250,4 +240,94 @@ details > div {
 
 .lightbox .close:hover {
     color: #00d4ff;
+}
+
+.success-table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 600px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 2px solid #4caf50;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    margin: 10px 0;
+    color: #fff;
+    text-align: left;
+}
+
+.success-table th {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-size: 1.2em;
+    border-bottom: 2px solid #fff;
+}
+
+.success-table td {
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    vertical-align: top;
+}
+
+.success-table tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.success-table tr:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.success-table td:first-child {
+    width: 120px;
+    font-weight: bold;
+    text-align: right;
+    background-color: rgba(76, 175, 80, 0.2);
+    white-space: nowrap;
+}
+
+.success-table td:nth-child(2) {
+    max-width: 0;
+    word-wrap: break-word;
+    padding-left: 15px;
+}
+
+details[open] .success-table {
+    margin-top: 10px;
+}
+
+#status {
+    /*     padding: 10px; */
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1.2em;
+    color: #fff;
+}
+
+#subcategory-container-sfw,
+#subcategory-container-nsfw,
+#subcategory-container {
+    margin-top: 10px;
+}
+
+#sfw-preset,
+#preset,
+#main-preset {
+    background: rgba(255, 255, 255, 0.08);
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+}
+
+#upscalerFormGroup,
+#clipSkipFormGroup {
+    display: none; /* Hidden by default */
+}
+
+#upscalerFormGroup.visible,
+#clipSkipFormGroup.visible {
+    display: flex;
 }
