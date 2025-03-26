@@ -642,13 +642,12 @@ async function generateImage() {
         workflow["178:1"]["inputs"]["boolean"] = inputs.useDynamicPrompt;
 
         // Positive Prompt
-        workflow["260"]["inputs"]["text"] = inputs.prompt;
-        workflow["171"]["inputs"]["custom_subject"] = inputs.prompt;
+        workflow["278"]["inputs"]["prompt"] = inputs.prompt;
 
         // Negative Prompt
         workflow["103"]["inputs"]["text"] = `${
             inputs.promptNegative || ""
-        }, , embedding:Stable_Yogis_PDXL_Negatives-neg, embedding:CyberRealistic_Negative_SDXL-neg`;
+        }, embedding:Stable_Yogis_PDXL_Negatives-neg, embedding:CyberRealistic_Negative_SDXL-neg`;
 
         // CFG
         workflow["218"]["inputs"]["cfg"] = cfg;

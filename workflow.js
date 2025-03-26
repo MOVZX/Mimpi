@@ -83,7 +83,7 @@ const workflow = {
         inputs: {
             complexity: "complex",
             custom_location: "",
-            custom_subject: ["260", 0],
+            custom_subject: ["278", 0],
             debug_mode: "off",
             include_effects: "yes",
             include_environment: "yes",
@@ -97,7 +97,7 @@ const workflow = {
         class_type: "Switch any [Crystools]",
         inputs: {
             boolean: false,
-            on_false: ["260", 0],
+            on_false: ["278", 0],
             on_true: ["171", 0],
         },
     },
@@ -162,12 +162,6 @@ const workflow = {
             text: ["178:1", 0],
         },
     },
-    260: {
-        class_type: "Text Multiline",
-        inputs: {
-            text: "1girl, solo, 30-year-old stunningly beautiful woman, feathered strawberry blonde hair, nun, blowjob, cum on face, cum dripping from her mouth, tongue out, living room, intricate details, realistic skin textures, skin pores, high resolution, best quality, real human aesthetic, bright lighting",
-        },
-    },
     267: {
         class_type: "SaveImage",
         inputs: {
@@ -183,5 +177,11 @@ const workflow = {
             device: "default",
         },
         class_type: "DualCLIPLoader",
+    },
+    278: {
+        inputs: {
+            prompt: "",
+        },
+        class_type: "Prompt Text (Auto Translate)",
     },
 };
