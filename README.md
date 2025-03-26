@@ -18,6 +18,7 @@ This project provides a user-friendly web interface to interact with the ComfyUI
 2. API Communication: The backend sends the input data to the ComfyUI API.
 3. Image Generation: ComfyUI processes the request and generates the image.
 4. Result Display: The generated image is displayed on the web interface for download or further editing.
+5. To get the **NSFW/Unrestricted** access add ``?unlock`` to the URL, e.g. http://localhost:8000/?unlock
 
 # Installation and Setup
 
@@ -39,7 +40,7 @@ python -m http.server 8000
 
 > [!NOTE]
 > **Personal Motivation**
-> 
+>
 > This project was initially created out of my own need for convenience. As someone who frequently uses ComfyUI for image generation, I found it cumbersome to rely on desktop setups or manually configure parameters through the API. I wanted a simpler way to interact with ComfyUI directly from my smartphone, allowing me to generate images on the go without needing access to a full desktop environment.
 >
 > With this web interface, I achieved a streamlined workflow that works seamlessly on mobile devices. Whether I'm commuting, traveling, or simply away from my computer, I can now generate high-quality images anytime, anywhere, using just my phone.
