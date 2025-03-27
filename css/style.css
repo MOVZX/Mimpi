@@ -330,3 +330,12 @@ details[open] .success-table {
 #clipSkipFormGroup.visible {
     display: flex;
 }
+
+.footer {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 100%;
+    text-align: center;
+  }

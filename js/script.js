@@ -29,7 +29,7 @@ if (isUnlocked) {
         "1girl, solo, 30-year-old woman, feathered blonde hair, wearing decent hijab dress, bedroom, intricate details, instagram, dynamic pose, looking at viewer, portrait, full upper body close view, high-resolution, best quality";
 } else {
     document.getElementById("prompt").value =
-        "A highly detailed, real-life photograph of a cat. The image features accurate anatomy, realistic textures of fur, feathers, or skin, lifelike eyes, and natural lighting. No mythical or fantasy creatures, only existing animals, depicted in a sharp, vibrant, 8k resolution with highest quality.";
+        "Foto kucing yang sangat detail dan nyata. Gambar tersebut menampilkan anatomi yang akurat, tekstur bulu, bulu halus, atau kulit yang realistis, mata yang tampak nyata, dan pencahayaan alami. Tidak ada makhluk mitos atau fantasi, hanya hewan yang ada, yang digambarkan dalam resolusi 8k yang tajam dan cemerlang dengan kualitas terbaik.";
 
     const useDynamicPromptCheckbox = document.getElementById("useDynamicPrompt");
 
@@ -596,6 +596,8 @@ async function generateImage() {
         workflow["4"]["inputs"]["ckpt_name"] = checkpointSelect.value;
 
         // LoRA
+        Object.assign(workflow, loras);
+
         if (inputs.useLoRA) {
             workflow[inputs.useCheckpointCache ? "106" : "193"]["inputs"]["model"] = [
                 inputs.useCheckpointCache ? "84" : "106",

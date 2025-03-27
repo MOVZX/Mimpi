@@ -1,51 +1,9 @@
 // NSFW Presets
-
-function RandomiseRooms() {
-    const rooms = [
-        "bedroom",
-        "living room",
-        "bathroom",
-        "shower",
-        "kitchen",
-        "hot tub",
-        "balcony",
-        "hotel room",
-        "rooftop",
-        "master suite",
-        "jacuzzi room",
-        "attic",
-        "library",
-        "wine cellar",
-        "fireplace lounge",
-        "private pool",
-        "sauna",
-        "sunroom",
-        "loft",
-        "candlelit bath",
-        "penthouse suite",
-        "secluded cabin",
-        "massage room",
-        "velvet lounge",
-        "garden gazebo",
-        "private terrace",
-        "mirrored room",
-        "art studio",
-        "yacht cabin",
-        "hidden nook",
-        "church",
-        "woods cottage",
-        "dining room",
-        "patio",
-    ];
-
-    return rooms[Math.floor(Math.random() * rooms.length)];
-}
-
 const NSFWPresets = {
     none: { label: "Tidak Ada", prompts: {} },
     amateur: {
         label: "Amateur",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -120,7 +78,7 @@ const NSFWPresets = {
     },
     asian: {
         label: "Asian",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -345,7 +303,7 @@ const NSFWPresets = {
     },
     bdsm: {
         label: "BDSM",
-        prompts: generatePrompts("dungeon", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -495,7 +453,7 @@ const NSFWPresets = {
     },
     creampie: {
         label: "Creampie",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -570,7 +528,7 @@ const NSFWPresets = {
     },
     "cum on face": {
         label: "Cum on Face",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -645,7 +603,7 @@ const NSFWPresets = {
     },
     "cumshot on tongue": {
         label: "Cumshot on Tongue",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -720,7 +678,7 @@ const NSFWPresets = {
     },
     deepthroat: {
         label: "Deepthroat",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -795,7 +753,7 @@ const NSFWPresets = {
     },
     dildo: {
         label: "Dildo",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -870,7 +828,7 @@ const NSFWPresets = {
     },
     doggystyle: {
         label: "Doggystyle",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -945,7 +903,7 @@ const NSFWPresets = {
     },
     "female orgasm": {
         label: "Female Orgasm",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -1020,7 +978,7 @@ const NSFWPresets = {
     },
     "from behind": {
         label: "From Behind",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -1095,7 +1053,7 @@ const NSFWPresets = {
     },
     hijab: {
         label: "Hijab",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -1254,7 +1212,7 @@ const NSFWPresets = {
     },
     homemade: {
         label: "Homemade",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -1329,7 +1287,7 @@ const NSFWPresets = {
     },
     housewife: {
         label: "Housewife",
-        prompts: generatePrompts("kitchen", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -1404,7 +1362,7 @@ const NSFWPresets = {
     },
     japanese: {
         label: "Japanese",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -1554,7 +1512,7 @@ const NSFWPresets = {
     },
     "kneeling blowjob": {
         label: "Kneeling Blowjob",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -1629,7 +1587,7 @@ const NSFWPresets = {
     },
     "kneeling tongue out": {
         label: "Kneeling Tongue Out",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -1704,7 +1662,7 @@ const NSFWPresets = {
     },
     korean: {
         label: "Korean",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -1854,7 +1812,7 @@ const NSFWPresets = {
     },
     "mirror selfie": {
         label: "Mirror Selfie",
-        prompts: generatePrompts("bathroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -1929,7 +1887,7 @@ const NSFWPresets = {
     },
     "missionary passion": {
         label: "Missionary Passion",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -2004,7 +1962,7 @@ const NSFWPresets = {
     },
     nun: {
         label: "Nun",
-        prompts: generatePrompts(RandomiseRooms(), [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -2163,7 +2121,7 @@ const NSFWPresets = {
     },
     nurses: {
         label: "Nurses",
-        prompts: generatePrompts("hospital room", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -2313,7 +2271,7 @@ const NSFWPresets = {
     },
     penetration: {
         label: "Penetration",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -2388,7 +2346,7 @@ const NSFWPresets = {
     },
     "pov blowjob": {
         label: "POV Blowjob",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -2463,7 +2421,7 @@ const NSFWPresets = {
     },
     pregnant: {
         label: "Pregnant",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -2688,7 +2646,7 @@ const NSFWPresets = {
     },
     "spread legs": {
         label: "Spread Legs",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -2763,7 +2721,7 @@ const NSFWPresets = {
     },
     stockings: {
         label: "Stockings",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -2838,7 +2796,7 @@ const NSFWPresets = {
     },
     "strip tease": {
         label: "Strip Tease",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -2913,7 +2871,7 @@ const NSFWPresets = {
     },
     "sweaty sex": {
         label: "Sweaty Sex",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -2988,7 +2946,7 @@ const NSFWPresets = {
     },
     teachers: {
         label: "Teachers",
-        prompts: generatePrompts("classroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -3063,7 +3021,7 @@ const NSFWPresets = {
     },
     vibrator: {
         label: "Vibrator",
-        prompts: generatePrompts("bedroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -3138,7 +3096,7 @@ const NSFWPresets = {
     },
     wet: {
         label: "Wet",
-        prompts: generatePrompts("bathroom", [
+        prompts: generatePrompts(randomRooms(), [
             {
                 hairstyle: randomHairStyles(),
                 haircolour: randomHairColours(),
@@ -3251,6 +3209,16 @@ function randomHairAdjective() {
  */
 function randomAge() {
     return (Math.random() * 13) | 25;
+}
+
+/**
+ * Fungsi untuk memilih ruangan secara acak.
+ *
+ * @description Fungsi ini mengembalikan ruangan secara acak dari daftar ruangan.
+ * @returns {string} Ruangan yang dipilih secara acak.
+ */
+function randomRooms() {
+    return rooms[Math.floor(Math.random() * rooms.length)];
 }
 
 /**
