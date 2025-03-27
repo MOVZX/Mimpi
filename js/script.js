@@ -210,11 +210,9 @@ function populateDropdowns() {
         const upscalerFormGroup = document.createElement("div");
         upscalerFormGroup.id = "upscalerFormGroup";
         upscalerFormGroup.className = "form-group";
-
         const upscalerLabel = document.createElement("label");
         upscalerLabel.htmlFor = "upscaler";
         upscalerLabel.textContent = "Upscaler";
-
         const upscalerSelect = document.createElement("select");
         upscalerSelect.id = "upscaler";
         upscalerSelect.name = "upscaler";
@@ -233,6 +231,32 @@ function populateDropdowns() {
         upscalerFormGroup.appendChild(upscalerSelect);
         detailsContent.appendChild(upscalerFormGroup);
     }
+
+    // LoRA Options (already exists in HTML, so we'll populate it)
+    const loraOptions = ["Detail Tweaker", "Breast Slider", "Beautify Supermodel"];
+    const loraFormGroup = document.getElementById("loraFormGroup");
+    const loraCheckboxGroup = document.createElement("div");
+    loraCheckboxGroup.className = "form-group";
+
+    loraOptions.forEach((option, index) => {
+        const checkboxWrapper = document.createElement("div");
+        checkboxWrapper.className = "checkbox-wrapper";
+
+        const input = document.createElement("input");
+        input.type = "checkbox";
+        input.id = `useLoRA${index + 1}`;
+        input.checked = true;
+
+        const label = document.createElement("label");
+        label.htmlFor = `useLoRA${index + 1}`;
+        label.textContent = option;
+
+        checkboxWrapper.appendChild(input);
+        checkboxWrapper.appendChild(label);
+        loraCheckboxGroup.appendChild(checkboxWrapper);
+    });
+
+    loraFormGroup.appendChild(loraCheckboxGroup);
 }
 
 /**
@@ -435,6 +459,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const cfgSelect = document.getElementById("cfg");
     const useUpscaleCheckbox = document.getElementById("useUpscale");
     const upscalerFormGroup = document.getElementById("upscalerFormGroup");
+    const loraFormGroup = document.getElementById("loraFormGroup");
     const clipSkipFormGroup = document.getElementById("clipSkipFormGroup");
     const useDynamicSeedCheckbox = document.getElementById("useDynamicSeed");
     const useIncrementalSeedCheckbox = document.getElementById("useIncrementalSeed");
@@ -486,6 +511,12 @@ document.addEventListener("DOMContentLoaded", () => {
             workflow["221"]["inputs"]["sampler_name"] = samplerSelect.value;
         });
     }
+
+    // LoRAs
+    loraFormGroup?.classList.toggle("visible", useLoRASelect?.checked ?? false);
+    useLoRASelect?.addEventListener("change", () => {
+        loraFormGroup?.classList.toggle("visible", useLoRASelect.checked);
+    });
 
     // CLIP Skip
     clipSkipFormGroup?.classList.toggle("visible", useClipSkipSelect?.checked ?? false);
@@ -598,6 +629,10 @@ async function generateImage() {
         // LoRA
         Object.assign(workflow, loras);
 
+        const useLoRA1 = document.getElementById("useLoRA1")?.checked;
+        const useLoRA2 = document.getElementById("useLoRA2")?.checked;
+        const useLoRA3 = document.getElementById("useLoRA3")?.checked;
+
         if (inputs.useLoRA) {
             workflow[inputs.useCheckpointCache ? "106" : "193"]["inputs"]["model"] = [
                 inputs.useCheckpointCache ? "84" : "106",
@@ -607,9 +642,14 @@ async function generateImage() {
             if (inputs.useDMD2) workflow["84"]["inputs"]["lora_1"]["on"] = true;
             else workflow["84"]["inputs"]["lora_1"]["on"] = false;
 
-            workflow["84"]["inputs"]["lora_2"]["on"] = true;
-            workflow["84"]["inputs"]["lora_3"]["on"] = true;
-            workflow["84"]["inputs"]["lora_4"]["on"] = true;
+            if (useLoRA1) workflow["84"]["inputs"]["lora_2"]["on"] = true;
+            else workflow["84"]["inputs"]["lora_2"]["on"] = false;
+
+            if (useLoRA2) workflow["84"]["inputs"]["lora_3"]["on"] = true;
+            else workflow["84"]["inputs"]["lora_3"]["on"] = false;
+
+            if (useLoRA3) workflow["84"]["inputs"]["lora_4"]["on"] = true;
+            else workflow["84"]["inputs"]["lora_4"]["on"] = false;
         } else {
             workflow[inputs.useCheckpointCache ? "106" : "193"]["inputs"]["model"] = ["84", 0];
 

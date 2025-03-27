@@ -322,12 +322,18 @@ details[open] .success-table {
 }
 
 #upscalerFormGroup,
-#clipSkipFormGroup {
+#clipSkipFormGroup,
+#loraFormGroup {
     display: none; /* Hidden by default */
 }
 
 #upscalerFormGroup.visible,
 #clipSkipFormGroup.visible {
+    display: flex;
+}
+
+#loraFormGroup.visible,
+#loraFormGroup.visible {
     display: flex;
 }
 
@@ -338,4 +344,4 @@ details[open] .success-table {
     margin: auto;
     width: 100%;
     text-align: center;
-  }
+}

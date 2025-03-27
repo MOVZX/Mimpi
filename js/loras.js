@@ -1,3 +1,10 @@
+// Upscalers
+const lorasModels = [
+    "SDXL/add-detail-xl.safetensors",
+    "SDXL/Breast Slider - Pony_alpha1.0_rank4_noxattn_last.safetensors",
+    "SDXL/Beautify-Supermodel-SDXL.safetensors",
+];
+
 // Main Workflow
 const loras = {
     84: {
@@ -11,17 +18,17 @@ const loras = {
                 strength: 1,
             },
             lora_2: {
-                on: true,
+                on: false,
                 lora: "SDXL/add-detail-xl.safetensors",
                 strength: 0.95,
             },
             lora_3: {
-                on: true,
+                on: false,
                 lora: "SDXL/Breast Slider - Pony_alpha1.0_rank4_noxattn_last.safetensors",
                 strength: 0.85,
             },
             lora_4: {
-                on: true,
+                on: false,
                 lora: "SDXL/Beautify-Supermodel-SDXL.safetensors",
                 strength: 0.8,
             },
