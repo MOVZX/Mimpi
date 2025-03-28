@@ -40,7 +40,7 @@ const upscaleNodes = {
             negative: ["103", 0],
             positive: ["259", 0],
             sampler_name: "lcm",
-            scheduler: "normal",
+            scheduler: "exponential",
             seam_fix_denoise: 1,
             seam_fix_mask_blur: 8,
             seam_fix_mode: "None",

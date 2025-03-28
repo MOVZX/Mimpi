@@ -3,13 +3,13 @@ const workflow = {
     4: {
         class_type: "CheckpointLoaderSimple",
         inputs: {
-            ckpt_name: "SDXL-Lightning/lustifySDXLNSFW_v40DMD2.safetensors",
+            ckpt_name: "SDXL/realisticLustXL_v05.safetensors",
         },
     },
     47: {
         class_type: "VAEDecode",
         inputs: {
-            samples: ["220", 0],
+            samples: ["279", 0],
             vae: ["4", 2],
         },
     },
@@ -43,7 +43,7 @@ const workflow = {
         inputs: {
             batch_size: 1,
             height_override: 0,
-            resolution: "896x1152 (0.78)",
+            resolution: "1024x1536 (0.67)",
             width_override: 0,
         },
     },
@@ -85,45 +85,6 @@ const workflow = {
         },
         class_type: "EnhancedCompileModel",
     },
-    218: {
-        class_type: "CFGGuider",
-        inputs: {
-            cfg: 1,
-            model: ["193", 0],
-            negative: ["103", 0],
-            positive: ["259", 0],
-        },
-    },
-    220: {
-        class_type: "SamplerCustomAdvanced",
-        inputs: {
-            guider: ["218", 0],
-            latent_image: ["152", 0],
-            noise: ["222", 0],
-            sampler: ["221", 0],
-            sigmas: ["252", 0],
-        },
-    },
-    221: {
-        class_type: "KSamplerSelect",
-        inputs: {
-            sampler_name: "lcm",
-        },
-    },
-    222: {
-        class_type: "RandomNoise",
-        inputs: {
-            noise_seed: 0,
-        },
-    },
-    252: {
-        class_type: "AlignYourStepsScheduler",
-        inputs: {
-            denoise: 1,
-            model_type: "SDXL",
-            steps: 11,
-        },
-    },
     259: {
         class_type: "CLIPTextEncode",
         inputs: {
@@ -152,5 +113,20 @@ const workflow = {
             prompt: "",
         },
         class_type: "Prompt Text (Auto Translate)",
+    },
+    279: {
+        inputs: {
+            seed: 614670872781194,
+            steps: 8,
+            cfg: 1,
+            sampler_name: "lcm",
+            scheduler: "exponential",
+            denoise: 1,
+            model: ["193", 0],
+            positive: ["259", 0],
+            negative: ["103", 0],
+            latent_image: ["152", 0],
+        },
+        class_type: "KSampler",
     },
 };

@@ -95,7 +95,7 @@ window.onload = function () {
  * Mengisi dropdown menu dengan opsi-opsi yang diperlukan.
  *
  * Fungsi ini akan menciptakan elemen-elemen dropdown untuk checkpoint model,
- * sampler, dan upscaler jika belum ada. Kemudian, akan mengisi dropdown
+ * sampler, scheduler, dan upscaler jika belum ada. Kemudian, akan mengisi dropdown
  * dengan opsi-opsi yang diperlukan.
  *
  * @returns {void}
@@ -156,7 +156,7 @@ function populateDropdowns() {
                     optionElement.textContent = displayName;
 
                     if (isUnlocked) {
-                        if (option === "SDXL/photopediaXL_45.safetensors") {
+                        if (option === "SDXL/realisticLustXL_v05.safetensors") {
                             optionElement.selected = true;
                         }
                     } else {
@@ -202,6 +202,33 @@ function populateDropdowns() {
         samplerFormGroup.appendChild(samplerLabel);
         samplerFormGroup.appendChild(samplerSelect);
         detailsContent.appendChild(samplerFormGroup);
+    }
+
+    // Scheduler Dropdowns
+    if (!document.getElementById("schedulerFormGroup")) {
+        const schedulerOptions = fetchSchedulerOptions();
+        const schedulerFormGroup = document.createElement("div");
+        schedulerFormGroup.id = "schedulerFormGroup";
+        schedulerFormGroup.className = "form-group";
+
+        const schedulerLabel = document.createElement("label");
+        schedulerLabel.htmlFor = "scheduler";
+        schedulerLabel.textContent = "Scheduler";
+
+        const schedulerSelect = document.createElement("select");
+        schedulerSelect.id = "scheduler";
+        schedulerSelect.name = "scheduler";
+
+        schedulerOptions.forEach((option) => {
+            const optionElement = document.createElement("option");
+            optionElement.value = option;
+            optionElement.textContent = option;
+            schedulerSelect.appendChild(optionElement);
+        });
+
+        schedulerFormGroup.appendChild(schedulerLabel);
+        schedulerFormGroup.appendChild(schedulerSelect);
+        detailsContent.appendChild(schedulerFormGroup);
     }
 
     // Upscaler Dropdowns
@@ -451,6 +478,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const checkpointSelect = document.getElementById("checkpoint");
     const samplerSelect = document.getElementById("sampler");
+    const schedulerSelect = document.getElementById("scheduler");
     const useLoRASelect = document.getElementById("useLoRA");
     const useDMD2Select = document.getElementById("useDMD2");
     const useClipSkipSelect = document.getElementById("useClipSkip");
@@ -492,6 +520,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const mapping = checkpointNameMapping[checkpointSelect.value] || {};
 
             if (samplerSelect) samplerSelect.value = mapping.sampler || "lcm";
+            if (schedulerSelect) schedulerSelect.value = mapping.scheduler || "exponential";
             if (useLoRASelect) useLoRASelect.checked = mapping.lora ?? false;
             if (useDMD2Select) useDMD2Select.checked = mapping.dmd2 ?? false;
             if (useClipSkipSelect) {
@@ -508,7 +537,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // Sampler
     if (samplerSelect) {
         samplerSelect.addEventListener("change", () => {
-            workflow["221"]["inputs"]["sampler_name"] = samplerSelect.value;
+            workflow["279"]["inputs"]["sampler_name"] = samplerSelect.value;
+        });
+    }
+
+    // Scheduler
+    if (schedulerSelect) {
+        schedulerSelect.addEventListener("change", () => {
+            workflow["279"]["inputs"]["scheduler"] = schedulerSelect.value;
         });
     }
 
@@ -558,7 +594,7 @@ document.addEventListener("DOMContentLoaded", () => {
  * @fungsi generateImage
  * @returns {Promise<void>}
  *
- * @deskripsi Fungsi ini menghasilkan gambar berdasarkan input pengguna seperti prompt, prompt negatif, checkpoint, sampler, dan pengaturan lainnya.
+ * @deskripsi Fungsi ini menghasilkan gambar berdasarkan input pengguna seperti prompt, prompt negatif, checkpoint, sampler, scheduler, dan pengaturan lainnya.
  * Fungsi ini mengirimkan permintaan ke server untuk menghasilkan gambar dan kemudian menampilkan gambar yang dihasilkan di halaman.
  *
  * @throws {Error} Jika input pengguna tidak valid (misalnya prompt kosong, checkpoint tidak valid, dll.).
@@ -602,9 +638,10 @@ async function generateImage() {
     // Dropdown Checkpoint/Sampler
     const checkpointSelect = document.getElementById("checkpoint");
     const samplerSelect = document.getElementById("sampler");
+    const schedulerSelect = document.getElementById("scheduler");
 
-    if (!checkpointSelect || !samplerSelect)
-        return showError(DOMCache.error, "Dropdown Checkpoint/Sampler tidak ditemukan!");
+    if (!checkpointSelect || !samplerSelect || !schedulerSelect)
+        return showError(DOMCache.error, "Dropdown Checkpoint/Sampler/Scheduler tidak ditemukan!");
 
     showStatus(DOMCache.status, "<h4>Membuat gambar...</h4>");
 
@@ -634,28 +671,26 @@ async function generateImage() {
         const useLoRA3 = document.getElementById("useLoRA3")?.checked;
 
         if (inputs.useLoRA) {
-            workflow[inputs.useCheckpointCache ? "106" : "193"]["inputs"]["model"] = [
-                inputs.useCheckpointCache ? "84" : "106",
-                0,
-            ];
+            workflow["193"]["inputs"]["model"] = [inputs.useCheckpointCache ? "106" : "84", 0];
 
-            if (inputs.useDMD2) workflow["84"]["inputs"]["lora_1"]["on"] = true;
-            else workflow["84"]["inputs"]["lora_1"]["on"] = false;
+            // DMD2
+            workflow["84"]["inputs"]["lora_1"]["on"] = inputs.useDMD2 ? true : false;
 
-            if (useLoRA1) workflow["84"]["inputs"]["lora_2"]["on"] = true;
-            else workflow["84"]["inputs"]["lora_2"]["on"] = false;
+            // LoRA 1
+            workflow["84"]["inputs"]["lora_2"]["on"] = useLoRA1 ? true : false;
 
-            if (useLoRA2) workflow["84"]["inputs"]["lora_3"]["on"] = true;
-            else workflow["84"]["inputs"]["lora_3"]["on"] = false;
+            // LoRA 2
+            workflow["84"]["inputs"]["lora_3"]["on"] = useLoRA2 ? true : false;
 
-            if (useLoRA3) workflow["84"]["inputs"]["lora_4"]["on"] = true;
-            else workflow["84"]["inputs"]["lora_4"]["on"] = false;
+            // LoRA 3
+            workflow["84"]["inputs"]["lora_4"]["on"] = useLoRA3 ? true : false;
         } else {
-            workflow[inputs.useCheckpointCache ? "106" : "193"]["inputs"]["model"] = ["84", 0];
+            workflow["193"]["inputs"]["model"] = [inputs.useCheckpointCache ? "106" : "84", 0];
 
-            if (inputs.useDMD2) workflow["84"]["inputs"]["lora_1"]["on"] = true;
-            else workflow["84"]["inputs"]["lora_1"]["on"] = false;
+            // DMD2
+            workflow["84"]["inputs"]["lora_1"]["on"] = inputs.useDMD2 ? true : false;
 
+            // LoRAs
             workflow["84"]["inputs"]["lora_2"]["on"] = false;
             workflow["84"]["inputs"]["lora_3"]["on"] = false;
             workflow["84"]["inputs"]["lora_4"]["on"] = false;
@@ -664,8 +699,7 @@ async function generateImage() {
         // CLIP Skip
         if (inputs.useClipSkip) {
             // Custom CLIP
-            if (inputs.useCustomClip) workflow["76"]["inputs"]["clip"] = ["268", 0];
-            else workflow["76"]["inputs"]["clip"] = ["4", 1];
+            workflow["76"]["inputs"]["clip"] = inputs.useCustomClip ? ["268", 0] : ["4", 1];
 
             workflow["76"]["inputs"]["stop_at_clip_layer"] = clipSkip;
             workflow["84"]["inputs"]["clip"] = ["76", 0];
@@ -673,8 +707,7 @@ async function generateImage() {
             workflow["259"]["inputs"]["clip"] = ["84", 1];
         } else {
             // Custom CLIP
-            if (inputs.useCustomClip) workflow["84"]["inputs"]["clip"] = ["268", 0];
-            else workflow["84"]["inputs"]["clip"] = ["4", 1];
+            workflow["76"]["inputs"]["clip"] = inputs.useCustomClip ? ["268", 0] : ["4", 1];
 
             workflow["103"]["inputs"]["clip"] = ["84", 1];
             workflow["259"]["inputs"]["clip"] = ["84", 1];
@@ -692,13 +725,16 @@ async function generateImage() {
         }, embedding:Stable_Yogis_PDXL_Negatives-neg, embedding:CyberRealistic_Negative_SDXL-neg`;
 
         // CFG
-        workflow["218"]["inputs"]["cfg"] = cfg;
+        workflow["279"]["inputs"]["cfg"] = cfg;
 
         // Steps
-        workflow["252"]["inputs"]["steps"] = steps;
+        workflow["279"]["inputs"]["steps"] = steps;
 
         // Sampler
-        workflow["221"]["inputs"]["sampler_name"] = samplerSelect.value;
+        workflow["279"]["inputs"]["sampler_name"] = samplerSelect.value;
+
+        // Scheduler
+        workflow["279"]["inputs"]["scheduler"] = schedulerSelect.value;
 
         // Seeds
         let seed;
@@ -719,12 +755,14 @@ async function generateImage() {
 
         currentSeedNum = seed;
         workflow["171"]["inputs"]["seed"] = Number(seed);
-        workflow["222"]["inputs"]["noise_seed"] = Number(seed);
+        workflow["279"]["inputs"]["seed"] = Number(seed);
         document.getElementById("seed").value = Number(seed);
 
         // Image Mode
         workflow["152"]["inputs"]["resolution"] =
-            inputs.imageMode === "portrait"
+            inputs.imageMode === "portrait-hd"
+                ? "1024x1536 (0.67)"
+                : inputs.imageMode === "portrait"
                 ? "896x1152 (0.78)"
                 : inputs.imageMode === "landscape"
                 ? "1152x896 (1.29)"
@@ -828,6 +866,7 @@ async function generateImage() {
                     <tr><td>CFG:</td><td>${cfg}</td></tr>
                     <tr><td>Seed:</td><td>${currentSeedNum}</td></tr>
                     <tr><td>Sampler:</td><td>${samplerSelect.value}</td></tr>
+                    <tr><td>Scheduler:</td><td>${schedulerSelect.value}</td></tr>
                     <tr><td>Upscale:</td><td>${inputs.useUpscale ? "Aktif" : "Tidak Aktif"}</td></tr>
                 </table>
             </details>
