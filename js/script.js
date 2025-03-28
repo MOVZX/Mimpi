@@ -26,7 +26,7 @@ const mainPresets = {
 
 if (isUnlocked) {
     document.getElementById("prompt").value =
-        "1girl, solo, 30-year-old woman, feathered blonde hair, wearing decent hijab dress, bedroom, intricate details, instagram, dynamic pose, looking at viewer, portrait, full upper body close view, high-resolution, best quality";
+        "1girl, solo, wanita berusia 30 tahun, rambut pirang, mengenakan pakaian hijab yang tertutup, kamar tidur, detail rumit, instagram, pose dinamis, melihat pemirsa, potret, tampilan dekat seluruh tubuh bagian atas, resolusi tinggi, kualitas terbaik";
 } else {
     document.getElementById("prompt").value =
         "Foto kucing yang sangat detail dan nyata. Gambar tersebut menampilkan anatomi yang akurat, tekstur bulu, bulu halus, atau kulit yang realistis, mata yang tampak nyata, dan pencahayaan alami. Tidak ada makhluk mitos atau fantasi, hanya hewan yang ada, yang digambarkan dalam resolusi 8k yang tajam dan cemerlang dengan kualitas terbaik.";

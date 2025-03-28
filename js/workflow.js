@@ -116,7 +116,7 @@ const workflow = {
     },
     279: {
         inputs: {
-            seed: 614670872781194,
+            seed: 0,
             steps: 8,
             cfg: 1,
             sampler_name: "lcm",
