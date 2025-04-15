@@ -27,17 +27,6 @@ const workflow = {
             text: "",
         },
     },
-    106: {
-        class_type: "ApplyFBCacheOnModel",
-        inputs: {
-            end: 1,
-            max_consecutive_cache_hits: -1,
-            model: ["84", 0],
-            object_to_patch: "diffusion_model",
-            residual_diff_threshold: 0.2,
-            start: 0,
-        },
-    },
     152: {
         class_type: "SDXLEmptyLatentSizePicker+",
         inputs: {
@@ -69,21 +58,6 @@ const workflow = {
             on_false: ["278", 0],
             on_true: ["171", 0],
         },
-    },
-    193: {
-        inputs: {
-            is_patcher: true,
-            object_to_patch: "diffusion_model",
-            compiler: "torch.compile",
-            fullgraph: false,
-            dynamic: false,
-            mode: "",
-            options: "",
-            disable: false,
-            backend: "inductor",
-            model: ["106", 0],
-        },
-        class_type: "EnhancedCompileModel",
     },
     259: {
         class_type: "CLIPTextEncode",
@@ -122,7 +96,7 @@ const workflow = {
             sampler_name: "lcm",
             scheduler: "exponential",
             denoise: 1,
-            model: ["193", 0],
+            model: ["84", 0],
             positive: ["259", 0],
             negative: ["103", 0],
             latent_image: ["152", 0],

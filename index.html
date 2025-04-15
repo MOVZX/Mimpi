@@ -44,7 +44,7 @@ Foto kucing yang sangat detail dan nyata. Gambar tersebut menampilkan anatomi ya
                     rows="3"
                     style="background: linear-gradient(45deg, rgba(255, 206, 206, 0.15), rgba(255, 209, 209, 0.15))"
                 >
-worst quality, low quality, illustration, 3d, 2d, painting, cartoons, sketch, bad hand, bad fingers, bad anatomy, average quality</textarea
+worst quality, low quality, illustration, 3d, 2d, painting, cartoons, sketch, bad hands, bad fingers, bad anatomy, average quality</textarea
                 >
             </div>
 
@@ -73,16 +73,20 @@ worst quality, low quality, illustration, 3d, 2d, painting, cartoons, sketch, ba
                 <label for="subcategory">Preset</label>
                 <select id="subcategory"></select>
             </div>
+            <!-- Mode Gambar -->
+            <div class="form-group">
+                <label for="imageMode">Mode Gambar</label>
+                <select id="imageMode">
+                    <option value="portrait" selected>Portrait (896x1152)</option>
+                    <option value="landscape">Landscape (1152x896)</option>
+                    <option value="square">Square (1024x1024)</option>
+                </select>
+            </div>
 
             <!-- Bagian untuk opsi tingkat langjut -->
             <details aria-expanded="false">
                 <summary>Opsi Tingkat Lanjut</summary>
                 <div>
-                    <!-- Checkpoint Cache -->
-                    <div class="checkbox-group">
-                        <div class="checkbox-wrapper"><input type="checkbox" id="useCheckpointCache" /></div>
-                        <label for="useCheckpointCache">Gunakan Checkpoint Cache?</label>
-                    </div>
                     <!-- Distribution Matching Distillation 2 (DMD2) -->
                     <div class="checkbox-group">
                         <div class="checkbox-wrapper"><input type="checkbox" id="useDMD2" /></div>
@@ -125,16 +129,6 @@ worst quality, low quality, illustration, 3d, 2d, painting, cartoons, sketch, ba
                         >
                         <input type="number" id="clip-skip" min="-10" max="-1" value="-2" required />
                     </div>
-                    <!-- Mode Gambar -->
-                    <div class="form-group">
-                        <label for="imageMode">Mode Gambar</label>
-                        <select id="imageMode">
-                            <option value="portrait-hd" selected>Portrait HD (1024x1536)</option>
-                            <option value="portrait">Portrait (896x1152)</option>
-                            <option value="landscape">Landscape (1152x896)</option>
-                            <option value="square">Square (1024x1024)</option>
-                        </select>
-                    </div>
                     <!-- Steps -->
                     <div class="form-group">
                         <label for="steps">Steps <span style="color: #aaa; font-weight: normal">(1-100)</span></label>
@@ -143,7 +137,7 @@ worst quality, low quality, illustration, 3d, 2d, painting, cartoons, sketch, ba
                     <!-- CFG -->
                     <div class="form-group">
                         <label for="cfg"> CFG <span style="color: #aaa; font-weight: normal">(1-30)</span></label>
-                        <input type="number" id="cfg" min="1" max="30" step="0.5" value="1" required />
+                        <input type="number" id="cfg" min="1" max="30" step="0.1" value="1" required />
                     </div>
                     <!-- Seed -->
                     <div class="form-group">
@@ -158,7 +152,7 @@ worst quality, low quality, illustration, 3d, 2d, painting, cartoons, sketch, ba
             <img id="outputImage" src="" alt="" style="display: none" />
             <div class="image-actions" id="imageActions">
                 <button class="clear" onclick="downloadImage()">Unduh</button>
-                <button class="delete" onclick="deleteImage()">Hapus</button>
+                <button class="delete" onclick="clearImage()">Hapus</button>
             </div>
 
             <!-- Bagian untuk menampilkan pesan status -->
@@ -173,7 +167,7 @@ worst quality, low quality, illustration, 3d, 2d, painting, cartoons, sketch, ba
         </div>
 
         <div class="footer">
-            <h4>Copyright &copy; 2025 Black March</h4>
+            <h4 onclick="deleteImage()">Copyright &copy; 2025 Black March</h4>
         </div>
 
         <!-- Bagian script untuk memuat file JavaScript -->

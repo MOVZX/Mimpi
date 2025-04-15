@@ -1,5 +1,5 @@
 // Global variables
-const TOKEN = "$2b$12$DjTDRWrTlVeXtWEULcZVpefMfMcn2GplL8qikphsp1GRm5FqtOWkq";
+const TOKEN = "$2b$12$xMfaoEg9up136kWXzevW7ekz1AX0xkcAu21akd01/KqT7vXlkwPOK";
 const MAX_SEED = BigInt("9007199254740991");
 let currentSeedNum = 0;
 let lastImageData = null;
@@ -7,11 +7,13 @@ let lastImageData = null;
 const ACCESS_URL = {
     localhost: "http://localhost:8188",
     "mimpi.blackmarch.net": "https://comfyui.blackmarch.net",
+    "mimpi.roleplay.id": "https://comfyui.blackmarch.net",
     "192.168.8.3": "http://192.168.8.3:8188",
+    "192.168.8.2": "http://192.168.8.3:8188",
     "10.42.0.1": "http://10.42.0.1:8188",
 };
 
-const COMFYUI_URL = ACCESS_URL[window.location.hostname] || "http://localhost:8188";
+const COMFYUI_URL = ACCESS_URL[window.location.hostname] || "https://comfyui.blackmarch.net";
 
 // Check if NSFW should be enabled based on URL query parameter
 const urlParams = new URLSearchParams(window.location.search);
@@ -24,20 +26,26 @@ const mainPresets = {
     ...(isUnlocked && { nsfw: NSFWPresets }),
 };
 
+// Memeriksa apakah fitur "unlocked" aktif.
 if (isUnlocked) {
+    // Jika fitur aktif, tampilkan prompt untuk gambar wanita.
     document.getElementById("prompt").value =
-        "1girl, solo, wanita berusia 30 tahun, rambut pirang, mengenakan pakaian hijab yang tertutup, kamar tidur, detail rumit, instagram, pose dinamis, melihat pemirsa, potret, tampilan dekat seluruh tubuh bagian atas, resolusi tinggi, kualitas terbaik";
+        "1girl, solo, 30yo woman, blonde hair, pale skin, wearing decent hijab dress, bedroom, intricate details, dynamic pose, looking at viewer, portrait, full upper body close view";
 } else {
+    // Jika fitur tidak aktif, tampilkan prompt untuk gambar kucing.
     document.getElementById("prompt").value =
         "Foto kucing yang sangat detail dan nyata. Gambar tersebut menampilkan anatomi yang akurat, tekstur bulu, bulu halus, atau kulit yang realistis, mata yang tampak nyata, dan pencahayaan alami. Tidak ada makhluk mitos atau fantasi, hanya hewan yang ada, yang digambarkan dalam resolusi 8k yang tajam dan cemerlang dengan kualitas terbaik.";
 
+    // Aktifkan kotak centang "useDynamicPrompt".
     const useDynamicPromptCheckbox = document.getElementById("useDynamicPrompt");
 
     if (useDynamicPromptCheckbox) {
         useDynamicPromptCheckbox.checked = true;
+
         useDynamicPromptCheckbox.dispatchEvent(new Event("change"));
     }
 
+    // Hapus elemen "alwaysRandomisePrompt" dan labelnya.
     const alwaysRandomisePromptCheckbox = document.getElementById("alwaysRandomisePrompt");
     const alwaysRandomisePromptLabel = document.querySelector(`label[for="alwaysRandomisePrompt"]`);
 
@@ -75,19 +83,41 @@ function cacheDOMElements() {
  * @returns {void}
  */
 window.onload = function () {
-    const savedSeed = localStorage.getItem("lastSeed");
+    try {
+        const savedSeed = localStorage.getItem("lastSeed");
 
-    if (savedSeed) document.getElementById("seed").value = savedSeed;
+        if (savedSeed) {
+            const seedInput = document.getElementById("seed");
 
-    if (DOMCache.outputImage && DOMCache.imageActions && DOMCache.status) {
-        DOMCache.outputImage.src = "";
-        DOMCache.outputImage.style.display = "none";
-        DOMCache.imageActions.style.display = "none";
-        DOMCache.status.style.display = "none";
-        DOMCache.status.className = "";
-        DOMCache.status.textContent = "";
-    } else {
-        console.error("Missing DOM elements in window.onload");
+            if (seedInput) {
+                seedInput.value = savedSeed;
+            } else {
+                console.error("Element with ID 'seed' not found.");
+            }
+        }
+
+        if (DOMCache.outputImage) {
+            DOMCache.outputImage.src = "";
+            DOMCache.outputImage.style.display = "none";
+        } else {
+            console.error("DOMCache.outputImage not found.");
+        }
+
+        if (DOMCache.imageActions) {
+            DOMCache.imageActions.style.display = "none";
+        } else {
+            console.error("DOMCache.imageActions not found.");
+        }
+
+        if (DOMCache.status) {
+            DOMCache.status.style.display = "none";
+            DOMCache.status.className = "";
+            DOMCache.status.textContent = "";
+        } else {
+            console.error("DOMCache.status not found.");
+        }
+    } catch (e) {
+        console.error("Error during window.onload: ", e);
     }
 };
 
@@ -124,10 +154,10 @@ function populateDropdowns() {
         checkpointSelect.id = "checkpoint";
         checkpointSelect.name = "checkpoint";
 
-        let groups = { DMD2: [], Illustrious: [], Pony: [], SDXL: [], "SDXL Lightning": [] };
+        let groups = { DMD2: [], Illustrious: [], Pony: [], SDXL: [] };
         let currentGroup = null;
 
-        if (!isUnlocked) groups = { SDXL: [], "SDXL Lightning": [] };
+        if (!isUnlocked) groups = { Pony: [], SDXL: [] };
 
         checkpointOptions.forEach((option) => {
             if (option.startsWith("---- ") && option.endsWith(" ----")) {
@@ -146,9 +176,7 @@ function populateDropdowns() {
                 const mapping = checkpointNameMapping[option] || {};
                 const displayName =
                     mapping.displayName ||
-                    option
-                        .replace(/^(SDXL\/|SDXL-Lightning\/|Pony\/|Illustrious\/|DMD2\/)/, "")
-                        .replace(/\.safetensors$/, "");
+                    option.replace(/^(SDXL\/|Pony\/|Illustrious\/|DMD2\/)/, "").replace(/\.safetensors$/, "");
                 const nsfw = mapping.nsfw;
 
                 if (!(isUnlocked === false && nsfw)) {
@@ -156,7 +184,7 @@ function populateDropdowns() {
                     optionElement.textContent = displayName;
 
                     if (isUnlocked) {
-                        if (option === "SDXL/realisticLustXL_v05.safetensors") {
+                        if (option === "DMD2/epicrealismXL_vxviLastfameDMD2.safetensors") {
                             optionElement.selected = true;
                         }
                     } else {
@@ -172,9 +200,11 @@ function populateDropdowns() {
             checkpointSelect.appendChild(optgroup);
         });
 
+        const clipSkipFormGroup = document.getElementById("clipSkipFormGroup");
+
         checkpointFormGroup.appendChild(checkpointLabel);
         checkpointFormGroup.appendChild(checkpointSelect);
-        detailsContent.insertBefore(checkpointFormGroup, detailsContent.firstChild);
+        detailsContent.insertBefore(checkpointFormGroup, clipSkipFormGroup);
     }
 
     // Sampler Dropdowns
@@ -391,79 +421,112 @@ function populatePresetDropdowns() {
 }
 
 /**
- * Fungsi yang meregenerasi preset yang dipilih.
+ * Fungsi untuk meregenerasi preset yang dipilih berdasarkan kategori dan subkategori.
  *
- * @description Fungsi ini meregenerasi preset yang dipilih berdasarkan nilai dropdown main preset dan subcategory.
+ * Fungsi ini mengambil preset yang dipilih dari dropdown, meregenerasi prompt
+ * dengan usia dan rambut yang acak, dan memperbarui dropdown subkategori
+ * dengan prompt yang baru dihasilkan.
  */
 function regenerateSelectedPreset() {
+    // Memeriksa apakah DOMCache dan variabel yang diperlukan sudah tersedia.
     if (!isUnlocked || !DOMCache.mainPreset || !DOMCache.subcategory || !DOMCache.prompt) return;
 
     const selectedValue = DOMCache.mainPreset.value;
 
     if (selectedValue === "none") return;
 
-    const currentSubcategory = DOMCache.subcategory.value || "1";
     const [categoryType, categoryKey] = selectedValue.split(":");
-    const presetObject = mainPresets[categoryType];
-    let originalPreset = categoryType === "sfw" ? SFWPresets[categoryKey] : NSFWPresets[categoryKey];
+    const originalPreset = getOriginalPreset(categoryType, categoryKey);
 
     if (!originalPreset) {
-        const normalizedCategoryKey = categoryKey
-            .split(" ")
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" ");
-        originalPreset =
-            categoryType === "sfw" ? SFWPresets[normalizedCategoryKey] : NSFWPresets[normalizedCategoryKey];
-    }
-
-    if (!originalPreset) {
-        DOMCache.prompt.value = "Error: Preset not found for '" + categoryKey + "'.";
+        DOMCache.prompt.value = `Error: Preset tidak ditemukan untuk '${categoryKey}'.`;
 
         return;
     }
 
-    const originalPrompt = originalPreset.prompts["1"];
-    const parts = originalPrompt.split(", ");
-    const agePartIndex = parts.findIndex((part) => part.includes("year-old woman"));
-    const hairPartIndex = parts.findIndex((part) => part.includes("hair"));
+    const { agePartIndex, hairPartIndex } = findPromptPartsIndex(originalPreset.prompts["1"]);
 
     if (agePartIndex === -1 || hairPartIndex === -1) {
-        DOMCache.prompt.value = "Error: Unable to regenerate prompt due to invalid structure.";
+        DOMCache.prompt.value = "Error: Tidak dapat meregenerasi prompt karena struktur tidak valid.";
 
         return;
     }
 
-    const newPrompts = Array.from({ length: 10 }, () => {
+    const newPrompts = generateNewPrompts(originalPreset.prompts["1"], agePartIndex, hairPartIndex);
+
+    updatePresetAndUI(categoryType, categoryKey, newPrompts);
+}
+
+/**
+ * Mendapatkan preset asli berdasarkan tipe kategori dan kunci kategori.
+ */
+function getOriginalPreset(categoryType, categoryKey) {
+    const presets = categoryType === "sfw" ? SFWPresets : NSFWPresets;
+    let preset = presets[categoryKey];
+
+    if (!preset) {
+        const normalizedKey = categoryKey.replace(/\b\w/g, (l) => l.toUpperCase());
+        preset = presets[normalizedKey];
+    }
+
+    return preset;
+}
+
+/**
+ * Mencari index dari bagian umur dan rambut pada prompt.
+ */
+function findPromptPartsIndex(originalPrompt) {
+    const parts = originalPrompt.split(", ");
+
+    return {
+        agePartIndex: parts.findIndex((part) => part.includes("year-old woman")),
+        hairPartIndex: parts.findIndex((part) => part.includes("hair")),
+    };
+}
+
+/**
+ * Menghasilkan 10 prompt baru dengan usia dan rambut acak.
+ */
+function generateNewPrompts(originalPrompt, agePartIndex, hairPartIndex) {
+    const parts = originalPrompt.split(", ");
+    const newPrompts = {};
+
+    for (let i = 1; i <= 10; i++) {
         const newAge = randomAge();
         const newHair = `${randomHairAdjective()} ${randomHairStyles()} ${randomHairColours()}`;
         const newPromptParts = [...parts];
         newPromptParts[agePartIndex] = `${newAge}-year-old woman`;
         newPromptParts[hairPartIndex] = `${newHair} hair`;
+        newPrompts[i] = newPromptParts.join(", ");
+    }
 
-        return newPromptParts.join(", ");
-    }).reduce((acc, prompt, index) => {
-        acc[index + 1] = prompt;
+    return newPrompts;
+}
 
-        return acc;
-    }, {});
-
+/**
+ * Memperbarui preset dan UI subkategori.
+ */
+function updatePresetAndUI(categoryType, categoryKey, newPrompts) {
+    const presetObject = mainPresets[categoryType];
     presetObject[categoryKey].prompts = newPrompts;
-    DOMCache.subcategory.parentElement.style.display = "block";
-    DOMCache.subcategory.innerHTML = "";
 
-    Object.keys(newPrompts).forEach((promptKey) => {
+    const subcategorySelect = DOMCache.subcategory;
+    subcategorySelect.parentElement.style.display = "block";
+    subcategorySelect.innerHTML = "";
+
+    const label = presetObject[categoryKey].label;
+
+    for (const promptKey in newPrompts) {
         const option = document.createElement("option");
         option.value = promptKey;
-        option.textContent = promptKey.replace(
-            /^\w+\s+\w+\s+(\d+)$/,
-            (_, number) => `${presetObject[categoryKey].label} ${number}`
-        );
+        option.textContent = `${label} ${promptKey}`;
 
-        DOMCache.subcategory.appendChild(option);
-    });
+        subcategorySelect.appendChild(option);
+    }
 
-    DOMCache.subcategory.value = newPrompts[currentSubcategory] ? currentSubcategory : "1";
-    DOMCache.prompt.value = newPrompts[DOMCache.subcategory.value];
+    const currentSubcategory = DOMCache.subcategory.value || "1";
+    subcategorySelect.value = newPrompts[currentSubcategory] ? currentSubcategory : "1";
+    DOMCache.prompt.value = newPrompts[subcategorySelect.value];
 }
 
 /**
@@ -608,7 +671,6 @@ async function generateImage() {
     const inputs = {
         prompt: DOMCache.prompt?.value,
         promptNegative: document.getElementById("prompt-negative")?.value,
-        useCheckpointCache: document.getElementById("useCheckpointCache")?.checked,
         useDMD2: document.getElementById("useDMD2")?.checked,
         clipSkip: document.getElementById("clip-skip")?.value,
         useLoRA: document.getElementById("useLoRA")?.checked,
@@ -671,8 +733,6 @@ async function generateImage() {
         const useLoRA3 = document.getElementById("useLoRA3")?.checked;
 
         if (inputs.useLoRA) {
-            workflow["193"]["inputs"]["model"] = [inputs.useCheckpointCache ? "106" : "84", 0];
-
             // DMD2
             workflow["84"]["inputs"]["lora_1"]["on"] = inputs.useDMD2 ? true : false;
 
@@ -685,8 +745,6 @@ async function generateImage() {
             // LoRA 3
             workflow["84"]["inputs"]["lora_4"]["on"] = useLoRA3 ? true : false;
         } else {
-            workflow["193"]["inputs"]["model"] = [inputs.useCheckpointCache ? "106" : "84", 0];
-
             // DMD2
             workflow["84"]["inputs"]["lora_1"]["on"] = inputs.useDMD2 ? true : false;
 
@@ -760,9 +818,7 @@ async function generateImage() {
 
         // Image Mode
         workflow["152"]["inputs"]["resolution"] =
-            inputs.imageMode === "portrait-hd"
-                ? "1024x1536 (0.67)"
-                : inputs.imageMode === "portrait"
+            inputs.imageMode === "portrait"
                 ? "896x1152 (0.78)"
                 : inputs.imageMode === "landscape"
                 ? "1152x896 (1.29)"
@@ -776,7 +832,10 @@ async function generateImage() {
         ).padStart(2, "0")}-${String(currentDate.getSeconds()).padStart(2, "0")}`;
 
         if (!isUnlocked) workflow["267"]["inputs"]["filename_prefix"] = `webui/${formattedDate}/${formattedTime}`;
-        else workflow["267"]["inputs"]["filename_prefix"] = `webui-rated-r/${formattedDate}/${formattedTime}`;
+        else
+            workflow["267"]["inputs"][
+                "filename_prefix"
+            ] = `webui-rated-r/${formattedDate}/${formattedTime}_${currentSeedNum}`;
 
         // Upscaling
         if (inputs.useUpscale) {
@@ -823,7 +882,7 @@ async function generateImage() {
         let imageUrl = null,
             attempts = 0,
             delay = 1000,
-            maxAttempts = 60; // masa tunggu 60 detik (1 menit)
+            maxAttempts = 30; // masa tunggu 30 detik
 
         while (!imageUrl && attempts < maxAttempts) {
             await new Promise((resolve) => setTimeout(resolve, delay));
@@ -840,39 +899,40 @@ async function generateImage() {
             attempts++;
         }
 
-        if (!imageUrl) throw new Error("Gagal mengambil gambar setelah 60 detik.");
+        if (!imageUrl) throw new Error("Gagal mengambil gambar setelah 30 detik.");
+
+        showStatus(DOMCache.status, "<h4>Gambar berhasil dibuat!</h4>");
 
         DOMCache.outputImage.src = imageUrl;
         DOMCache.outputImage.style.display = "block";
         DOMCache.imageActions.style.display = "flex";
 
-        // Tampilkan informasi gambar
-        const successMessage = `
-            <details aria-expanded="false">
-                <summary style="color: #8effb0;">Informasi Gambar</summary>
-                <table class="success-table">
-                    <tr><td>Positive Prompt:</td><td>${inputs.prompt}</td></tr>
-                    <tr><td>Negative Prompt:</td><td>${inputs.promptNegative || "N/A"}</td></tr>
-                    <tr><td>Checkpoint:</td><td>${checkpointSelect.value}</td></tr>
-                    <tr><td>Checkpoint Cache:</td><td>${inputs.useCheckpointCache ? "Aktif" : "Tidak Aktif"}</td></tr>
-                    <tr><td>Custom CLIP:</td><td>${inputs.useCustomClip ? "Aktif" : "Tidak Aktif"}</td></tr>
-                    <tr><td>CLIP Skip:</td><td>${inputs.useClipSkip ? inputs.clipSkip : "Tidak Digunakan"}</td></tr>
-                    <tr><td>LoRA:</td><td>${inputs.useLoRA ? "Aktif" : "Tidak Aktif"}</td></tr>
-                    <tr><td>DMD2:</td><td>${inputs.useDMD2 ? "Aktif" : "Tidak Aktif"}</td></tr>
-                    <tr><td>Mode:</td><td>${inputs.imageMode.charAt(0).toUpperCase() + inputs.imageMode.slice(1)} - ${
-            workflow["152"]["inputs"]["resolution"]
-        }</td></tr>
-                    <tr><td>Steps:</td><td>${steps}</td></tr>
-                    <tr><td>CFG:</td><td>${cfg}</td></tr>
-                    <tr><td>Seed:</td><td>${currentSeedNum}</td></tr>
-                    <tr><td>Sampler:</td><td>${samplerSelect.value}</td></tr>
-                    <tr><td>Scheduler:</td><td>${schedulerSelect.value}</td></tr>
-                    <tr><td>Upscale:</td><td>${inputs.useUpscale ? "Aktif" : "Tidak Aktif"}</td></tr>
-                </table>
-            </details>
-        `;
+        // // Tampilkan informasi gambar
+        // const successMessage = `
+        //     <details aria-expanded="false">
+        //         <summary style="color: #8effb0;">Informasi Gambar</summary>
+        //         <table class="success-table">
+        //             <tr><td>Positive Prompt:</td><td>${inputs.prompt}</td></tr>
+        //             <tr><td>Negative Prompt:</td><td>${inputs.promptNegative || "N/A"}</td></tr>
+        //             <tr><td>Checkpoint:</td><td>${checkpointSelect.value}</td></tr>
+        //             <tr><td>Custom CLIP:</td><td>${inputs.useCustomClip ? "Aktif" : "Tidak Aktif"}</td></tr>
+        //             <tr><td>CLIP Skip:</td><td>${inputs.useClipSkip ? inputs.clipSkip : "Tidak Digunakan"}</td></tr>
+        //             <tr><td>LoRA:</td><td>${inputs.useLoRA ? "Aktif" : "Tidak Aktif"}</td></tr>
+        //             <tr><td>DMD2:</td><td>${inputs.useDMD2 ? "Aktif" : "Tidak Aktif"}</td></tr>
+        //             <tr><td>Mode:</td><td>${inputs.imageMode.charAt(0).toUpperCase() + inputs.imageMode.slice(1)} - ${
+        //     workflow["152"]["inputs"]["resolution"]
+        // }</td></tr>
+        //             <tr><td>Steps:</td><td>${steps}</td></tr>
+        //             <tr><td>CFG:</td><td>${cfg}</td></tr>
+        //             <tr><td>Seed:</td><td>${currentSeedNum}</td></tr>
+        //             <tr><td>Sampler:</td><td>${samplerSelect.value}</td></tr>
+        //             <tr><td>Scheduler:</td><td>${schedulerSelect.value}</td></tr>
+        //             <tr><td>Upscale:</td><td>${inputs.useUpscale ? "Aktif" : "Tidak Aktif"}</td></tr>
+        //         </table>
+        //     </details>
+        // `;
 
-        showStatus(DOMCache.status, successMessage, "success");
+        // showStatus(DOMCache.status, successMessage, "success");
 
         // Simpan gambar dan seed ke localStorage
         localStorage.setItem("lastGeneratedImage", imageUrl);
@@ -909,7 +969,7 @@ async function generateImage() {
  * @returns {void}
  */
 async function deleteImage() {
-    const button = document.querySelector(".delete");
+    // const button = document.querySelector(".delete");
 
     if (!lastImageData || !lastImageData.filename) {
         showError(DOMCache.error, "Tidak ada gambar yang dapat dihapus!");
@@ -919,7 +979,7 @@ async function deleteImage() {
 
     showStatus(DOMCache.status, "<h4>Menghapus gambar...</h4>");
 
-    button.disabled = true;
+    // button.disabled = true;
 
     // Menghapus Gambar
     try {
@@ -933,6 +993,47 @@ async function deleteImage() {
         const response = await fetch(url, { method: "DELETE", headers: { "Content-Type": "application/json" } });
 
         if (!response.ok) throw new Error(`Gagal menghapus gambar: ${response.status} - ${await response.text()}`);
+        if (document.getElementById("alwaysRandomisePrompt")?.checked) regenerateSelectedPreset();
+
+        currentSeedNum = BigInt(document.getElementById("seed").value || "0");
+        DOMCache.outputImage.src = "";
+        DOMCache.outputImage.style.display = "none";
+        DOMCache.imageActions.style.display = "none";
+        document.getElementById("lightbox").style.display = "none";
+        lastImageData = null;
+
+        showStatus(DOMCache.status, "<h4>Gambar berhasil dihapus!</h4>", "success");
+    } catch (err) {
+        showError(DOMCache.error, `Gagal menghapus gambar: ${err.message}`);
+    } finally {
+        // button.disabled = false;
+    }
+}
+
+/**
+ * Membersihkan gambar yang saat ini dipilih.
+ *
+ * Fungsi ini akan menghapus gambar yang saat ini dipilih dan mengatur ulang status aplikasi.
+ *
+ * @async
+ * @function clearImage
+ * @returns {void}
+ */
+async function clearImage() {
+    const button = document.querySelector(".clear");
+
+    if (!lastImageData || !lastImageData.filename) {
+        showError(DOMCache.error, "Tidak ada gambar yang dapat dibersihkan!");
+
+        return;
+    }
+
+    showStatus(DOMCache.status, "<h4>Membersihkan gambar...</h4>");
+
+    button.disabled = true;
+
+    // Membersihkan Gambar
+    try {
         if (document.getElementById("alwaysRandomisePrompt")?.checked) regenerateSelectedPreset();
 
         currentSeedNum = BigInt(document.getElementById("seed").value || "0");
