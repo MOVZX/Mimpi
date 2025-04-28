@@ -95,7 +95,7 @@ select {
     border: none;
     border-radius: 8px;
     background: var(--input-background);
-    color: var(--font-color);
+    color: #32aaff;
     font-size: 16px;
     transition: all 0.3s ease;
     box-sizing: border-box;
@@ -327,7 +327,7 @@ details[open] .success-table {
     padding: 8px;
     border: none;
     border-radius: 4px;
-    color: var(--font-color);
+    color: #32aaff;
 }
 
 #upscalerFormGroup,

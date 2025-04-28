@@ -154,7 +154,7 @@ function populateDropdowns() {
         checkpointSelect.id = "checkpoint";
         checkpointSelect.name = "checkpoint";
 
-        let groups = { DMD2: [], Illustrious: [], Pony: [], SDXL: [] };
+        let groups = { Anime: [], DMD2: [], Illustrious: [], Pony: [], SDXL: [] };
         let currentGroup = null;
 
         if (!isUnlocked) groups = { Pony: [], SDXL: [] };
@@ -184,7 +184,7 @@ function populateDropdowns() {
                     optionElement.textContent = displayName;
 
                     if (isUnlocked) {
-                        if (option === "DMD2/epicrealismXL_vxviLastfameDMD2.safetensors") {
+                        if (option === "DMD2/realismSDXLByStable_v60XLDMD2.safetensors") {
                             optionElement.selected = true;
                         }
                     } else {
@@ -775,7 +775,7 @@ async function generateImage() {
         workflow["178:1"]["inputs"]["boolean"] = inputs.useDynamicPrompt;
 
         // Positive Prompt
-        workflow["278"]["inputs"]["prompt"] = inputs.prompt;
+        workflow["278"]["inputs"]["prompt"] = `${inputs.prompt || "Stable_Yogis_PDXL_Positives.safetensors"}`;
 
         // Negative Prompt
         workflow["103"]["inputs"]["text"] = `${
