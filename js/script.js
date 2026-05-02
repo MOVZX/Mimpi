@@ -10,10 +10,14 @@ const ACCESS_URL = {
     "mimpi.roleplay.id": "https://comfyui.blackmarch.net",
     "192.168.8.3": "http://192.168.8.3:8188",
     "192.168.8.2": "http://192.168.8.3:8188",
+    "192.168.1.2": "http://192.168.8.3:8188",
+    "mimpi.ai": "http://192.168.8.3:8188",
     "10.42.0.1": "http://10.42.0.1:8188",
 };
 
-const COMFYUI_URL = ACCESS_URL[window.location.hostname] || "https://comfyui.blackmarch.net";
+const COMFYUI_URL = ACCESS_URL[window.location.hostname] || "http://10.4.11.108:8188";
+
+console.log(window.location.hostname);
 
 // Check if NSFW should be enabled based on URL query parameter
 const urlParams = new URLSearchParams(window.location.search);
@@ -184,7 +188,7 @@ function populateDropdowns() {
                     optionElement.textContent = displayName;
 
                     if (isUnlocked) {
-                        if (option === "DMD2/realismSDXLByStable_v60XLDMD2.safetensors") {
+                        if (option === "SDXL/jibMixRealisticXL_v170SmokeSheen.safetensors") {
                             optionElement.selected = true;
                         }
                     } else {
