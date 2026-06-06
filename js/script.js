@@ -6,16 +6,12 @@ let lastImageData = null;
 
 const ACCESS_URL = {
     localhost: "http://localhost:8188",
-    "mimpi.blackmarch.net": "https://comfyui.blackmarch.net",
-    "mimpi.roleplay.id": "https://comfyui.blackmarch.net",
     "192.168.8.3": "http://192.168.8.3:8188",
     "192.168.8.2": "http://192.168.8.3:8188",
     "192.168.1.2": "http://192.168.8.3:8188",
-    "mimpi.ai": "http://192.168.8.3:8188",
-    "10.42.0.1": "http://10.42.0.1:8188",
 };
 
-const COMFYUI_URL = ACCESS_URL[window.location.hostname] || "http://10.4.11.108:8188";
+const COMFYUI_URL = ACCESS_URL[window.location.hostname] || "http://192.168.8.3:8188";
 
 console.log(window.location.hostname);
 
@@ -34,7 +30,7 @@ const mainPresets = {
 if (isUnlocked) {
     // Jika fitur aktif, tampilkan prompt untuk gambar wanita.
     document.getElementById("prompt").value =
-        "1girl, solo, 30yo woman, blonde hair, pale skin, wearing decent hijab dress, bedroom, intricate details, dynamic pose, looking at viewer, portrait, full upper body close view";
+        "1girl, solo, 30yo beautiful asian woman, black hair, pale skin, wearing decent hijab dress, bedroom, intricate details, dynamic pose, looking at viewer, portrait, full upper body close view";
 } else {
     // Jika fitur tidak aktif, tampilkan prompt untuk gambar kucing.
     document.getElementById("prompt").value =
@@ -405,7 +401,7 @@ function populatePresetDropdowns() {
             option.value = promptKey;
             option.textContent = promptKey.replace(
                 /^\w+\s+\w+\s+(\d+)$/,
-                (_, number) => `${presetObject[categoryKey].label} ${number}`
+                (_, number) => `${presetObject[categoryKey].label} ${number}`,
             );
 
             DOMCache.subcategory.appendChild(option);
@@ -825,21 +821,20 @@ async function generateImage() {
             inputs.imageMode === "portrait"
                 ? "896x1152 (0.78)"
                 : inputs.imageMode === "landscape"
-                ? "1152x896 (1.29)"
-                : "1024x1024 (1.0)";
+                  ? "1152x896 (1.29)"
+                  : "1024x1024 (1.0)";
 
         // Filename
         const currentDate = new Date();
         const formattedDate = currentDate.toISOString().split("T")[0];
         const formattedTime = `${String(currentDate.getHours()).padStart(2, "0")}-${String(
-            currentDate.getMinutes()
+            currentDate.getMinutes(),
         ).padStart(2, "0")}-${String(currentDate.getSeconds()).padStart(2, "0")}`;
 
         if (!isUnlocked) workflow["267"]["inputs"]["filename_prefix"] = `webui/${formattedDate}/${formattedTime}`;
         else
-            workflow["267"]["inputs"][
-                "filename_prefix"
-            ] = `webui-rated-r/${formattedDate}/${formattedTime}_${currentSeedNum}`;
+            workflow["267"]["inputs"]["filename_prefix"] =
+                `webui-rated-r/${formattedDate}/${formattedTime}_${currentSeedNum}`;
 
         // Upscaling
         if (inputs.useUpscale) {
@@ -988,7 +983,7 @@ async function deleteImage() {
     // Menghapus Gambar
     try {
         const url = new URL(
-            `${COMFYUI_URL}/comfyapi/v1/output-images/${encodeURIComponent(lastImageData.filename)}?token=${TOKEN}`
+            `${COMFYUI_URL}/comfyapi/v1/output-images/${encodeURIComponent(lastImageData.filename)}?token=${TOKEN}`,
         );
 
         url.searchParams.append("temp", "false");

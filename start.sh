@@ -1,7 +1,7 @@
 #!/bin/env bash
 
 readonly DIR="/multimedia/AI/Mimpi";
-readonly VENV_DIR="$DIR/venv";
+readonly VENV_DIR="$DIR/.venv";
 
 if [[ ! -d "$VENV_DIR" ]]; then
     echo "Error: Virtual environment directory '$VENV_DIR' not found.";

@@ -16,8 +16,8 @@ const checkpointNameMapping = {
         dmd2: true,
         nsfw: true,
     },
-    "Anime/animagineXLV31_v31.safetensors": {
-        displayName: "Anime Screenshot Merge - VPred | v3.0",
+    "Anime/animeScreenshotMerge_v30.safetensors": {
+        displayName: "Anime Screenshot Merge NoobAI | v3.0",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -52,9 +52,33 @@ const checkpointNameMapping = {
         dmd2: true,
         nsfw: true,
     },
+    "Anime/novaAnimeXL_ilV190.safetensors": {
+        displayName: "Nova Anime XL | IL v19.0",
+        sampler: "lcm",
+        scheduler: "exponential",
+        lora: false,
+        clip: true,
+        clipskip: -2,
+        steps: 10,
+        cfg: 1,
+        dmd2: true,
+        nsfw: true,
+    },
+    "Anime/novaOrangeXL_rexV10.safetensors": {
+        displayName: "Nova Orange XL | REX v1.0",
+        sampler: "lcm",
+        scheduler: "exponential",
+        lora: false,
+        clip: true,
+        clipskip: -2,
+        steps: 10,
+        cfg: 1,
+        dmd2: true,
+        nsfw: true,
+    },
     // DMD2
     "DMD2/asianRealismByStable_v10DMD2.safetensors": {
-        displayName: "Asian_Realism_By_Stable_Yogi (ILLUS) | v1.0_DMD2",
+        displayName: "Asian Realism By Stable Yogi (PONY) | v1.0_DMD2_PONY",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -102,7 +126,7 @@ const checkpointNameMapping = {
         nsfw: true,
     },
     "DMD2/gonzalomoDMD_v11.safetensors": {
-        displayName: "GonzaLomo DMD | v1.1",
+        displayName: "GonzaLomo XL/Flux/Pony | v1.1 Real XL DMD",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -114,7 +138,7 @@ const checkpointNameMapping = {
         nsfw: true,
     },
     "DMD2/gonzalomoDMD_v11Real.safetensors": {
-        displayName: "GonzaLomo DMD | v1.1 Real",
+        displayName: "GonzaLomo XL/Flux/Pony | v1.1 Real XL DMD",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -162,7 +186,7 @@ const checkpointNameMapping = {
         nsfw: true,
     },
     "DMD2/realismSDXLByStable_v60XLDMD2.safetensors": {
-        displayName: "Realism_SDXL_By_Stable_Yogi | v6.0_XL_DMD2",
+        displayName: "Realism SDXL By Stable Yogi | v6.0_XL_DMD2",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -210,7 +234,7 @@ const checkpointNameMapping = {
         nsfw: true,
     },
     "DMD2/ultraRealisticBy_v10DMD2.safetensors": {
-        displayName: "Ultra Realistic By Stable Yogi | v1.0_DMD2",
+        displayName: "Ultra Realistic By Stable Yogi (Pony) | v1.0_DMD2",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -233,10 +257,9 @@ const checkpointNameMapping = {
         dmd2: false,
         nsfw: true,
     },
-
     // Illustrious
     "Illustrious/asianRealismByStable_v10FP16.safetensors": {
-        displayName: "Asian_Realism_By_Stable_Yogi (ILLUS) | v1.0_FP16",
+        displayName: "Asian Realism By Stable Yogi (ILLUS) | v1.0_FP16",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -248,7 +271,19 @@ const checkpointNameMapping = {
         nsfw: true,
     },
     "Illustrious/babesIllustriousBy_v30BF16.safetensors": {
-        displayName: "Babes_Illustrious_By_Stable_Yogi | v3.0_BF16",
+        displayName: "Babes Illustrious By Stable Yogi | v3.0_BF16",
+        sampler: "lcm",
+        scheduler: "exponential",
+        lora: false,
+        clip: true,
+        clipskip: -2,
+        steps: 10,
+        cfg: 1,
+        dmd2: true,
+        nsfw: true,
+    },
+    "Illustrious/babesIllustriousBy_v55FP16.safetensors": {
+        displayName: "Babes Illustrious By Stable Yogi | v5.5 FP16",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -260,7 +295,31 @@ const checkpointNameMapping = {
         nsfw: true,
     },
     "Illustrious/cyberillustrious_v35.safetensors": {
-        displayName: "CyberIllustrious | CyberRealistic | v3.5",
+        displayName: "CyberRealistic CyberIllustrious | v3.5",
+        sampler: "lcm",
+        scheduler: "exponential",
+        lora: false,
+        clip: true,
+        clipskip: -2,
+        steps: 10,
+        cfg: 1,
+        dmd2: true,
+        nsfw: true,
+    },
+    "Illustrious/darkmixMargarita_v300.safetensors": {
+        displayName: "DarkMix Margarita Illustrious - Fantastical Realism | v3.0.0",
+        sampler: "lcm",
+        scheduler: "exponential",
+        lora: false,
+        clip: true,
+        clipskip: -2,
+        steps: 10,
+        cfg: 1,
+        dmd2: true,
+        nsfw: true,
+    },
+    "Illustrious/divingIllustriousFlat_v70VAE.safetensors": {
+        displayName: "Diving-Illustrious Flat Anime Paradigm Shift | v7.0+VAE",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -272,7 +331,7 @@ const checkpointNameMapping = {
         nsfw: true,
     },
     "Illustrious/illustriousRealismBy_v10VAE.safetensors": {
-        displayName: "Illustrious Realism by klaabu | v1.0 + VAE",
+        displayName: "Illustrious Realism by klaabu | V1.0 + VAE",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -332,7 +391,7 @@ const checkpointNameMapping = {
         nsfw: true,
     },
     "Illustrious/perfectionAmateurILXL_v10.safetensors": {
-        displayName: "Perfection Amateur [ILXL / Illustrious XL] - NSFW / SFW Checkpoint | v1.0",
+        displayName: "Perfection Amateur [ILXL / Illustrious XL] - NSFW / SFW Checkpoint | 1.0",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -343,8 +402,8 @@ const checkpointNameMapping = {
         dmd2: true,
         nsfw: true,
     },
-    "Illustrious/perfectionRealisticILXL_v30.safetensors": {
-        displayName: "Perfection Realistic [ILXL / Illustrious XL] - NSFW / SFW Checkpoint | v3.0",
+    "Illustrious/perfectionRealisticILXL_80.safetensors": {
+        displayName: "Perfection Realistic [ILXL / Illustrious XL NSFW] | 8.0",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -356,7 +415,7 @@ const checkpointNameMapping = {
         nsfw: true,
     },
     "Illustrious/pornmasterPro_realismILV1VAE.safetensors": {
-        displayName: "PornMaster-Pro 色情大师- Illustrious & noob | Realism-IL-V1-VAE",
+        displayName: "PornMaster-Pro 色情大师- Illustrious & noob | Realism-IL-V1",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -404,7 +463,7 @@ const checkpointNameMapping = {
         nsfw: true,
     },
     "Illustrious/reallybiglust_v095LoraCompatible.safetensors": {
-        displayName: "ReallyBigLust - Illustrious Realistic | v0.95 LoRA Compatible",
+        displayName: "ReallyBigLust - Illustrious Realistic | v0.98 LoRA Compatible",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -416,8 +475,7 @@ const checkpointNameMapping = {
         nsfw: true,
     },
     "Illustrious/redcraftCADSUpdatedMar11_illust3relustion.safetensors": {
-        displayName:
-            "RedCraft | 红潮 CADS | UPdated-Mar18 | Commercial & Advertising Design System | Illust3Relustion🔥",
+        displayName: "RedCraft | 红潮 | ERNIE RedMIX | Illust3Relustion🔥",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -452,10 +510,21 @@ const checkpointNameMapping = {
         dmd2: true,
         nsfw: true,
     },
-
     // Pony
     "Pony/asianRealismByStable_v10FP16.safetensors": {
-        displayName: "Asian_Realism_By_Stable_Yogi | v1.0_FP16",
+        displayName: "Asian Realism By Stable Yogi (PONY) | v1.0_FP16_PONY",
+        sampler: "lcm",
+        scheduler: "exponential",
+        lora: false,
+        clip: true,
+        clipskip: -2,
+        steps: 10,
+        cfg: 1,
+        dmd2: true,
+        nsfw: true,
+    },
+    "Pony/cyberrealisticPony_v180Coreshift.safetensors": {
+        displayName: "CyberRealistic Pony | v18.0 CoreShift",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -491,7 +560,7 @@ const checkpointNameMapping = {
         nsfw: true,
     },
     "Pony/fucktasticRealCheckpointPony_21.safetensors": {
-        displayName: "Fucktastic Real Checkpoint [Pony/PDXL Porn] [Realistic] [NSFW/SFW] | v2.1",
+        displayName: "Fucktastic Real Checkpoint [Pony/PDXL Porn] [Realistic] [NSFW/SFW] | 2.1",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -526,6 +595,18 @@ const checkpointNameMapping = {
         dmd2: true,
         nsfw: true,
     },
+    "Pony/likeRealityPonyBy_v60VAE.safetensors": {
+        displayName: "Like Reality Pony by Ethanar | v6.0 VAE",
+        sampler: "lcm",
+        scheduler: "exponential",
+        lora: false,
+        clip: true,
+        clipskip: -2,
+        steps: 10,
+        cfg: 1,
+        dmd2: true,
+        nsfw: true,
+    },
     "Pony/novaRealityXL_v70.safetensors": {
         displayName: "Nova Reality XL | v7.0",
         sampler: "lcm",
@@ -550,8 +631,8 @@ const checkpointNameMapping = {
         dmd2: true,
         nsfw: true,
     },
-    "Pony/ultraRealisticBy_v10FP16.safetensors": {
-        displayName: "Ultra Realistic By Stable Yogi | v1.0_FP16",
+    "Pony/realismByStableYogi_ponyV65.safetensors": {
+        displayName: "Realism By Stable Yogi (Pony) | Pony _v6.5",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -562,7 +643,18 @@ const checkpointNameMapping = {
         dmd2: true,
         nsfw: true,
     },
-
+    "Pony/ultraRealisticBy_v10FP16.safetensors": {
+        displayName: "Ultra Realistic By Stable Yogi (Pony) | v1.0_FP16",
+        sampler: "lcm",
+        scheduler: "exponential",
+        lora: false,
+        clip: true,
+        clipskip: -2,
+        steps: 10,
+        cfg: 1,
+        dmd2: true,
+        nsfw: true,
+    },
     // SDXL
     "SDXL/1girlPrinter20_v10.safetensors": {
         displayName: "1girl printer 2.0 | v1.0",
@@ -624,8 +716,8 @@ const checkpointNameMapping = {
         dmd2: true,
         nsfw: true,
     },
-    "SDXL/bigLove_xl3.safetensors": {
-        displayName: "Big Love | XL3",
+    "SDXL/bigLove_photo6.safetensors": {
+        displayName: "Big Love | Photo6",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -637,7 +729,7 @@ const checkpointNameMapping = {
         nsfw: true,
     },
     "SDXL/biglust17_v17.safetensors": {
-        displayName: "Big Lust | v1.7",
+        displayName: "BigLust 1.7 | v1.7",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -709,7 +801,7 @@ const checkpointNameMapping = {
         nsfw: true,
     },
     "SDXL/cyberprimeXL_v11.safetensors": {
-        displayName: "CyberPrime XL| v1.1",
+        displayName: "CyberPrime XL | v1.0",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -732,18 +824,6 @@ const checkpointNameMapping = {
         dmd2: true,
         nsfw: true,
     },
-    "SDXL/donutsdeliverymixV4_v41.safetensors": {
-        displayName: "DonutsDeliveryMix V4 - NSFW Photorealism | V4.1",
-        sampler: "lcm",
-        scheduler: "exponential",
-        lora: false,
-        clip: true,
-        clipskip: -2,
-        steps: 10,
-        cfg: 1,
-        dmd2: true,
-        nsfw: true,
-    },
     "SDXL/d33psixSDXL_d33psixSDXL.safetensors": {
         displayName: "D33PSIX - SDXL | D33PSIX - SDXL",
         sampler: "lcm",
@@ -756,8 +836,32 @@ const checkpointNameMapping = {
         dmd2: true,
         nsfw: true,
     },
+    "SDXL/dirtyRealism_Uncensored.safetensors": {
+        displayName: "Dirty Realism | DirtyRealism-Uncensored",
+        sampler: "lcm",
+        scheduler: "exponential",
+        lora: false,
+        clip: true,
+        clipskip: -2,
+        steps: 10,
+        cfg: 1,
+        dmd2: true,
+        nsfw: true,
+    },
+    "SDXL/donutsdeliverymixV4_v41.safetensors": {
+        displayName: "DonutsDeliveryMix V4 - NSFW Photorealism | v4.1",
+        sampler: "lcm",
+        scheduler: "exponential",
+        lora: false,
+        clip: true,
+        clipskip: -2,
+        steps: 10,
+        cfg: 1,
+        dmd2: true,
+        nsfw: true,
+    },
     "SDXL/epicjoy_alpha.safetensors": {
-        displayName: "EpicJOY | alpha",
+        displayName: "EpicJOY | full",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -781,7 +885,7 @@ const checkpointNameMapping = {
         nsfw: false,
     },
     "SDXL/epicrealismXL_vxviLastfameRealism.safetensors": {
-        displayName: "epiCRealism XL | VXVI - LastFAME (Realism)",
+        displayName: "epiCRealism XL | VXVI - LastFAME (Realism++)",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -793,7 +897,7 @@ const checkpointNameMapping = {
         nsfw: true,
     },
     "SDXL/evalisenniaRealisticEastAsian_v30.safetensors": {
-        displayName: "Evalisennia 伊岚: Realistic East Asian Female | 写实东亚女性人像 | v3.01",
+        displayName: "Evalisennia 伊岚: Realistic East Asian Female | 写实东亚女性人像 | v3.0",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -817,7 +921,7 @@ const checkpointNameMapping = {
         nsfw: true,
     },
     "SDXL/fabledIllusionXXXLSFWNSFWPorn_v30PhotoNoir.safetensors": {
-        displayName: "Fabled Illusion XXXL - (SFW / NSFW - Porn - Sex - Erotica - Fantasy - Art) | v3 Photo Noir",
+        displayName: "🐇Fabled Illusion (N/SFW)✨ | v3 Photo Noir",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -865,7 +969,7 @@ const checkpointNameMapping = {
         nsfw: true,
     },
     "SDXL/galaxytimemachinesGTM_xlplusV35.safetensors": {
-        displayName: 'GalaxyTimeMachine\'s GTM "XLPlus" | XLPlus_v3.5',
+        displayName: "GalaxyTimeMachine's GTM \"XLPlus\" | XLPlus_v3.5",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -888,8 +992,20 @@ const checkpointNameMapping = {
         dmd2: true,
         nsfw: true,
     },
+    "SDXL/intorealismUltra_v11.safetensors": {
+        displayName: "IntoRealism Ultra | v11",
+        sampler: "lcm",
+        scheduler: "exponential",
+        lora: false,
+        clip: true,
+        clipskip: -2,
+        steps: 10,
+        cfg: 1,
+        dmd2: true,
+        nsfw: true,
+    },
     "SDXL/jibMixRealisticXL_v170SmokeSheen.safetensors": {
-        displayName: "Jib Mix Realistic XL | v17.0 - Smoke & Sheen",
+        displayName: "Jib Mix Realistic XL | v17.0 Smoke & Sheen",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -972,8 +1088,8 @@ const checkpointNameMapping = {
         dmd2: true,
         nsfw: true,
     },
-    "SDXL/realismSDXLByStable_v70FP16.safetensors": {
-        displayName: "Realism_SDXL_By_Stable_Yogi | v7.0_FP16",
+    "SDXL/realismSDXLByStable_v80FP16.safetensors": {
+        displayName: "Realism SDXL By Stable Yogi | v8.0_FP16",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -1010,6 +1126,18 @@ const checkpointNameMapping = {
     },
     "SDXL/realphotosdxi_0.safetensors": {
         displayName: "RealPhotoSDXI | RealPhotoSDXI.0",
+        sampler: "lcm",
+        scheduler: "exponential",
+        lora: false,
+        clip: true,
+        clipskip: -2,
+        steps: 10,
+        cfg: 1,
+        dmd2: true,
+        nsfw: true,
+    },
+    "SDXL/sensualMindChimera_v10.safetensors": {
+        displayName: "Sensual Mind - Chimera | v1.0",
         sampler: "lcm",
         scheduler: "exponential",
         lora: false,
@@ -1057,6 +1185,8 @@ const checkpointNameMapping = {
         nsfw: true,
     },
 };
+;
+;
 
 /**
  * Fungsi yang mengambil daftar checkpoint.
@@ -1075,6 +1205,9 @@ function fetchCheckpointOptions() {
         "Anime/animeScreenshotMerge_v30.safetensors",
         "Anime/autismmixSDXL_autismmixPony.safetensors",
         "Anime/nngmixXL_v42.safetensors",
+        "Anime/novaAnimeXL_ilV190.safetensors",
+        "Anime/novaOrangeXL_rexV10.safetensors",
+
         "---- DMD2 ----",
         "DMD2/asianRealismByStable_v10DMD2.safetensors",
         "DMD2/centerfold_versionXIDmd2.safetensors",
@@ -1095,14 +1228,17 @@ function fetchCheckpointOptions() {
         "---- Illustrious ----",
         "Illustrious/asianRealismByStable_v10FP16.safetensors",
         "Illustrious/babesIllustriousBy_v30BF16.safetensors",
+        "Illustrious/babesIllustriousBy_v55FP16.safetensors",
         "Illustrious/cyberillustrious_v35.safetensors",
+        "Illustrious/darkmixMargarita_v300.safetensors",
+        "Illustrious/divingIllustriousFlat_v70VAE.safetensors",
         "Illustrious/illustriousRealismBy_v10VAE.safetensors",
         "Illustrious/jedpointreal_v1ILVae.safetensors",
         "Illustrious/jibMixIllustrious_v20Revelation.safetensors",
         "Illustrious/otherworldIDXLSDXL_v10.safetensors",
         "Illustrious/perfection3DILXLIllustrious_v11.safetensors",
         "Illustrious/perfectionAmateurILXL_v10.safetensors",
-        "Illustrious/perfectionRealisticILXL_v30.safetensors",
+        "Illustrious/perfectionRealisticILXL_80.safetensors",
         "Illustrious/pornmasterPro_realismILV1VAE.safetensors",
         "Illustrious/realCosplayerUNCEN_v10.safetensors",
         "Illustrious/realismFusion_v10.safetensors",
@@ -1114,13 +1250,16 @@ function fetchCheckpointOptions() {
 
         "---- Pony ----",
         "Pony/asianRealismByStable_v10FP16.safetensors",
+        "Pony/cyberrealisticPony_v180Coreshift.safetensors",
         "Pony/cyberrealisticPony_v90Alt2.safetensors",
         "Pony/fasercore_v30PonyFP16.safetensors",
         "Pony/fucktasticRealCheckpointPony_21.safetensors",
         "Pony/iniverseMixSFWNSFW_ponyRealGuofengV50C.safetensors",
-        "Pony/likeRealityPonyBy_v20VAE",
+        "Pony/likeRealityPonyBy_v20VAE.safetensors",
+        "Pony/likeRealityPonyBy_v60VAE.safetensors",
         "Pony/novaRealityXL_v70.safetensors",
         "Pony/realDream_sdxlPony15.safetensors",
+        "Pony/realismByStableYogi_ponyV65.safetensors",
         "Pony/ultraRealisticBy_v10FP16.safetensors",
 
         "---- SDXL ----",
@@ -1129,7 +1268,7 @@ function fetchCheckpointOptions() {
         "SDXL/AiprealisticSDXLNSFW_v10.safetensors",
         "SDXL/annolustxl_v2.safetensors",
         "SDXL/beyondimaginationxl_v0005Fix.safetensors",
-        "SDXL/bigLove_xl3.safetensors",
+        "SDXL/bigLove_photo6.safetensors",
         "SDXL/biglust17_v17.safetensors",
         "SDXL/biglustydonutmixNSFW_v12.safetensors",
         "SDXL/boomerArtModelBAM_bamV2.safetensors",
@@ -1139,6 +1278,7 @@ function fetchCheckpointOptions() {
         "SDXL/cyberprimeXL_v11.safetensors",
         "SDXL/cyberrealisticXL_v56.safetensors",
         "SDXL/d33psixSDXL_d33psixSDXL.safetensors",
+        "SDXL/dirtyRealism_Uncensored.safetensors",
         "SDXL/donutsdeliverymixV4_v41.safetensors",
         "SDXL/epicjoy_alpha.safetensors",
         "SDXL/epicjuggernautxl_vxvXI.safetensors",
@@ -1151,22 +1291,25 @@ function fetchCheckpointOptions() {
         "SDXL/FuchsiaXLPhoto_v10.safetensors",
         "SDXL/galaxytimemachinesGTM_xlplusV35.safetensors",
         "SDXL/genieSDXLUnchained_v10.safetensors",
+        "SDXL/intorealismUltra_v11.safetensors",
         "SDXL/jibMixRealisticXL_v170SmokeSheen.safetensors",
         "SDXL/juggernautXL_juggXIByRundiffusion.safetensors",
-        "SDXL/lustifySDXLNSFW_endgame.safetensors",
         "SDXL/lustifySDXLNSFW_oltFIXEDTEXTURES.safetensors",
         "SDXL/lustimix_.safetensors",
         "SDXL/mumixxl_v11.safetensors",
         "SDXL/photoart_V50.safetensors",
         "SDXL/photopediaXL_45.safetensors",
-        "SDXL/realismSDXLByStable_v70FP16.safetensors",
+        "SDXL/realismSDXLByStable_v80FP16.safetensors",
         "SDXL/realisticLustXL_v09.safetensors",
         "SDXL/realisticStockPhoto_v20.safetensors",
         "SDXL/realphotosdxi_0.safetensors",
+        "SDXL/sensualMindChimera_v10.safetensors",
         "SDXL/sensuaxlV2_v20.safetensors",
         "SDXL/stepDadsStashXLV2_v20.safetensors",
         "SDXL/talesOfDigitalDesireSFW_v21.safetensors",
     ];
+
+
 
     checkpointCache.checkpoints = baseCheckpoints.map((ckpt) => ckpt);
     return checkpointCache.checkpoints;
