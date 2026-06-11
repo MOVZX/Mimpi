@@ -1,0 +1,1454 @@
+{
+  "categories": [
+    {
+      "name": "Anime",
+      "models": [
+        {
+          "filename": "Anime/animagineXLV31_v31.safetensors",
+          "displayName": "Animagine XL V3.1 | v3.1",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Anime/animeScreenshotMerge_v30.safetensors",
+          "displayName": "Anime Screenshot Merge NoobAI | v3.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Anime/autismmixSDXL_autismmixPony.safetensors",
+          "displayName": "AutismMix SDXL | AutismMix_pony",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Anime/nngmixXL_v42.safetensors",
+          "displayName": "NNGMIX-XL | v4.2",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Anime/novaAnimeXL_ilV190.safetensors",
+          "displayName": "Nova Anime XL | IL v19.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Anime/novaOrangeXL_rexV10.safetensors",
+          "displayName": "Nova Orange XL | REX v1.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "DMD2",
+      "models": [
+        {
+          "filename": "DMD2/asianRealismByStable_v10DMD2.safetensors",
+          "displayName": "Asian Realism By Stable Yogi (PONY) | v1.0_DMD2_PONY",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": false,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "DMD2/centerfold_versionXIDmd2.safetensors",
+          "displayName": "Centerfold | version XI dmd2",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": false,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "DMD2/cognitiveriver_illustriousV10.safetensors",
+          "displayName": "CognitiveRiver | Illustrious v1.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": false,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "DMD2/epicrealismXL_vxviLastfameDMD2.safetensors",
+          "displayName": "epiCRealism XL | VXVI - LastFAME DMD2 (Realism)",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": false,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "DMD2/gonzalomoDMD_v11.safetensors",
+          "displayName": "GonzaLomo XL/Flux/Pony | v1.1 Real XL DMD",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": false,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "DMD2/gonzalomoDMD_v11Real.safetensors",
+          "displayName": "GonzaLomo XL/Flux/Pony | v1.1 Real XL DMD",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": false,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "DMD2/lustifySDXLNSFW_endgameDMD2.safetensors",
+          "displayName": "LUSTIFY! [SDXL NSFW checkpoint] | ENDGAME ⚡DMD2⚡",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": false,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "DMD2/neuralSoup_v10.safetensors",
+          "displayName": "Neural Soup | v1.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": false,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "DMD2/neuralStew_v10.safetensors",
+          "displayName": "Neural Stew | v1.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": false,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "DMD2/realismSDXLByStable_v60XLDMD2.safetensors",
+          "displayName": "Realism SDXL By Stable Yogi | v6.0_XL_DMD2",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": false,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "DMD2/realustriousPonyXL_dmd.safetensors",
+          "displayName": "Realustrious Pony XL | DMD",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": false,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "DMD2/sirenForge_v21OldeskoolAnalog.safetensors",
+          "displayName": "Siren Forge | v2.1 (OldeSkool Analog)",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": false,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "DMD2/splashedMixDMD_v40.safetensors",
+          "displayName": "Splashed Mix DMD | v4.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": false,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "DMD2/ultraRealisticBy_v10DMD2.safetensors",
+          "displayName": "Ultra Realistic By Stable Yogi (Pony) | v1.0_DMD2",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": false,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "DMD2/xxxRay_dmd2.safetensors",
+          "displayName": "XXX-Ray | DMD2",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": false,
+            "nsfw": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Illustrious",
+      "models": [
+        {
+          "filename": "Illustrious/asianRealismByStable_v10FP16.safetensors",
+          "displayName": "Asian Realism By Stable Yogi (ILLUS) | v1.0_FP16",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Illustrious/babesIllustriousBy_v55FP16.safetensors",
+          "displayName": "Babes Illustrious By Stable Yogi | v5.5 FP16",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Illustrious/cyberillustrious_v35.safetensors",
+          "displayName": "CyberRealistic CyberIllustrious | v3.5",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Illustrious/darkmixMargarita_v300.safetensors",
+          "displayName": "DarkMix Margarita Illustrious - Fantastical Realism | v3.0.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Illustrious/divingIllustriousFlat_v70VAE.safetensors",
+          "displayName": "Diving-Illustrious Flat Anime Paradigm Shift | v7.0+VAE",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Illustrious/illustriousRealismBy_v10VAE.safetensors",
+          "displayName": "Illustrious Realism by klaabu | V1.0 + VAE",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Illustrious/jedpointreal_v1ILVae.safetensors",
+          "displayName": "JedpointReal | V1 IL + Vae",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Illustrious/jibMixIllustrious_v20Revelation.safetensors",
+          "displayName": "Jib Mix Illustrious Realistic | v2.0 Revelation",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Illustrious/otherworldIDXLSDXL_v10.safetensors",
+          "displayName": "Otherworld IDXL/SDXL Hybrid | v1.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Illustrious/perfection3DILXLIllustrious_v11.safetensors",
+          "displayName": "Perfection 3D [ILXL / Illustrious XL] - NSFW / SFW Checkpoint | v1.1",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Illustrious/perfectionAmateurILXL_v10.safetensors",
+          "displayName": "Perfection Amateur [ILXL / Illustrious XL] - NSFW / SFW Checkpoint | 1.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Illustrious/perfectionRealisticILXL_80.safetensors",
+          "displayName": "Perfection Realistic [ILXL / Illustrious XL NSFW] | 8.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Illustrious/pornmasterPro_realismILV1VAE.safetensors",
+          "displayName": "PornMaster-Pro 色情大师- Illustrious & noob | Realism-IL-V1",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Illustrious/realCosplayerUNCEN_v10.safetensors",
+          "displayName": "Real_Cosplayer_UNCEN [ILLUS/NOOB] | v1.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Illustrious/realismFusion_v10.safetensors",
+          "displayName": "Realism Fusion | Illustrious | Realistic | v1.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Illustrious/reallybiglust_hibridIllustrious.safetensors",
+          "displayName": "ReallyBigLust - Illustrious Realistic | Hibrid Illustrious-SDXL",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Illustrious/reallybiglust_v095LoraCompatible.safetensors",
+          "displayName": "ReallyBigLust - Illustrious Realistic | v0.98 LoRA Compatible",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Illustrious/redcraftCADSUpdatedMar11_illust3relustion.safetensors",
+          "displayName": "RedCraft | 红潮 | ERNIE RedMIX | Illust3Relustion🔥",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Illustrious/reijality_v10.safetensors",
+          "displayName": "Reijality | v1.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Illustrious/shutter_v20.safetensors",
+          "displayName": "Shutter | v2.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pony",
+      "models": [
+        {
+          "filename": "Pony/asianRealismByStable_v10FP16.safetensors",
+          "displayName": "Asian Realism By Stable Yogi (PONY) | v1.0_FP16_PONY",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Pony/cyberrealisticPony_v180Coreshift.safetensors",
+          "displayName": "CyberRealistic Pony | v18.0 CoreShift",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Pony/fasercore_v30PonyFP16.safetensors",
+          "displayName": "FaserCore | v3.0_Pony_FP16",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Pony/fucktasticRealCheckpointPony_21.safetensors",
+          "displayName": "Fucktastic Real Checkpoint [Pony/PDXL Porn] [Realistic] [NSFW/SFW] | 2.1",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Pony/iniverseMixSFWNSFW_ponyRealGuofengV50C.safetensors",
+          "displayName": "iNiverse Mix(SFW & NSFW) | Pony Real GuoFeng v5.0C🔥",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Pony/likeRealityPonyBy_v60VAE.safetensors",
+          "displayName": "Like Reality Pony by Ethanar | v6.0 VAE",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Pony/novaRealityXL_v70.safetensors",
+          "displayName": "Nova Reality XL | v7.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Pony/realDream_sdxlPony15.safetensors",
+          "displayName": "Real Dream | SDXL Pony 15",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Pony/realismByStableYogi_ponyV65.safetensors",
+          "displayName": "Realism By Stable Yogi (Pony) | Pony _v6.5",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "Pony/ultraRealisticBy_v10FP16.safetensors",
+          "displayName": "Ultra Realistic By Stable Yogi (Pony) | v1.0_FP16",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "SDXL",
+      "models": [
+        {
+          "filename": "SDXL/1girlPrinter20_v10.safetensors",
+          "displayName": "1girl printer 2.0 | v1.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/agxl_V2.safetensors",
+          "displayName": "AGXL | AGXL_v2",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/AiprealisticSDXLNSFW_v10.safetensors",
+          "displayName": "真实感写实大模型AIPRealistic_SDXL_NSFW | v1.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/annolustxl_v2.safetensors",
+          "displayName": "ANNOLustXL | ANNOLustXLV2",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/beyondimaginationxl_v0005Fix.safetensors",
+          "displayName": "BeyondImaginationXL | v0_005_Fix",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/bigLove_photo6.safetensors",
+          "displayName": "Big Love | Photo6",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/biglust17_v17.safetensors",
+          "displayName": "BigLust 1.7 | v1.7",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/biglustydonutmixNSFW_v12.safetensors",
+          "displayName": "BigLustyDonutMix (NSFW Realism) | v1.2",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/boomerArtModelBAM_bamV2.safetensors",
+          "displayName": "Boomer Art Model (BAM!) | BAM_v2",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/chirps_v1.safetensors",
+          "displayName": "chirps | v1",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/cinemaDiffusoXL_beta03.safetensors",
+          "displayName": "Cinema Diffuso XL | Beta 0.3",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/clarityXL_v20.safetensors",
+          "displayName": "Clarity XL | v2.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/cyberprimeXL_v11.safetensors",
+          "displayName": "CyberPrime XL | v1.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/cyberrealisticXL_v56.safetensors",
+          "displayName": "CyberRealistic XL | v5.6",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/d33psixSDXL_d33psixSDXL.safetensors",
+          "displayName": "D33PSIX - SDXL | D33PSIX - SDXL",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/dirtyRealism_Uncensored.safetensors",
+          "displayName": "Dirty Realism | DirtyRealism-Uncensored",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/donutsdeliverymixV4_v41.safetensors",
+          "displayName": "DonutsDeliveryMix V4 - NSFW Photorealism | v4.1",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/epicjoy_alpha.safetensors",
+          "displayName": "EpicJOY | full",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/epicjuggernautxl_vxvXI.safetensors",
+          "displayName": "EpicJuggernautXL | VXV+XI",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": false
+          }
+        },
+        {
+          "filename": "SDXL/epicrealismXL_vxviLastfameRealism.safetensors",
+          "displayName": "epiCRealism XL | VXVI - LastFAME (Realism++)",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/evalisenniaRealisticEastAsian_v30.safetensors",
+          "displayName": "Evalisennia 伊岚: Realistic East Asian Female | 写实东亚女性人像 | v3.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/evermoreSDXL_v21NSFWFp16.safetensors",
+          "displayName": "Evermore SDXL | v2.1 NSFW Fp16",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/fabledIllusionXXXLSFWNSFWPorn_v30PhotoNoir.safetensors",
+          "displayName": "🐇Fabled Illusion (N/SFW)✨ | v3 Photo Noir",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/fasercore_xlV1.safetensors",
+          "displayName": "FaserCore | XL_V1",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/fennfotoXL_v1.safetensors",
+          "displayName": "fennfoto_XL | v1",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/FuchsiaXLPhoto_v10.safetensors",
+          "displayName": "Fuchsia XL (Photo) | v10",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/galaxytimemachinesGTM_xlplusV35.safetensors",
+          "displayName": "SDXL/galaxytimemachinesGTM_xlplusV35.safetensors",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/genieSDXLUnchained_v10.safetensors",
+          "displayName": "Genie_SDXL_unchained | v1.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/intorealismUltra_v11.safetensors",
+          "displayName": "IntoRealism Ultra | v11",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/jibMixRealisticXL_v170SmokeSheen.safetensors",
+          "displayName": "Jib Mix Realistic XL | v17.0 Smoke & Sheen",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/juggernautXL_juggXIByRundiffusion.safetensors",
+          "displayName": "Juggernaut XL | Jugg_XI_by_RunDiffusion",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": false
+          }
+        },
+        {
+          "filename": "SDXL/lustifySDXLNSFW_oltFIXEDTEXTURES.safetensors",
+          "displayName": "LUSTIFY! [SDXL NSFW checkpoint] | OLT (FIXED TEXTURES)",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/lustimix_.safetensors",
+          "displayName": "LustiMix | LustiMix",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/mumixxl_v11.safetensors",
+          "displayName": "MuMixXL | v1.1",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/photoart_V50.safetensors",
+          "displayName": "PhotoArt | PhotoArt v5.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/photopediaXL_45.safetensors",
+          "displayName": "PhotoPedia XL | 4.5",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/realismSDXLByStable_v80FP16.safetensors",
+          "displayName": "Realism SDXL By Stable Yogi | v8.0_FP16",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/realisticLustXL_v09.safetensors",
+          "displayName": "Realistic Lust [XL] | v0.9",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/realisticStockPhoto_v20.safetensors",
+          "displayName": "Realistic Stock Photo | v2.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/realphotosdxi_0.safetensors",
+          "displayName": "RealPhotoSDXI | RealPhotoSDXI.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/sensualMindChimera_v10.safetensors",
+          "displayName": "Sensual Mind - Chimera | v1.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/sensuaxlV2_v20.safetensors",
+          "displayName": "SensuaXL v2 | v2.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/stepDadsStashXLV2_v20.safetensors",
+          "displayName": "Step Dads Stash XL V.2 | v2.0",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        },
+        {
+          "filename": "SDXL/talesOfDigitalDesireSFW_v21.safetensors",
+          "displayName": "Tales of Digital Desire (SFW & NSFW & XXX) | v2.1",
+          "mapping": {
+            "sampler": "lcm",
+            "scheduler": "exponential",
+            "lora": false,
+            "clip": true,
+            "clipskip": -2,
+            "steps": 10,
+            "cfg": 1,
+            "dmd2": true,
+            "nsfw": true
+          }
+        }
+      ]
+    }
+  ]
+}

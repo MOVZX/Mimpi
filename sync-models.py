@@ -11,6 +11,7 @@ Cara kerja:
   5. Urutkan alphabetical → tulis ulang
 """
 
+from pathlib import Path
 import os
 import re
 import sys
@@ -411,7 +412,27 @@ def write_checkpoints_js(
     with open(filepath, "w") as f:
         f.write(output)
 
-    print(f"✔ Ditulis ke {filepath}")
+    # ── Also write checkpoints.json ──
+    json_path = Path(filepath).with_suffix(".json")
+    categories, current_cat, current_models = [], None, []
+    for key, props in mapping:
+        if key.startswith("---- ") and key.endswith(" ----"):
+            if current_cat and current_models:
+                categories.append({"name": current_cat, "models": current_models})
+            current_cat = key.replace("---- ", "").replace(" ----", "")
+            current_models = []
+        elif current_cat:
+            model = {"filename": key, "displayName": props.get("displayName", key)}
+            extra = {k: v for k, v in props.items() if k != "displayName"}
+            if extra:
+                model["mapping"] = extra
+            current_models.append(model)
+    if current_cat and current_models:
+        categories.append({"name": current_cat, "models": current_models})
+    import json
+    with open(json_path, "w") as f:
+        json.dump({"categories": categories}, f, indent=2, ensure_ascii=False)
+    print(f"✔ Ditulis ke {json_path}")
 
 
 # ---------------------------------------------------------------------------
