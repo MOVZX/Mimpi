@@ -16,7 +16,7 @@ source "$VENV_DIR/bin/activate"
 
 # ── Build frontend ──
 echo "🚧 Building Mimpi frontend..."
-cd mimpi-src
+cd mimpi
 npm install
 npx vite build
 cd ..
@@ -28,7 +28,7 @@ echo "🔄 Restarting server..."
 tmux kill-session -t mimpi 2>/dev/null || true
 sleep 1
 
-tmux new-session -d -s mimpi ".venv/bin/python server.py"
+tmux new-session -d -s mimpi ".venv/bin/python server/main.py"
 sleep 2
 
 # ── Verifikasi ──
